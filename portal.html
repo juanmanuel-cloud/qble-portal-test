@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Portal | QBLE WIRE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+   <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f8fafc; }
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
+        .text-qble-orange { color: #F58220; }
+        .bg-qble-orange { background-color: #F58220; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-slate-800" x-data="{ menuAbierto: true, seccionActiva: 'tablero', mostrarModalPerdida: false }">
+
+    <aside class="w-64 bg-slate-900 text-white flex flex-col transition-all duration-300 shadow-xl z-20" :class="menuAbierto ? 'w-64' : 'w-20'">
+        <div class="h-20 flex items-center justify-center border-b border-slate-800">
+            <h2 class="font-extrabold text-2xl tracking-widest text-qble-orange" x-show="menuAbierto">QBLE<span class="text-white text-sm font-light tracking-normal ml-1">PORTAL</span></h2>
+            <h2 class="font-extrabold text-2xl text-qble-orange" x-show="!menuAbierto">Q</h2>
+        </div>
+        
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <button @click="seccionActiva = 'tablero'" :class="seccionActiva === 'tablero' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">📊</span><span class="ml-3" x-show="menuAbierto">Mi Tablero</span>
+            </button>
+            <button @click="seccionActiva = 'boms'" :class="seccionActiva === 'boms' || seccionActiva === 'nuevo-proyecto' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">🛠️</span><span class="ml-3" x-show="menuAbierto">Proyectos / BOMs</span>
+            </button>
+            <button @click="seccionActiva = 'cotizaciones'" :class="seccionActiva === 'cotizaciones' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">📄</span><span class="ml-3" x-show="menuAbierto">Cotizaciones</span>
+            </button>
+            <button @click="seccionActiva = 'logistica'" :class="seccionActiva === 'logistica' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">🚚</span><span class="ml-3" x-show="menuAbierto">Logística y Envíos</span>
+            </button>
+            <button @click="seccionActiva = 'finanzas'" :class="seccionActiva === 'finanzas' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">💳</span><span class="ml-3" x-show="menuAbierto">Estado de Cuenta</span>
+            </button>
+            <button @click="seccionActiva = 'soporte'" :class="seccionActiva === 'soporte' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">💬</span><span class="ml-3" x-show="menuAbierto">Centro de Atención</span>
+            </button>
+        </nav>
+        <div class="p-4 border-t border-slate-800">
+            <button class="flex items-center text-slate-400 hover:text-white text-sm font-bold w-full transition-colors">
+                <span>🚪</span><span class="ml-3" x-show="menuAbierto">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10 relative shadow-sm">
+            <button @click="menuAbierto = !menuAbierto" class="text-slate-500 hover:text-slate-800 text-xl transition-colors">☰</button>
+            <div class="flex items-center space-x-6">
+                
+                <button onclick="if(typeof Tawk_API !== 'undefined'){ Tawk_API.showWidget(); Tawk_API.maximize(); }" class="flex items-center bg-slate-900 text-white text-xs font-bold px-4 py-2.5 rounded-lg shadow-sm hover:bg-qble-orange transition-colors">
+                    <span class="mr-2 text-base leading-none">💬</span> Ayuda en Línea
+                </button>
+
+                <div class="text-right hidden md:block border-l border-slate-200 pl-6">
+                    <p class="text-sm font-bold text-slate-800">Ing. Roberto Linares</p>
+                    <p class="text-xs text-slate-500">Integradores KUKA México</p>
+                </div>
+                <div class="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600 border-2 border-qble-orange">RL</div>
+            </div>
+        </header>
+        <div class="flex-1 overflow-y-auto p-8 lg:px-12 relative pb-24">
+            
+            <div x-show="seccionActiva === 'tablero'" class="space-y-10 max-w-7xl mx-auto" style="display: none;">
+                
+                <div class="border-b border-slate-200 pb-6">
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">¡Bienvenido de vuelta, Roberto!</h2>
+                    <p class="text-slate-500 mt-2 text-lg">Tu centro de control de ingeniería y facturación B2B.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">1. Resumen Financiero</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col relative overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-slate-800"></div>
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Saldo Total Pendiente</span>
+                            <span class="text-3xl font-black text-slate-800">$42,150.00</span>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl border border-amber-200 p-6 shadow-sm flex flex-col relative overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-amber-400"></div>
+                            <span class="text-xs font-bold text-amber-700 uppercase tracking-wider mb-2">Por Vencer (Próx. 7 días)</span>
+                            <span class="text-3xl font-black text-amber-600">$42,150.00</span>
+                        </div>
+
+                        <div class="bg-white rounded-2xl border border-red-200 p-6 shadow-sm flex flex-col relative overflow-hidden group hover:shadow-md transition-shadow">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-red-500"></div>
+                            <span class="text-xs font-bold text-red-700 uppercase tracking-wider mb-2">Vencido (Atrasado)</span>
+                            <span class="text-3xl font-black text-red-600">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">2. Estatus Operativo</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div @click="seccionActiva = 'boms'" class="bg-white rounded-2xl border border-blue-100 p-6 shadow-sm flex flex-col relative overflow-hidden group hover:border-blue-300 hover:shadow-md transition-all cursor-pointer">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-blue-700 uppercase tracking-wider">Proyectos en Incubación (BOM)</span>
+                                <span class="text-blue-400 group-hover:text-blue-600 transition-colors">➔</span>
+                            </div>
+                            <span class="text-3xl font-black text-blue-600">3 Proyectos</span>
+                            <p class="text-sm text-slate-500 mt-2">Armando listas de materiales, sin cotizar.</p>
+                        </div>
+
+                        <div @click="seccionActiva = 'cotizaciones'" class="bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm flex flex-col relative overflow-hidden group hover:border-emerald-300 hover:shadow-md transition-all cursor-pointer">
+                            <div class="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Cotizaciones Activas</span>
+                                <span class="text-emerald-400 group-hover:text-emerald-600 transition-colors">➔</span>
+                            </div>
+                            <span class="text-3xl font-black text-emerald-600">2 Activas</span>
+                            <p class="text-sm text-slate-500 mt-2">Validadas por QBLE, esperando tu aprobación.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="px-6 py-5 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800 text-lg">Documentos de Acción Rápida</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-white text-slate-400 text-[10px] uppercase tracking-widest font-black border-b border-slate-100">
+                                <tr>
+                                    <th class="px-6 py-4">Referencia / Proyecto</th>
+                                    <th class="px-6 py-4">Monto (MXN)</th>
+                                    <th class="px-6 py-4">Estatus</th>
+                                    <th class="px-6 py-4 text-right">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-50">
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-5">
+                                        <div class="font-bold text-slate-900 text-base">S09145</div>
+                                        <div class="text-slate-500 text-xs mt-0.5">Tableros Control Fase 2</div>
+                                    </td>
+                                    <td class="px-6 py-5 font-bold text-slate-700 text-base">$18,450.00</td>
+                                    <td class="px-6 py-5">
+                                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-md">Aprobación Técnica</span>
+                                    </td>
+                                    <td class="px-6 py-5 text-right space-x-3">
+                                        <button @click="seccionActiva = 'soporte'" class="text-xs font-bold text-slate-400 hover:text-qble-orange transition-colors">💬 Solicitar Cambio</button>
+                                        <button class="bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-lg hover:bg-qble-orange transition-colors shadow-sm">Ver PDF</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-5">
+                                        <div class="font-bold text-slate-900 text-base">S09143</div>
+                                        <div class="text-slate-500 text-xs mt-0.5">Cableado VFD Extrusora</div>
+                                    </td>
+                                    <td class="px-6 py-5 font-bold text-slate-700 text-base">$24,800.00</td>
+                                    <td class="px-6 py-5">
+                                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-md">Lista para Pago</span>
+                                    </td>
+                                    <td class="px-6 py-5 text-right">
+                                        <button class="bg-emerald-500 text-white text-xs font-bold px-6 py-2.5 rounded-lg shadow-md hover:bg-emerald-600 transition-colors transform active:scale-95 flex items-center inline-flex">
+                                            <span class="mr-2">💳</span> Pagar Ahora
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'boms'" class="space-y-6 max-w-7xl mx-auto" style="display: none;">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 gap-4">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Mis Proyectos (BOMs)</h2>
+                        <p class="text-slate-500 mt-1 text-base">Crea carpetas, diseña tu ingeniería usando nuestros selectores y genera listas de materiales.</p>
+                    </div>
+                    <button @click="seccionActiva = 'nuevo-proyecto'" class="bg-qble-orange text-white font-bold px-6 py-3 rounded-xl shadow-md hover:bg-orange-600 transition-colors flex items-center transform active:scale-95">
+                        <span class="text-xl mr-2">+</span> Nuevo Proyecto
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-lg transition-shadow flex flex-col">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-wider">En Diseño</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-1">Línea Ensamble Chasis</h3>
+                        <p class="text-xs text-slate-500 mb-6">Planta Silao - Fase 1</p>
+                        <div class="bg-slate-50 rounded-lg p-3 mb-6 flex-grow border border-slate-100">
+                            <ul class="text-sm text-slate-700 space-y-1">
+                                <li>• 2x Kits Harting 16B</li>
+                                <li>• 500m Cable Control JZ-500</li>
+                            </ul>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-auto">
+                            <button @click="seccionActiva = 'nuevo-proyecto'" class="border border-slate-300 text-slate-700 font-bold text-xs py-2 rounded-lg hover:bg-slate-50 transition">Ver / Editar</button>
+                            <button class="bg-slate-900 text-white font-bold text-xs py-2 rounded-lg hover:bg-slate-800 transition">Solicitar Cot.</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'nuevo-proyecto'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div class="flex-1 w-full">
+                        <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">Nombre del Proyecto</label>
+                        <input type="text" placeholder="Ej. Actualización de Tableros KUKA..." class="w-full text-2xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-qble-orange outline-none pb-2 bg-transparent transition-colors">
+                    </div>
+                    <div class="flex space-x-3 w-full md:w-auto">
+                        <button @click="seccionActiva = 'boms'" class="px-5 py-3 rounded-lg font-bold text-sm text-slate-600 border border-slate-200 hover:bg-slate-50 w-full md:w-auto">Cancelar</button>
+                        <button class="bg-slate-900 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-slate-800 w-full md:w-auto">💾 Guardar Borrador</button>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
+                        <span class="bg-qble-orange text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">1</span> 
+                        Agregue materiales a su proyecto
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-3 mb-4">
+                        <button class="bg-white border border-slate-200 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚙️</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Cable<br>Control</span>
+                        </button>
+                        <button class="bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚡</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Variador<br>(VFD)</span>
+                        </button>
+                        <button class="bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">📡</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Instrum.</span>
+                        </button>
+                        <button class="bg-white border border-slate-200 hover:border-red-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🟥</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Monopolares</span>
+                        </button>
+                        <button class="bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🌐</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Redes / LAN</span>
+                        </button>
+                        <button class="bg-white border border-slate-200 hover:border-indigo-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🛡️</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Belden<br>NewGen</span>
+                        </button>
+                        <button class="bg-white border border-slate-200 hover:border-yellow-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🔌</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Kits<br>Harting</span>
+                        </button>
+                        <button class="bg-white border border-slate-200 hover:border-slate-700 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⛓️</span>
+                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Cadenas<br>Portacables</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 mt-4 flex flex-col md:flex-row gap-4 items-center">
+                        <div class="flex-shrink-0 text-2xl">✍️</div>
+                        <div class="flex-1 w-full">
+                            <input type="text" placeholder="¿No encontró lo que busca? Escriba aquí la marca, modelo o descripción libre..." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-qble-orange">
+                        </div>
+                        <div class="w-full md:w-32">
+                            <input type="number" placeholder="Cant." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none text-center">
+                        </div>
+                        <button class="w-full md:w-auto bg-slate-800 text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-slate-700 whitespace-nowrap">Añadir Especial</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-end mb-4">
+                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center">
+                            <span class="bg-qble-orange text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">2</span> Lista de Materiales (BOM)
+                        </h3>
+                    </div>
+                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center">
+                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📥</div>
+                        <h4 class="text-lg font-bold text-slate-700 mb-1">Tu proyecto está vacío</h4>
+                        <p class="text-sm text-slate-500 max-w-md mx-auto">Use los selectores o la caja de texto libre para agregar partidas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'cotizaciones'" class="space-y-6 max-w-7xl mx-auto" style="display: none;">
+                <div class="border-b border-slate-200 pb-6 flex justify-between items-end">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Cotizaciones Activas</h2>
+                        <p class="text-slate-500 mt-2 text-base">Apruebe para facturación, solicite modificaciones o clasifique las cotizaciones.</p>
+                    </div>
+                    <button class="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl shadow-md hover:bg-slate-800 transition-colors">+ Solicitar Nueva</button>
+                </div>
+
+                <div class="space-y-6 mt-6">
+                    <div class="bg-white rounded-2xl border border-emerald-200 p-6 shadow-sm hover:shadow-lg transition-shadow">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 border-b border-slate-100 pb-4">
+                            <div>
+                                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-3 py-1 rounded-md uppercase tracking-widest">Válida hasta 30/May/2026</span>
+                                <h3 class="text-2xl font-bold text-slate-900 mt-2">Cotización S09145 <span class="text-slate-400 font-normal text-lg ml-2">Tableros Fase 2</span></h3>
+                            </div>
+                            <div class="text-right mt-4 md:mt-0">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total MXN (Inc. IVA)</p>
+                                <p class="text-3xl font-black text-emerald-600">$18,450.00</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col md:flex-row gap-3 mt-4">
+                            <button class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg shadow-sm transition-colors text-sm uppercase tracking-widest">✔️ Aceptar y Procesar</button>
+                            <button @click="seccionActiva = 'soporte'" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-lg border border-slate-300 transition-colors text-sm uppercase tracking-widest">💬 Solicitar Modificación</button>
+                            <button class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-lg shadow-sm transition-colors text-sm uppercase tracking-widest">📄 Descargar PDF</button>
+                            <button @click="mostrarModalPerdida = true" class="md:w-auto px-6 bg-white hover:bg-red-50 text-red-500 font-bold py-3 rounded-lg border border-red-200 transition-colors text-sm uppercase tracking-widest">✖️ Rechazar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="mostrarModalPerdida" class="fixed inset-0 bg-slate-900 bg-opacity-50 z-50 flex items-center justify-center p-4" style="display: none;">
+                    <div class="bg-white rounded-2xl max-w-md w-full p-8 shadow-2xl">
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Clasificar como Perdida</h3>
+                        <p class="text-sm text-slate-500 mb-6">Ayúdenos a mejorar. ¿Cuál fue el motivo principal para no proceder con esta cotización?</p>
+                        
+                        <select class="w-full p-3 border border-slate-300 rounded-lg mb-4 text-slate-700 font-bold">
+                            <option value="">- Seleccione el motivo -</option>
+                            <option value="precio">Precio muy alto</option>
+                            <option value="tiempo">Tiempo de entrega largo</option>
+                            <option value="cancelado">Proyecto cancelado por el usuario final</option>
+                            <option value="competencia">Se compró con otro proveedor</option>
+                            <option value="tecnico">No cumplió la especificación técnica</option>
+                        </select>
+                        <textarea placeholder="Comentarios adicionales (opcional)..." rows="3" class="w-full p-3 border border-slate-300 rounded-lg mb-6 text-sm"></textarea>
+                        
+                        <div class="flex gap-3">
+                            <button @click="mostrarModalPerdida = false" class="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-lg">Cancelar</button>
+                            <button @click="mostrarModalPerdida = false" class="flex-1 bg-red-500 text-white font-bold py-3 rounded-lg shadow-md">Confirmar Rechazo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'logistica'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+                <div class="border-b border-slate-200 pb-6">
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Logística y Envíos</h2>
+                    <p class="text-slate-500 mt-2 text-base">Rastree sus pedidos en curso y descargue las evidencias de entrega (PoD).</p>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-black text-qble-orange uppercase tracking-[0.2em] mb-4">Pedidos en Curso</h3>
+                    
+                    <div class="bg-white rounded-2xl border border-blue-200 p-6 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                        <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Orden S09143</p>
+                                <h4 class="text-xl font-bold text-slate-900">Cableado VFD Extrusora</h4>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Entrega Estimada</p>
+                                <p class="text-lg font-bold text-blue-600">22 de Mayo, 2026</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between mt-8 mb-4 px-2 md:px-10">
+                            <div class="flex flex-col items-center relative w-1/3">
+                                <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-md z-10">✓</div>
+                                <p class="text-[10px] md:text-xs font-bold text-slate-800 mt-2 uppercase text-center">Confirmado</p>
+                                <div class="absolute top-4 left-1/2 w-full h-1 bg-blue-500"></div>
+                            </div>
+                            <div class="flex flex-col items-center relative w-1/3">
+                                <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-md z-10">✂️</div>
+                                <p class="text-[10px] md:text-xs font-bold text-slate-800 mt-2 uppercase text-center">Corte/Empaque</p>
+                                <div class="absolute top-4 left-1/2 w-full h-1 bg-slate-200"></div>
+                            </div>
+                            <div class="flex flex-col items-center relative w-1/3">
+                                <div class="w-8 h-8 bg-white border-2 border-slate-300 text-slate-300 rounded-full flex items-center justify-center font-bold z-10">🚚</div>
+                                <p class="text-[10px] md:text-xs font-bold text-slate-400 mt-2 uppercase text-center">En Tránsito</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Entregas Finalizadas (Evidencias)</h3>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-400 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4">Orden / Proyecto</th>
+                                    <th class="px-6 py-4">Fecha de Entrega</th>
+                                    <th class="px-6 py-4">Recibido por</th>
+                                    <th class="px-6 py-4 text-right">Evidencia</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4 font-bold text-slate-900">S08990 - Alimentación General</td>
+                                    <td class="px-6 py-4 text-slate-600">02/May/2026</td>
+                                    <td class="px-6 py-4 text-slate-600">Almacén (Firma: Juan P.)</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-qble-orange transition-colors">📄 Ver Acuse (PoD)</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'soporte'" class="space-y-6 max-w-4xl mx-auto" style="display: none;">
+                <div class="border-b border-slate-200 pb-6">
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Centro de Atención</h2>
+                    <p class="text-slate-500 mt-2 text-lg">Resolución rápida de dudas de ingeniería, envíos o facturación.</p>
+                </div>
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-12 text-center mt-8 relative overflow-hidden">
+                    <div class="text-7xl mb-6">💬</div>
+                    <h3 class="text-2xl font-bold text-slate-800">Inicia una conversación directa</h3>
+                    <p class="text-slate-500 mt-3 max-w-lg mx-auto text-base">Todo tu historial se queda guardado aquí mismo. Si nos escribes fuera de horario, tu ticket quedará abierto para el día siguiente.</p>
+                    <button onclick="if(typeof Tawk_API !== 'undefined'){ Tawk_API.maximize(); }" class="mt-8 bg-slate-900 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-slate-800 transition-colors transform active:scale-95 text-lg">
+                        Iniciar Conversación
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    
+<script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+
+    // 1. Ocultar el chat por defecto al cargar la página
+    Tawk_API.onLoad = function(){
+        Tawk_API.hideWidget();
+    };
+
+    // 2. Si el cliente presiona "minimizar", lo volvemos a ocultar por completo
+    Tawk_API.onChatMinimized = function(){
+        Tawk_API.hideWidget();
+    };
+
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6a0cc33bb520821c40f07840/1jp0tl7s5';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+</script>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Mando | QBLE Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f1f5f9; }
+        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
+        .text-qble-orange { color: #F58220; }
+        .bg-qble-orange { background-color: #F58220; }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(245, 130, 32, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(245, 130, 32, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(245, 130, 32, 0); }
+        }
+        .live-indicator { animation: pulse-ring 2s infinite; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-slate-800" x-data="{ menuAbierto: true, seccionActiva: 'cotizador', filtroChat: 'todos' }">
+
+    <aside class="w-64 bg-slate-950 text-slate-300 flex flex-col transition-all duration-300 shadow-2xl z-20 border-r border-slate-800" :class="menuAbierto ? 'w-64' : 'w-20'">
+        <div class="h-20 flex items-center justify-center border-b border-slate-800 bg-black bg-opacity-20">
+            <h2 class="font-extrabold text-2xl tracking-widest text-qble-orange" x-show="menuAbierto">QBLE<span class="text-white text-sm font-light tracking-normal ml-1">ADMIN</span></h2>
+            <h2 class="font-extrabold text-2xl text-qble-orange" x-show="!menuAbierto">QA</h2>
+        </div>
+        
+        <div class="px-4 py-4 border-b border-slate-800" x-show="menuAbierto">
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Usuario Activo</p>
+            <div class="flex items-center">
+                <div class="w-8 h-8 rounded-full bg-qble-orange text-white font-bold flex items-center justify-center text-xs mr-3">JM</div>
+                <div>
+                    <p class="text-sm font-bold text-white leading-tight">Juan Manuel</p>
+                    <p class="text-xs text-slate-400">Director General</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 mt-2 px-2" x-show="menuAbierto">Operación en Vivo</p>
+            <button @click="seccionActiva = 'radar'" :class="seccionActiva === 'radar' ? 'bg-slate-800 text-white' : 'hover:bg-slate-900 hover:text-white'" class="w-full flex items-center px-4 py-2.5 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">📡</span><span class="ml-3" x-show="menuAbierto">Radar de Clientes</span>
+            </button>
+            <button @click="seccionActiva = 'chat'" :class="seccionActiva === 'chat' ? 'bg-slate-800 text-white' : 'hover:bg-slate-900 hover:text-white'" class="w-full flex items-center px-4 py-2.5 rounded-lg font-bold text-sm transition-all relative">
+                <span class="text-lg">💬</span><span class="ml-3" x-show="menuAbierto">Bandeja de Chats</span>
+                <span class="absolute right-4 w-5 h-5 bg-red-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold" x-show="menuAbierto">3</span>
+            </button>
+
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 mt-6 px-2" x-show="menuAbierto">Gestión de Ventas</p>
+            <button @click="seccionActiva = 'cotizador'" :class="seccionActiva === 'cotizador' ? 'bg-slate-800 text-white' : 'hover:bg-slate-900 hover:text-white'" class="w-full flex items-center px-4 py-2.5 rounded-lg font-bold text-sm transition-all relative">
+                <span class="text-lg">💰</span><span class="ml-3" x-show="menuAbierto">Cotizaciones (SLA)</span>
+                <span class="absolute right-4 w-3 h-3 bg-red-500 rounded-full live-indicator" x-show="menuAbierto"></span>
+            </button>
+            <button @click="seccionActiva = 'reportes'" :class="seccionActiva === 'reportes' ? 'bg-slate-800 text-white' : 'hover:bg-slate-900 hover:text-white'" class="w-full flex items-center px-4 py-2.5 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">👥</span><span class="ml-3" x-show="menuAbierto">Reportes y Adopción</span>
+            </button>
+
+            <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 mt-6 px-2" x-show="menuAbierto">Administración</p>
+            <button @click="seccionActiva = 'logistica'" :class="seccionActiva === 'logistica' ? 'bg-slate-800 text-white' : 'hover:bg-slate-900 hover:text-white'" class="w-full flex items-center px-4 py-2.5 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">📦</span><span class="ml-3" x-show="menuAbierto">Logística y Despacho</span>
+            </button>
+            <button @click="seccionActiva = 'finanzas'" :class="seccionActiva === 'finanzas' ? 'bg-slate-800 text-white' : 'hover:bg-slate-900 hover:text-white'" class="w-full flex items-center px-4 py-2.5 rounded-lg font-bold text-sm transition-all">
+                <span class="text-lg">📈</span><span class="ml-3" x-show="menuAbierto">Cobranza y Finanzas</span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-slate-100 relative">
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10 shadow-sm">
+            <button @click="menuAbierto = !menuAbierto" class="text-slate-500 hover:text-slate-800 text-xl transition-colors">☰</button>
+            <div class="flex items-center space-x-6">
+                <div class="relative hidden md:block w-64">
+                    <input type="text" placeholder="Buscar cliente, cotización..." class="w-full bg-slate-100 text-sm font-medium px-4 py-2 rounded-full border-none focus:ring-2 focus:ring-qble-orange outline-none">
+                </div>
+                <div class="flex items-center text-xs font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+                    <span class="mr-2">🟢</span> Odoo Sincronizado
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8 relative">
+            
+            <div x-show="seccionActiva === 'radar'" class="space-y-6 max-w-7xl mx-auto" style="display: none;">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Radar de Actividad (Monitor)</h2>
+                        <p class="text-slate-500 mt-1">Vigila quién está usando tu portal en este momento y adelántate a sus necesidades.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded uppercase tracking-wider flex items-center">
+                                <div class="w-2 h-2 bg-emerald-500 rounded-full mr-2 live-indicator"></div>
+                                En línea AHORA
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-xl">Roberto Linares</h4>
+                        <p class="text-sm text-slate-500 mb-4">KUKA México</p>
+                        <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100 font-medium">
+                            <span class="font-bold">Acción actual:</span> Viendo Cotización S09145
+                        </p>
+                        <button @click="seccionActiva = 'chat'" class="w-full mt-4 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs uppercase tracking-widest transition-colors">Abrir Chat</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded uppercase tracking-wider flex items-center">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full mr-2 live-indicator"></div>
+                                En línea AHORA
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-xl">Ana Pérez</h4>
+                        <p class="text-sm text-slate-500 mb-4">Flex Automotriz</p>
+                        <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100 font-medium">
+                            <span class="font-bold">Acción actual:</span> Usando Selector (Cable Control)
+                        </p>
+                        <button @click="seccionActiva = 'chat'" class="w-full mt-4 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 rounded-lg text-xs uppercase tracking-widest transition-colors">Abrir Chat</button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden opacity-75">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="text-[10px] font-black text-slate-500 bg-slate-100 px-3 py-1 rounded uppercase tracking-wider">Desconectado</span>
+                            <span class="text-xs text-slate-400">Hace 45 min</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-xl">Compras</h4>
+                        <p class="text-sm text-slate-500 mb-4">Thinskani Constructora</p>
+                        <p class="text-xs text-slate-600 bg-slate-50 p-3 rounded-lg border border-slate-100 font-medium">
+                            <span class="font-bold">Última acción:</span> Descargó Estado de Cuenta
+                        </p>
+                        <button class="w-full mt-4 bg-white border border-slate-300 text-slate-600 font-bold py-2 rounded-lg text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">Ver Perfil</button>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'cotizador'" class="space-y-8 max-w-7xl mx-auto">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Gestión de Cotizaciones</h2>
+                    <p class="text-slate-500 mt-1">Cumplimiento de tiempos de respuesta (SLA 2hrs) y seguimiento de cierres de venta.</p>
+                </div>
+
+                <div>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center">
+                        <span class="text-red-500 mr-2 text-lg">⏱️</span> Modificaciones Pendientes (SLA: 2 Horas Máximo)
+                    </h3>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4">Cliente / Proyecto</th>
+                                    <th class="px-6 py-4">Solicitud de Cambio</th>
+                                    <th class="px-6 py-4 text-center">Tiempo Transcurrido</th>
+                                    <th class="px-6 py-4 text-right">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="bg-red-50 hover:bg-red-100 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900">Ing. Mantenimiento - Grupo Modelo</div>
+                                        <div class="text-slate-500 text-xs">Cot. S09142 - Línea de Embotellado</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-700">Cambio de Calibre</div>
+                                        <div class="text-slate-500 text-xs">"Ocupo que suban el cable VFD a 4G16"</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="bg-red-500 text-white text-xs font-black px-3 py-1.5 rounded-md shadow-sm">2h 45m (VENCIDO)</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-qble-orange transition-colors">Ajustar Precios</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900">Roberto Linares - KUKA México</div>
+                                        <div class="text-slate-500 text-xs">Cot. S09145 - Tableros Control Fase 2</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-700">Ajuste de Cantidades</div>
+                                        <div class="text-slate-500 text-xs">"Bajamos los conectores Harting a 10 kits"</div>
+                                    </td>
+                                    <td class="px-6 py-4 text-center">
+                                        <span class="bg-amber-400 text-amber-900 text-xs font-black px-3 py-1.5 rounded-md shadow-sm">1h 15m (En Riesgo)</span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-qble-orange transition-colors">Ajustar Precios</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center">
+                        <span class="text-qble-orange mr-2 text-lg">🎯</span> Enfoque de Cierre (Cotizaciones Enviadas)
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        
+                        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm relative hover:shadow-md transition-shadow">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider">Abierta hace 5 días</span>
+                                <span class="text-slate-400 font-bold">S08990</span>
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-lg mb-1">Constructora Thinskani</h4>
+                            <p class="text-2xl font-black text-emerald-600 mb-4">$112,400 <span class="text-xs font-medium text-slate-500">MXN</span></p>
+                            <p class="text-xs text-slate-500 mb-6 border-l-2 border-slate-300 pl-2">"El cliente dijo que lo autorizaban el viernes. Toca llamar hoy."</p>
+                            <div class="flex space-x-2">
+                                <button class="flex-1 bg-qble-orange text-white text-xs font-bold py-2 rounded shadow-sm hover:bg-orange-600">🔔 Recordar</button>
+                                <button class="flex-1 bg-slate-100 text-slate-600 border border-slate-300 text-xs font-bold py-2 rounded hover:bg-slate-200">Ganada</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'logistica'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Logística y Despacho</h2>
+                    <p class="text-slate-500 mt-1">Control de pedidos pendientes de entrega y validación de evidencias.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4">Orden / Cliente</th>
+                                <th class="px-6 py-4">Destino</th>
+                                <th class="px-6 py-4">Estatus Interno</th>
+                                <th class="px-6 py-4 text-right">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900">S09143 - KUKA México</div>
+                                    <div class="text-slate-500 text-xs">Cableado VFD Extrusora</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-700">Planta Silao</div>
+                                    <div class="text-slate-500 text-xs">Guanajuato</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full border border-blue-200">✂️ En Corte/Empaque</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-qble-orange transition-colors">Marcar 'Enviado' 🚚</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900">S08990 - Alimentación General</div>
+                                    <div class="text-slate-500 text-xs">Thinskani</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-700">Obra Guadalajara</div>
+                                    <div class="text-slate-500 text-xs">Jalisco</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1 rounded-full border border-slate-200">🚚 En Tránsito</span>
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="bg-white border border-slate-300 text-slate-700 text-xs font-bold px-4 py-2 rounded shadow-sm hover:bg-slate-50 transition-colors">Subir PoD</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'finanzas'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Cobranza y Finanzas</h2>
+                    <p class="text-slate-500 mt-1">Panorama general de cuentas por cobrar y líneas de crédito.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl border border-red-200 p-6 shadow-sm">
+                        <h3 class="text-xs font-black text-red-500 uppercase tracking-widest mb-2">Cartera Vencida (> 30 días)</h3>
+                        <p class="text-3xl font-black text-slate-800">$125,800.00</p>
+                        <button class="mt-4 text-red-600 font-bold text-sm hover:underline">Ver detalle de clientes ➔</button>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-amber-200 p-6 shadow-sm">
+                        <h3 class="text-xs font-black text-amber-500 uppercase tracking-widest mb-2">Por Vencer (Esta Semana)</h3>
+                        <p class="text-3xl font-black text-slate-800">$84,200.00</p>
+                        <button class="mt-4 text-amber-600 font-bold text-sm hover:underline">Programar recordatorios automáticos ➔</button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-8">
+                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                        <h3 class="font-bold text-slate-800">Pagos Recientes (Por Conciliar)</h3>
+                    </div>
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-white text-slate-400 text-[10px] uppercase tracking-widest font-black border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-4">Cliente</th>
+                                <th class="px-6 py-4">Factura Relacionada</th>
+                                <th class="px-6 py-4">Monto Pagado</th>
+                                <th class="px-6 py-4 text-right">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50">
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4 font-bold text-slate-900">Flex Automotriz</td>
+                                <td class="px-6 py-4 text-slate-500">FAC-2026-0412</td>
+                                <td class="px-6 py-4 font-bold text-emerald-600">$45,000.00</td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-emerald-600 transition-colors">Conciliar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'reportes'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Reporte de Clientes y Adopción</h2>
+                        <p class="text-slate-500 mt-1">Identifica quién usa tu portal B2B y quién necesita ayuda para ingresar.</p>
+                    </div>
+                    <button class="bg-white border border-slate-300 text-slate-700 font-bold px-4 py-2 rounded shadow-sm hover:bg-slate-50">📥 Exportar a Excel</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex items-center">
+                        <div class="text-4xl mr-4">📈</div>
+                        <div>
+                            <p class="text-xs font-black text-slate-400 uppercase tracking-widest">Tasa de Adopción</p>
+                            <p class="text-2xl font-black text-slate-800">78% <span class="text-sm font-medium text-emerald-500">+12% este mes</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex items-center">
+                        <div class="text-4xl mr-4">🛠️</div>
+                        <div>
+                            <p class="text-xs font-black text-slate-400 uppercase tracking-widest">BOMs Generados Solos</p>
+                            <p class="text-2xl font-black text-slate-800">45 <span class="text-sm font-medium text-slate-500">Proyectos</span></p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-red-100 p-6 shadow-sm flex items-center">
+                        <div class="text-4xl mr-4">⚠️</div>
+                        <div>
+                            <p class="text-xs font-black text-red-400 uppercase tracking-widest">Clientes Inactivos</p>
+                            <p class="text-2xl font-black text-red-600">8 <span class="text-sm font-medium text-red-400">Nunca han entrado</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-4">Cliente / Empresa</th>
+                                <th class="px-6 py-4">Última Conexión</th>
+                                <th class="px-6 py-4">Historial en el Portal</th>
+                                <th class="px-6 py-4 text-right">Estatus y Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-900">Ing. Roberto Linares</div>
+                                    <div class="text-slate-500 text-xs">KUKA México</div>
+                                </td>
+                                <td class="px-6 py-4 text-emerald-600 font-bold">Hace 2 horas</td>
+                                <td class="px-6 py-4 text-xs text-slate-600">
+                                    • Creó 3 proyectos BOM nuevos.<br>
+                                    • Descargó 5 fichas técnicas.
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-black px-2 py-1 rounded uppercase tracking-wider block mb-2 text-center w-24 ml-auto">Muy Activo</span>
+                                    <button class="text-qble-orange text-xs font-bold hover:underline">Ver Perfil</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'chat'" class="space-y-6 max-w-7xl mx-auto h-full flex flex-col" style="display: none;">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Centro de Comunicaciones (Tawk.to)</h2>
+                    <p class="text-slate-500 mt-1">Gestión de tickets en vivo separados por departamento para no mezclar temas.</p>
+                </div>
+                
+                <div class="bg-white flex-1 rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden min-h-[600px]">
+                    
+                    <div class="flex border-b border-slate-200 bg-slate-50 px-4 pt-4">
+                        <button @click="filtroChat = 'todos'" :class="filtroChat === 'todos' ? 'border-qble-orange text-qble-orange bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'" class="px-6 py-3 font-bold text-sm border-b-2 transition-colors">
+                            Todos los Chats
+                        </button>
+                        <button @click="filtroChat = 'cotizaciones'" :class="filtroChat === 'cotizaciones' ? 'border-blue-500 text-blue-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'" class="px-6 py-3 font-bold text-sm border-b-2 transition-colors flex items-center">
+                            ⚙️ Cotizaciones y Proyectos <span class="bg-blue-100 text-blue-700 ml-2 px-2 py-0.5 rounded-full text-[10px]">2</span>
+                        </button>
+                        <button @click="filtroChat = 'finanzas'" :class="filtroChat === 'finanzas' ? 'border-emerald-500 text-emerald-600 bg-white' : 'border-transparent text-slate-500 hover:text-slate-800'" class="px-6 py-3 font-bold text-sm border-b-2 transition-colors flex items-center">
+                            💳 Finanzas y Cobranza <span class="bg-emerald-100 text-emerald-700 ml-2 px-2 py-0.5 rounded-full text-[10px]">1</span>
+                        </button>
+                    </div>
+
+                    <div class="flex-1 flex overflow-hidden">
+                        <div class="w-1/3 border-r border-slate-200 bg-slate-50 overflow-y-auto">
+                            <div x-show="filtroChat === 'todos' || filtroChat === 'cotizaciones'" class="p-4 border-b border-slate-200 bg-blue-50 cursor-pointer border-l-4 border-l-blue-500">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="font-bold text-slate-900 text-sm">Roberto Linares (KUKA)</h4>
+                                    <span class="text-[10px] font-bold text-blue-600">AHORA</span>
+                                </div>
+                                <p class="text-[10px] font-black text-blue-500 uppercase mb-1">Canal: Ingeniería</p>
+                                <p class="text-xs text-slate-600 truncate font-bold">"Carlos, el cable VFD lo ocupo para..."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 flex flex-col bg-white">
+                            <div class="h-16 border-b border-slate-200 flex justify-between items-center px-6 bg-blue-50">
+                                <div>
+                                    <h3 class="font-bold text-slate-800">Roberto Linares - KUKA México</h3>
+                                    <p class="text-xs text-slate-500 font-bold text-blue-600">Tema: Modificación de Proyecto (Cotizaciones)</p>
+                                </div>
+                                <span class="bg-blue-100 text-blue-700 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Asignado a Carlos</span>
+                            </div>
+                            
+                            <div class="flex-1 p-6 overflow-y-auto space-y-4 bg-slate-50">
+                                <div class="flex flex-col items-center mb-6">
+                                    <span class="text-xs font-bold text-slate-400 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">Hoy, 10:42 AM</span>
+                                </div>
+                                
+                                <div class="flex items-start">
+                                    <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center font-bold text-slate-500 text-xs mr-3 flex-shrink-0">RL</div>
+                                    <div class="bg-white p-3 rounded-lg rounded-tl-none shadow-sm border border-slate-200 max-w-md">
+                                        <p class="text-sm text-slate-700">Carlos, el cable VFD lo ocupo para un motor de 50HP, ¿el calibre 4G16 es suficiente o subimos a 4G25?</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start justify-end mt-4">
+                                    <div class="bg-blue-600 text-white p-3 rounded-lg rounded-tr-none shadow-sm max-w-md">
+                                        <p class="text-sm">Hola Roberto, con 4G16 estamos perfectos para 50HP según norma. Te ajusto la cotización en el portal en 2 minutos para que la apruebes.</p>
+                                    </div>
+                                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center font-bold text-white text-xs ml-3 flex-shrink-0">CM</div>
+                                </div>
+                            </div>
+                            
+                            <div class="p-4 border-t border-slate-200 bg-white">
+                                <div class="flex items-center bg-slate-100 rounded-lg p-1 border border-slate-200">
+                                    <input type="text" placeholder="Escribe tu respuesta técnica a Roberto..." class="flex-1 bg-transparent p-3 text-sm outline-none">
+                                    <button class="bg-blue-600 text-white px-6 py-2 rounded font-bold text-sm shadow hover:bg-blue-700 transition-colors">Enviar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>
