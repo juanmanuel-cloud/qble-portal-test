@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Configurador QBLE - Redes Industriales y LAN (Completo)</title>
+
+</head>
+
+<body style="background-color: #f1f5f9; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif;">
+
+<div style="max-width: 1050px; margin: 0 auto; padding-bottom: 20px;">
+        <a href="index.html?s=herramientas" style="color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#0d9488'" onmouseout="this.style.color='#64748b'">
+            <span style="margin-right: 5px;">←</span> Volver a la Suite QBLE
+        </a>
+    </div>
+
+<div style="max-width: 1050px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #0d9488;">
+
+<div style="text-align: left; margin-bottom: 30px;">
+
+<h2 style="color: #0f172a; margin-bottom: 5px; text-transform: uppercase; font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">SELECTOR DE REDES (INDUSTRIAL Y LAN)</h2>
+
+<p style="color: #64748b; font-size: 15px;">Encuentre cables de red, conectores y patch cords para automatización (Profinet), cuartos de control y oficinas.</p>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+
+<div style="display: flex; flex-direction: column;">
+
+<label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">Categoría / Tipo</label>
+
+<select id="filtro-categoria" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+<option value="Todos">Todos</option>
+
+<option value="Cat 5e">Cat 5e (Hasta 1 Gbps)</option>
+
+<option value="Cat 6">Cat 6 (Hasta 1 Gbps / 250 MHz)</option>
+
+<option value="Cat 6a">Cat 6a (10 Gbps / 500 MHz)</option>
+
+<option value="Cat 7">Cat 7 (10 Gbps / 600 MHz)</option>
+
+<option value="Cat 7e">Cat 7e (10 Gbps / 1000 MHz)</option>
+
+<option value="Patch Cords Industriales">Patch Cords (Armados)</option>
+
+<option value="Conectores RJ45">Conectores RJ45 (Sueltos)</option>
+
+</select>
+
+</div>
+
+<div style="display: flex; flex-direction: column;">
+
+<label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">Construcción</label>
+
+<select id="filtro-pares" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+<option value="Todos">Todos</option>
+
+<option value="2 Pares (4 Hilos)">2 Pares (4 Hilos) - Profinet</option>
+
+<option value="4 Pares (8 Hilos)">4 Pares (8 Hilos) - Gigabit</option>
+
+<option value="Cable Armado (RJ45-RJ45)">Cable Armado (RJ45-RJ45)</option>
+
+<option value="Conector (4 Pines)">Conector (4 Pines) - Profinet</option>
+
+<option value="Conector (8 Pines)">Conector (8 Pines) - Ethernet</option>
+
+</select>
+
+</div>
+
+<div style="display: flex; flex-direction: column;">
+
+<label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">Entorno / Longitud</label>
+
+<select id="filtro-entorno" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+<option value="Todos">Todos</option>
+
+<option value="LAN / Comercial (Oficina)">LAN / Comercial (Oficinas)</option>
+
+<option value="Industrial Estándar">Industrial Estándar (Planta)</option>
+
+<option value="600V">600V (Apto Charola de Fuerza)</option>
+
+<option value="0.15 m">0.15 m</option>
+
+<option value="0.25 m">0.25 m</option>
+
+<option value="0.5 m">0.5 m</option>
+
+<option value="1.0 m">1.0 m</option>
+
+<option value="1.5 m">1.5 m</option>
+
+<option value="2.0 m">2.0 m</option>
+
+<option value="3.0 m">3.0 m</option>
+
+<option value="5.0 m">5.0 m</option>
+
+<option value="7.5 m">7.5 m</option>
+
+<option value="10.0 m">10.0 m</option>
+
+<option value="15.0 m">15.0 m</option>
+
+<option value="N/A (Accesorio)">N/A (Accesorio)</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div id="mensaje-inicial" style="text-align: center; padding: 20px; border: 1px dashed #cbd5e1; border-radius: 8px; margin-bottom: 30px; background-color: #f8fafc;">
+
+<p style="color: #64748b; margin: 0; font-size: 14px; font-weight: 500;"><span style="margin-right: 8px; font-size: 16px;">🌐</span> Seleccione los 3 filtros para revelar el cable, conector o patch cord exacto.</p>
+
+</div>
+
+<div id="contenedor-resultados" style="display: none; margin-bottom: 30px;">
+
+<div style="border: 1px solid #1e293b; border-radius: 8px; overflow: hidden;">
+
+<table style="width: 100%; border-collapse: collapse; background: #0f172a;">
+
+<thead>
+
+<tr style="color: #ffffff; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">
+
+<th style="padding: 15px; text-align: left; width: 15%;">REF / P/N</th>
+
+<th style="padding: 15px; text-align: left; width: 30%;">MODELO / MEDIDA</th>
+
+<th style="padding: 15px; text-align: left; width: 15%;">FAMILIA</th>
+
+<th style="padding: 15px; text-align: center; width: 20%;">CANTIDAD</th>
+
+<th style="padding: 15px; text-align: right; width: 20%;">ACCIÓN</th>
+
+</tr>
+
+</thead>
+
+</table>
+
+<div style="max-height: 400px; overflow-y: auto; background: #ffffff;">
+
+<table style="width: 100%; border-collapse: collapse;">
+
+<tbody id="tabla-resultados">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="seccion-carrito" style="display: none; background: #ffffff; padding: 25px; border-radius: 12px; border: 2px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-top: 40px;">
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+
+<div>
+
+<h3 style="color: #0f172a; margin: 0 0 5px 0; font-size: 22px; text-transform: uppercase; display: flex; align-items: center;">
+
+<span style="background: #0d9488; color: white; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 16px; margin-right: 12px;" id="contador-items">0</span>
+
+MI LISTA DE REDES
+
+</h3>
+
+<p style="color: #64748b; font-size: 13px; margin: 0;">Revise los modelos y cantidades antes de solicitar su presupuesto formal.</p>
+
+</div>
+
+<button onclick="enviarPorCorreo()" style="background: #0d9488; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.3); transition: transform 0.2s;">
+
+COTIZACIÓN FORMAL ✉️
+
+</button>
+
+</div>
+
+<div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+
+<table style="width: 100%; border-collapse: collapse; background: #fff;">
+
+<thead style="background: #f8fafc;">
+
+<tr style="border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">
+
+<th style="padding: 15px; text-align: left;">Modelo Seleccionado</th>
+
+<th style="padding: 15px; text-align: center;">Cantidad Solicitada</th>
+
+<th style="padding: 15px; text-align: right;">Eliminar</th>
+
+</tr>
+
+</thead>
+
+<tbody id="lista-carrito"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+// ==========================================
+
+// BASE DE DATOS DE ETHERNET INDUSTRIAL, LAN Y ACCESORIOS
+
+// ==========================================
+
+const baseDeDatos = [
+
+// --- CABLES INDUSTRIALES ---
+
+{
+
+ref: "800068", familia: "HELUKAT PROFInet (Fijo)", categoria: "Cat 5e",
+
+categoria_label: "Cat 5e (Blindado)", pares: "2 Pares (4 Hilos)",
+
+entorno: "Industrial Estándar", unidad: "Metros"
+
+},
+
+{
+
+ref: "800654", familia: "HELUKAT PROFInet (Movimiento / Tipo C)", categoria: "Cat 5e",
+
+categoria_label: "Cat 5e (Blindado PUR)", pares: "2 Pares (4 Hilos)",
+
+entorno: "Industrial Estándar", unidad: "Metros"
+
+},
+
+{
+
+ref: "803387", familia: "HELUKAT Industrial", categoria: "Cat 6",
+
+categoria_label: "Cat 6 (Blindado)", pares: "4 Pares (8 Hilos)",
+
+entorno: "Industrial Estándar", unidad: "Metros"
+
+},
+
+{
+
+ref: "805123", familia: "HELUKAT Industrial", categoria: "Cat 6a",
+
+categoria_label: "Cat 6a (Blindado)", pares: "4 Pares (8 Hilos)",
+
+entorno: "Industrial Estándar", unidad: "Metros"
+
+},
+
+{
+
+ref: "802184", familia: "HELUKAT Industrial", categoria: "Cat 7",
+
+categoria_label: "Cat 7 (Blindado)", pares: "4 Pares (8 Hilos)",
+
+entorno: "Industrial Estándar", unidad: "Metros"
+
+},
+
+{
+
+ref: "801197", familia: "HELUKAT 600V Aprobado", categoria: "Cat 7e",
+
+categoria_label: "Cat 7e (Blindado UL)", pares: "4 Pares (8 Hilos)",
+
+entorno: "600V", unidad: "Metros"
+
+},
+
+// --- CABLES LAN / COMERCIALES ---
+
+{
+
+ref: "82501", familia: "HELUKAT LAN Blindado", categoria: "Cat 5e",
+
+categoria_label: "Cat 5e (Blindado F/UTP)", pares: "4 Pares (8 Hilos)",
+
+entorno: "LAN / Comercial (Oficina)", unidad: "Metros"
+
+},
+
+{
+
+ref: "2412", familia: "Belden LAN Clásico", categoria: "Cat 6",
+
+categoria_label: "Cat 6 (No Blindado UTP)", pares: "4 Pares (8 Hilos)",
+
+entorno: "LAN / Comercial (Oficina)", unidad: "Bobinas (1000 ft)"
+
+},
+
+{
+
+ref: "2412FS", familia: "Belden LAN Blindado", categoria: "Cat 6",
+
+categoria_label: "Cat 6 (Blindado F/UTP)", pares: "4 Pares (8 Hilos)",
+
+entorno: "LAN / Comercial (Oficina)", unidad: "Bobinas (1000 ft)"
+
+},
+
+// --- PATCH CORDS ARMADOS (AHORA EL ENTORNO ES LA MEDIDA) ---
+
+{ ref: "11007747", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "0.15 m", unidad: "Piezas" },
+
+{ ref: "11007748", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "0.25 m", unidad: "Piezas" },
+
+{ ref: "11007749", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "0.5 m", unidad: "Piezas" },
+
+{ ref: "11007750", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "1.0 m", unidad: "Piezas" },
+
+{ ref: "11007751", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "1.5 m", unidad: "Piezas" },
+
+{ ref: "11007752", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "2.0 m", unidad: "Piezas" },
+
+{ ref: "11007753", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "3.0 m", unidad: "Piezas" },
+
+{ ref: "11007754", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "5.0 m", unidad: "Piezas" },
+
+{ ref: "11007755", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "7.5 m", unidad: "Piezas" },
+
+{ ref: "11007756", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "10.0 m", unidad: "Piezas" },
+
+{ ref: "11007757", familia: "Patch Cord HELUKAT", categoria: "Patch Cords Industriales", categoria_label: "Patch Cord Profinet", pares: "Cable Armado (RJ45-RJ45)", entorno: "15.0 m", unidad: "Piezas" },
+
+// --- CONECTORES SUELTOS ---
+
+{
+
+ref: "804544", familia: "Accesorio HELUKAT", categoria: "Conectores RJ45",
+
+categoria_label: "Conector Ethernet Industrial", pares: "Conector (8 Pines)",
+
+entorno: "N/A (Accesorio)", unidad: "Piezas"
+
+},
+
+{
+
+ref: "11024689", familia: "Accesorio HELUKAT", categoria: "Conectores RJ45",
+
+categoria_label: "Conector Profinet Industrial", pares: "Conector (4 Pines)",
+
+entorno: "N/A (Accesorio)", unidad: "Piezas"
+
+}
+
+];
+
+let carrito = [];
+
+// ==========================================
+
+// LÓGICA DE FILTROS DEPENDIENTES / CASCADA
+
+// ==========================================
+
+function manejarFiltrosDinamicos() {
+
+const valCat = document.getElementById("filtro-categoria").value;
+
+const valPar = document.getElementById("filtro-pares").value;
+
+const valEnt = document.getElementById("filtro-entorno").value;
+
+const haceMatch = (cable, testCat, testPar, testEnt) => {
+
+return (testCat === "Todos" || cable.categoria === testCat) &&
+
+(testPar === "Todos" || cable.pares === testPar) &&
+
+(testEnt === "Todos" || cable.entorno === testEnt);
+
+};
+
+const validCat = new Set(baseDeDatos.filter(c => haceMatch(c, "Todos", valPar, valEnt)).map(c => c.categoria));
+
+const validPar = new Set(baseDeDatos.filter(c => haceMatch(c, valCat, "Todos", valEnt)).map(c => c.pares));
+
+const validEnt = new Set(baseDeDatos.filter(c => haceMatch(c, valCat, valPar, "Todos")).map(c => c.entorno));
+
+actualizarSelect("filtro-categoria", validCat);
+
+actualizarSelect("filtro-pares", validPar);
+
+actualizarSelect("filtro-entorno", validEnt);
+
+filtrarCables();
+
+}
+
+function actualizarSelect(id, setValido) {
+
+const select = document.getElementById(id);
+
+let actualVal = select.value;
+
+let seleccionValida = false;
+
+Array.from(select.options).forEach(opt => {
+
+if (opt.value === "Todos" || setValido.has(opt.value)) {
+
+opt.style.display = "";
+
+opt.disabled = false;
+
+if (opt.value === actualVal) seleccionValida = true;
+
+} else {
+
+opt.style.display = "none";
+
+opt.disabled = true;
+
+}
+
+});
+
+if (!seleccionValida) {
+
+select.value = "Todos";
+
+}
+
+}
+
+// ==========================================
+
+// LÓGICA DE DIBUJO DE RESULTADOS
+
+// ==========================================
+
+function filtrarCables() {
+
+const cCat = document.getElementById("filtro-categoria").value;
+
+const cPar = document.getElementById("filtro-pares").value;
+
+const cEnt = document.getElementById("filtro-entorno").value;
+
+const contenedorResultados = document.getElementById("contenedor-resultados");
+
+const tbody = document.getElementById("tabla-resultados");
+
+const mensajeInicial = document.getElementById("mensaje-inicial");
+
+if (cCat === "Todos" || cPar === "Todos" || cEnt === "Todos") {
+
+contenedorResultados.style.display = "none";
+
+mensajeInicial.style.display = "block";
+
+mensajeInicial.innerHTML = `<p style="color: #64748b; margin: 0; font-size: 14px; font-weight: 500;"><span style="margin-right: 8px; font-size: 16px;">🌐</span> Seleccione los 3 filtros para revelar el cable, conector o patch cord exacto.</p>`;
+
+return;
+
+}
+
+const res = baseDeDatos.filter(cable => {
+
+return cable.categoria === cCat &&
+
+cable.pares === cPar &&
+
+cable.entorno === cEnt;
+
+});
+
+mensajeInicial.style.display = "none";
+
+contenedorResultados.style.display = "block";
+
+tbody.innerHTML = "";
+
+if (res.length > 0) {
+
+res.forEach(item => {
+
+// Turquesa por defecto (Helukabel)
+
+let badgeStyle = "background: #0d9488; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;";
+
+// Color distinto para familias especiales
+
+if (item.familia.includes("Movimiento")) {
+
+badgeStyle = "background: #f59e0b; color: #0f172a; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; text-transform: uppercase;";
+
+} else if (item.familia.includes("Accesorio") || item.familia.includes("Patch Cord")) {
+
+badgeStyle = "background: #1e293b; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; text-transform: uppercase;"; // Gris oscuro
+
+} else if (item.familia.includes("Belden")) {
+
+badgeStyle = "background: #1e3a8a; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; text-transform: uppercase;"; // Azul marino
+
+}
+
+// Ajuste de valor inicial según la unidad
+
+let valorInicial = (item.unidad === "Piezas" || item.unidad.includes("Bobinas")) ? "1" : "100";
+
+// Para mostrar la longitud correctamente en la tabla si es Patch Cord
+
+let displayModelo = item.categoria === "Patch Cords Industriales" ? `${item.categoria_label} (${item.entorno})` : item.categoria_label;
+
+tbody.innerHTML += `
+
+<tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+
+<td style="padding: 15px; font-style: italic; color: #94a3b8; font-size: 12px; width: 15%;">P/N ${item.ref}</td>
+
+<td style="padding: 15px; font-weight: 800; color: #0d9488; font-size: 15px; width: 30%;">${displayModelo}<br><span style="font-size: 11px; color: #64748b; font-weight: 600;">${item.pares}</span></td>
+
+<td style="padding: 15px; width: 15%;"><span style="${badgeStyle}">${item.familia}</span></td>
+
+<td style="padding: 15px; text-align: center; width: 20%;">
+
+<div style="display: inline-flex; align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 2px 10px;">
+
+<input type="number" id="qty-${item.ref}" value="${valorInicial}" min="1" step="1" style="width: 50px; padding: 6px 0; border: none; outline: none; text-align: center; font-weight: 700; color: #0f172a;">
+
+<span style="color: #64748b; font-size: 11px; margin-left: 8px; font-weight: 600; text-transform: uppercase;">${item.unidad}</span>
+
+</div>
+
+</td>
+
+<td style="padding: 15px; text-align: right; width: 20%;">
+
+<button onclick="agregarAlCarrito('${item.ref}', this)" style="background: transparent; color: #0d9488; border: 2px solid #0d9488; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;">
+
+AÑADIR 📦
+
+</button>
+
+</td>
+
+</tr>`;
+
+});
+
+} else {
+
+tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 50px 20px; color: #ef4444; font-weight: bold;">⚠️ No hay modelos que cumplan exactamente con esta combinación.</td></tr>`;
+
+}
+
+}
+
+// ==========================================
+
+// LÓGICA DEL CARRITO Y RESET AUTOMÁTICO
+
+// ==========================================
+
+function agregarAlCarrito(ref, btnElement) {
+
+const item = baseDeDatos.find(i => i.ref === ref);
+
+const qty = document.getElementById(`qty-${ref}`).value;
+
+if(qty <= 0 || qty === "") {
+
+alert("Por favor ingrese una cantidad válida.");
+
+return;
+
+}
+
+const existe = carrito.find(c => c.ref === ref);
+
+if (existe) {
+
+existe.cantidad = parseInt(existe.cantidad) + parseInt(qty);
+
+} else {
+
+carrito.push({ ...item, cantidad: qty });
+
+}
+
+actualizarInterfazCarrito();
+
+const originalHTML = btnElement.innerHTML;
+
+btnElement.style.background = "#0d9488";
+
+btnElement.style.color = "white";
+
+btnElement.innerHTML = "✓ LISTO";
+
+setTimeout(() => {
+
+resetearFiltros();
+
+}, 600);
+
+}
+
+function resetearFiltros() {
+
+document.getElementById("filtro-categoria").value = "Todos";
+
+document.getElementById("filtro-pares").value = "Todos";
+
+document.getElementById("filtro-entorno").value = "Todos";
+
+manejarFiltrosDinamicos();
+
+}
+
+function actualizarInterfazCarrito() {
+
+const seccion = document.getElementById("seccion-carrito");
+
+const lista = document.getElementById("lista-carrito");
+
+const contador = document.getElementById("contador-items");
+
+if (carrito.length > 0) {
+
+seccion.style.display = "block";
+
+contador.innerText = carrito.length;
+
+lista.innerHTML = "";
+
+carrito.forEach((item, index) => {
+
+let displayModeloCart = item.categoria === "Patch Cords Industriales" ? `${item.categoria_label} (${item.entorno})` : item.categoria_label;
+
+lista.innerHTML += `
+
+<tr style="border-bottom: 1px solid #f1f5f9;">
+
+<td style="padding: 15px; font-size: 15px; color: #0f172a; font-weight: 700;">
+
+${item.familia} - ${displayModeloCart}
+
+<span style="color: #94a3b8; font-size: 12px; font-weight: 400; margin-left: 10px;">P/N ${item.ref}</span>
+
+</td>
+
+<td style="padding: 15px; text-align: center;">
+
+<span style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 15px; border-radius: 6px; font-weight: 700; color: #0f172a;">${item.cantidad}</span>
+
+<span style="color: #94a3b8; font-size: 13px; margin-left: 5px;">${item.unidad}</span>
+
+</td>
+
+<td style="padding: 15px; text-align: right;">
+
+<button onclick="removerDelCarrito(${index})" style="color: #ef4444; background: transparent; border: 1px solid #ef4444; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center;" title="Eliminar">🗑️</button>
+
+</td>
+
+</tr>`;
+
+});
+
+} else {
+
+seccion.style.display = "none";
+
+}
+
+}
+
+function removerDelCarrito(index) {
+
+carrito.splice(index, 1);
+
+actualizarInterfazCarrito();
+
+}
+
+function enviarPorCorreo() {
+
+let listaCables = "Hola QBLE, solicito cotización formal de los siguientes cables/accesorios de Red:\n\n";
+
+carrito.forEach(item => {
+
+let detalle = item.categoria === "Patch Cords Industriales" ? `(${item.entorno})` : `(${item.categoria})`;
+
+listaCables += `• ${item.cantidad} ${item.unidad} | ${item.familia} ${detalle} | P/N: ${item.ref}\n`;
+
+});
+
+listaCables += "\nQuedo a la espera de su pronta respuesta. Saludos.";
+
+window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(listaCables)}`;
+
+}
+
+window.onload = manejarFiltrosDinamicos;
+
+</script>
+
+</body>
+
+</html>

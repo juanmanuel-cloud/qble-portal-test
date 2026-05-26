@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Configurador QBLE - Cables Monopolares (Catálogo Total)</title>
+
+</head>
+
+<body style="background-color: #f1f5f9; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif;">
+
+<div style="max-width: 1050px; margin: 0 auto; padding-bottom: 20px;">
+        <a href="index.html?s=herramientas" style="color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#64748b'">
+            <span style="margin-right: 5px;">←</span> Volver a la Suite QBLE
+        </a>
+    </div>
+
+
+
+<div style="max-width: 1050px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #ef4444;">
+
+   
+
+  <div style="text-align: left; margin-bottom: 30px;">
+
+    <h2 style="color: #0f172a; margin-bottom: 5px; text-transform: uppercase; font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">SELECTOR DE CABLES MONOPOLARES</h2>
+
+    <p style="color: #64748b; font-size: 15px;">Encuentre cables flexibles H05V-K y H07V-K para cableado interno y potencia en tableros.</p>
+
+  </div>
+
+
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+
+     
+
+    <div style="display: flex; flex-direction: column;">
+
+      <label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">Sección (mm² / AWG)</label>
+
+      <select id="filtro-seccion" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+        <option value="Todos">Todos</option>
+
+        <option value="0.5 mm² (20 AWG)">0.5 mm² (20 AWG)</option>
+
+        <option value="0.75 mm² (19 AWG)">0.75 mm² (19 AWG)</option>
+
+        <option value="1.0 mm² (18 AWG)">1.0 mm² (18 AWG)</option>
+
+        <option value="1.5 mm² (16 AWG)">1.5 mm² (16 AWG)</option>
+
+        <option value="2.5 mm² (14 AWG)">2.5 mm² (14 AWG)</option>
+
+        <option value="4.0 mm² (12 AWG)">4.0 mm² (12 AWG)</option>
+
+        <option value="6.0 mm² (10 AWG)">6.0 mm² (10 AWG)</option>
+
+        <option value="10.0 mm² (8 AWG)">10.0 mm² (8 AWG)</option>
+
+        <option value="16.0 mm² (6 AWG)">16.0 mm² (6 AWG)</option>
+
+        <option value="25.0 mm² (4 AWG)">25.0 mm² (4 AWG)</option>
+
+        <option value="35.0 mm² (2 AWG)">35.0 mm² (2 AWG)</option>
+
+        <option value="50.0 mm² (1 AWG)">50.0 mm² (1 AWG)</option>
+
+        <option value="70.0 mm² (2/0 AWG)">70.0 mm² (2/0 AWG)</option>
+
+        <option value="95.0 mm² (3/0 AWG)">95.0 mm² (3/0 AWG)</option>
+
+        <option value="120.0 mm² (4/0 AWG)">120.0 mm² (4/0 AWG)</option>
+
+        <option value="150.0 mm² (300 kcmil)">150.0 mm² (300 kcmil)</option>
+
+        <option value="185.0 mm² (350 kcmil)">185.0 mm² (350 kcmil)</option>
+
+        <option value="240.0 mm² (500 kcmil)">240.0 mm² (500 kcmil)</option>
+
+      </select>
+
+    </div>
+
+
+
+    <div style="display: flex; flex-direction: column;">
+
+      <label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">Color de Forro</label>
+
+      <select id="filtro-color" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+        <option value="Todos">Todos</option>
+
+        <option value="Negro">Negro</option>
+
+        <option value="Verde-Amarillo">Verde-Amarillo (Tierra)</option>
+
+        <option value="Azul">Azul</option>
+
+        <option value="Marrón">Marrón</option>
+
+        <option value="Rojo">Rojo</option>
+
+        <option value="Blanco">Blanco</option>
+
+        <option value="Gris">Gris</option>
+
+        <option value="Violeta">Violeta</option>
+
+        <option value="Amarillo">Amarillo</option>
+
+        <option value="Rosa">Rosa</option>
+
+        <option value="Verde">Verde</option>
+
+        <option value="Transparente">Transparente</option>
+
+        <option value="Azul Oscuro">Azul Oscuro</option>
+
+        <option value="Naranja">Naranja</option>
+
+        <option value="Azul Ultramar">Azul Ultramar</option>
+
+        <option value="Azul-Blanco">Azul-Blanco</option>
+
+        <option value="Marrón-Blanco">Marrón-Blanco</option>
+
+        <option value="Azul Oscuro-Blanco">Azul Oscuro-Blanco</option>
+
+        <option value="Rojo-Blanco">Rojo-Blanco</option>
+
+        <option value="Bicolor">Bicolor (Generico)</option>
+
+        <option value="Otro color">Otro color</option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+
+
+  <div id="mensaje-inicial" style="text-align: center; padding: 20px; border: 1px dashed #cbd5e1; border-radius: 8px; margin-bottom: 30px; background-color: #f8fafc;">
+
+    <p style="color: #64748b; margin: 0; font-size: 14px; font-weight: 500;"><span style="margin-right: 8px; font-size: 16px;">🟥</span> Seleccione Sección y Color para revelar el número de parte exacto.</p>
+
+  </div>
+
+
+
+  <div id="contenedor-resultados" style="display: none; margin-bottom: 30px;">
+
+    <div style="border: 1px solid #1e293b; border-radius: 8px; overflow: hidden;">
+
+      <table style="width: 100%; border-collapse: collapse; background: #0f172a;">
+
+        <thead>
+
+          <tr style="color: #ffffff; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">
+
+            <th style="padding: 15px; text-align: left; width: 15%;">REF / P/N</th>
+
+            <th style="padding: 15px; text-align: left; width: 25%;">MODELO</th>
+
+            <th style="padding: 15px; text-align: left; width: 15%;">COLOR</th>
+
+            <th style="padding: 15px; text-align: center; width: 25%;">CANTIDAD REQUERIDA</th>
+
+            <th style="padding: 15px; text-align: right; width: 20%;">ACCIÓN</th>
+
+          </tr>
+
+        </thead>
+
+      </table>
+
+       
+
+      <div style="max-height: 400px; overflow-y: auto; background: #ffffff;">
+
+        <table style="width: 100%; border-collapse: collapse;">
+
+          <tbody id="tabla-resultados">
+
+            </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+   
+
+  <div id="seccion-carrito" style="display: none; background: #ffffff; padding: 25px; border-radius: 12px; border: 2px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-top: 40px;">
+
+     
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+
+      <div>
+
+        <h3 style="color: #0f172a; margin: 0 0 5px 0; font-size: 22px; text-transform: uppercase; display: flex; align-items: center;">
+
+          <span style="background: #ef4444; color: white; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 16px; margin-right: 12px;" id="contador-items">0</span> 
+
+          MI LISTA DE COTIZACIÓN
+
+        </h3>
+
+        <p style="color: #64748b; font-size: 13px; margin: 0;">Revise los modelos y cantidades antes de solicitar su presupuesto formal.</p>
+
+      </div>
+
+       
+
+      <button onclick="enviarPorCorreo()" style="background: #ef4444; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3); transition: transform 0.2s;">
+
+        COTIZACIÓN FORMAL ✉️
+
+      </button>
+
+    </div>
+
+
+
+    <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+
+      <table style="width: 100%; border-collapse: collapse; background: #fff;">
+
+        <thead style="background: #f8fafc;">
+
+          <tr style="border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">
+
+            <th style="padding: 15px; text-align: left;">Modelo Seleccionado</th>
+
+            <th style="padding: 15px; text-align: center;">Cantidad Solicitada</th>
+
+            <th style="padding: 15px; text-align: right;">Eliminar</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="lista-carrito"></tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+
+
+</div>
+
+
+
+<script>
+
+  // ==========================================
+
+  // BASE DE DATOS DE MONOPOLARES H05V-K & H07V-K
+
+  // ==========================================
+
+  const baseDeDatos = [
+
+    // --- H05V-K: 0.5 mm² (20 AWG) ---
+
+    { ref: "29081", familia: "H05V-K", modelo: "1 x 0.5", color: "Negro", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29082", familia: "H05V-K", modelo: "1 x 0.5", color: "Verde-Amarillo", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29083", familia: "H05V-K", modelo: "1 x 0.5", color: "Azul", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29084", familia: "H05V-K", modelo: "1 x 0.5", color: "Marrón", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29085", familia: "H05V-K", modelo: "1 x 0.5", color: "Rojo", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29086", familia: "H05V-K", modelo: "1 x 0.5", color: "Blanco", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29087", familia: "H05V-K", modelo: "1 x 0.5", color: "Gris", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29088", familia: "H05V-K", modelo: "1 x 0.5", color: "Violeta", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29089", familia: "H05V-K", modelo: "1 x 0.5", color: "Amarillo", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29090", familia: "H05V-K", modelo: "1 x 0.5", color: "Rosa", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29091", familia: "H05V-K", modelo: "1 x 0.5", color: "Verde", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29092", familia: "H05V-K", modelo: "1 x 0.5", color: "Transparente", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29093", familia: "H05V-K", modelo: "1 x 0.5", color: "Azul Oscuro", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29094", familia: "H05V-K", modelo: "1 x 0.5", color: "Naranja", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29095", familia: "H05V-K", modelo: "1 x 0.5", color: "Otro color", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29096", familia: "H05V-K", modelo: "1 x 0.5", color: "Bicolor", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "26386", familia: "H05V-K", modelo: "1 x 0.5", color: "Azul Ultramar", seccion: "0.5 mm² (20 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // --- H05V-K: 0.75 mm² (19 AWG) ---
+
+    { ref: "29097", familia: "H05V-K", modelo: "1 x 0.75", color: "Negro", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29098", familia: "H05V-K", modelo: "1 x 0.75", color: "Verde-Amarillo", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29099", familia: "H05V-K", modelo: "1 x 0.75", color: "Azul", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29100", familia: "H05V-K", modelo: "1 x 0.75", color: "Marrón", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29101", familia: "H05V-K", modelo: "1 x 0.75", color: "Rojo", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29102", familia: "H05V-K", modelo: "1 x 0.75", color: "Blanco", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29103", familia: "H05V-K", modelo: "1 x 0.75", color: "Gris", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29104", familia: "H05V-K", modelo: "1 x 0.75", color: "Violeta", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29105", familia: "H05V-K", modelo: "1 x 0.75", color: "Amarillo", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29106", familia: "H05V-K", modelo: "1 x 0.75", color: "Rosa", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29107", familia: "H05V-K", modelo: "1 x 0.75", color: "Verde", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29108", familia: "H05V-K", modelo: "1 x 0.75", color: "Transparente", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29109", familia: "H05V-K", modelo: "1 x 0.75", color: "Azul Oscuro", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29110", familia: "H05V-K", modelo: "1 x 0.75", color: "Naranja", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29111", familia: "H05V-K", modelo: "1 x 0.75", color: "Otro color", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29112", familia: "H05V-K", modelo: "1 x 0.75", color: "Bicolor", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "26387", familia: "H05V-K", modelo: "1 x 0.75", color: "Azul Ultramar", seccion: "0.75 mm² (19 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // --- H05V-K: 1.0 mm² (18 AWG) ---
+
+    { ref: "29113", familia: "H05V-K", modelo: "1 x 1", color: "Negro", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29114", familia: "H05V-K", modelo: "1 x 1", color: "Verde-Amarillo", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29115", familia: "H05V-K", modelo: "1 x 1", color: "Azul", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29116", familia: "H05V-K", modelo: "1 x 1", color: "Marrón", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29117", familia: "H05V-K", modelo: "1 x 1", color: "Rojo", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29118", familia: "H05V-K", modelo: "1 x 1", color: "Blanco", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29119", familia: "H05V-K", modelo: "1 x 1", color: "Gris", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29120", familia: "H05V-K", modelo: "1 x 1", color: "Violeta", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29121", familia: "H05V-K", modelo: "1 x 1", color: "Amarillo", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29122", familia: "H05V-K", modelo: "1 x 1", color: "Rosa", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29123", familia: "H05V-K", modelo: "1 x 1", color: "Verde", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29124", familia: "H05V-K", modelo: "1 x 1", color: "Transparente", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29125", familia: "H05V-K", modelo: "1 x 1", color: "Azul Oscuro", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29126", familia: "H05V-K", modelo: "1 x 1", color: "Naranja", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29127", familia: "H05V-K", modelo: "1 x 1", color: "Otro color", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29128", familia: "H05V-K", modelo: "1 x 1", color: "Bicolor", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "26388", familia: "H05V-K", modelo: "1 x 1", color: "Azul Ultramar", seccion: "1.0 mm² (18 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // ==========================================
+
+    // H07V-K (EN CAJAS DE 100m)
+
+    // ==========================================
+
+     
+
+    // --- 1.5 mm² (16 AWG) ---
+
+    { ref: "29129", familia: "H07V-K", modelo: "1 x 1.5", color: "Negro", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29130", familia: "H07V-K", modelo: "1 x 1.5", color: "Verde-Amarillo", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29131", familia: "H07V-K", modelo: "1 x 1.5", color: "Azul", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29132", familia: "H07V-K", modelo: "1 x 1.5", color: "Marrón", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29133", familia: "H07V-K", modelo: "1 x 1.5", color: "Rojo", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29134", familia: "H07V-K", modelo: "1 x 1.5", color: "Blanco", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29135", familia: "H07V-K", modelo: "1 x 1.5", color: "Gris", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29136", familia: "H07V-K", modelo: "1 x 1.5", color: "Violeta", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29142", familia: "H07V-K", modelo: "1 x 1.5", color: "Naranja", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29141", familia: "H07V-K", modelo: "1 x 1.5", color: "Azul Oscuro", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29138", familia: "H07V-K", modelo: "1 x 1.5", color: "Rosa", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "26395", familia: "H07V-K", modelo: "1 x 1.5", color: "Azul Ultramar", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29137", familia: "H07V-K", modelo: "1 x 1.5", color: "Amarillo", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29139", familia: "H07V-K", modelo: "1 x 1.5", color: "Verde", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29140", familia: "H07V-K", modelo: "1 x 1.5", color: "Transparente", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29378", familia: "H07V-K", modelo: "1 x 1.5", color: "Azul-Blanco", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29383", familia: "H07V-K", modelo: "1 x 1.5", color: "Marrón-Blanco", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29397", familia: "H07V-K", modelo: "1 x 1.5", color: "Azul Oscuro-Blanco", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29373", familia: "H07V-K", modelo: "1 x 1.5", color: "Rojo-Blanco", seccion: "1.5 mm² (16 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // --- 2.5 mm² (14 AWG) ---
+
+    { ref: "29145", familia: "H07V-K", modelo: "1 x 2.5", color: "Negro", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29146", familia: "H07V-K", modelo: "1 x 2.5", color: "Verde-Amarillo", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29147", familia: "H07V-K", modelo: "1 x 2.5", color: "Azul", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29148", familia: "H07V-K", modelo: "1 x 2.5", color: "Marrón", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29149", familia: "H07V-K", modelo: "1 x 2.5", color: "Rojo", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29150", familia: "H07V-K", modelo: "1 x 2.5", color: "Blanco", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29151", familia: "H07V-K", modelo: "1 x 2.5", color: "Gris", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29152", familia: "H07V-K", modelo: "1 x 2.5", color: "Violeta", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29158", familia: "H07V-K", modelo: "1 x 2.5", color: "Naranja", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29157", familia: "H07V-K", modelo: "1 x 2.5", color: "Azul Oscuro", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29154", familia: "H07V-K", modelo: "1 x 2.5", color: "Rosa", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "26396", familia: "H07V-K", modelo: "1 x 2.5", color: "Azul Ultramar", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29153", familia: "H07V-K", modelo: "1 x 2.5", color: "Amarillo", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29155", familia: "H07V-K", modelo: "1 x 2.5", color: "Verde", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29156", familia: "H07V-K", modelo: "1 x 2.5", color: "Transparente", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29379", familia: "H07V-K", modelo: "1 x 2.5", color: "Azul-Blanco", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29384", familia: "H07V-K", modelo: "1 x 2.5", color: "Marrón-Blanco", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29398", familia: "H07V-K", modelo: "1 x 2.5", color: "Azul Oscuro-Blanco", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29374", familia: "H07V-K", modelo: "1 x 2.5", color: "Rojo-Blanco", seccion: "2.5 mm² (14 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // --- 4.0 mm² (12 AWG) ---
+
+    { ref: "29161", familia: "H07V-K", modelo: "1 x 4", color: "Negro", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29162", familia: "H07V-K", modelo: "1 x 4", color: "Verde-Amarillo", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29163", familia: "H07V-K", modelo: "1 x 4", color: "Azul", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29164", familia: "H07V-K", modelo: "1 x 4", color: "Marrón", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29165", familia: "H07V-K", modelo: "1 x 4", color: "Rojo", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29166", familia: "H07V-K", modelo: "1 x 4", color: "Blanco", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29167", familia: "H07V-K", modelo: "1 x 4", color: "Gris", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29168", familia: "H07V-K", modelo: "1 x 4", color: "Violeta", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29174", familia: "H07V-K", modelo: "1 x 4", color: "Naranja", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29173", familia: "H07V-K", modelo: "1 x 4", color: "Azul Oscuro", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29170", familia: "H07V-K", modelo: "1 x 4", color: "Rosa", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "26397", familia: "H07V-K", modelo: "1 x 4", color: "Azul Ultramar", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29169", familia: "H07V-K", modelo: "1 x 4", color: "Amarillo", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29171", familia: "H07V-K", modelo: "1 x 4", color: "Verde", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29172", familia: "H07V-K", modelo: "1 x 4", color: "Transparente", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29386", familia: "H07V-K", modelo: "1 x 4", color: "Azul-Blanco", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29387", familia: "H07V-K", modelo: "1 x 4", color: "Marrón-Blanco", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29399", familia: "H07V-K", modelo: "1 x 4", color: "Azul Oscuro-Blanco", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29385", familia: "H07V-K", modelo: "1 x 4", color: "Rojo-Blanco", seccion: "4.0 mm² (12 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // --- 6.0 mm² (10 AWG) ---
+
+    { ref: "29177", familia: "H07V-K", modelo: "1 x 6", color: "Negro", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29178", familia: "H07V-K", modelo: "1 x 6", color: "Verde-Amarillo", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29179", familia: "H07V-K", modelo: "1 x 6", color: "Azul", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29180", familia: "H07V-K", modelo: "1 x 6", color: "Marrón", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29181", familia: "H07V-K", modelo: "1 x 6", color: "Rojo", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29182", familia: "H07V-K", modelo: "1 x 6", color: "Blanco", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29183", familia: "H07V-K", modelo: "1 x 6", color: "Gris", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29184", familia: "H07V-K", modelo: "1 x 6", color: "Violeta", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29190", familia: "H07V-K", modelo: "1 x 6", color: "Naranja", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29189", familia: "H07V-K", modelo: "1 x 6", color: "Azul Oscuro", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29186", familia: "H07V-K", modelo: "1 x 6", color: "Rosa", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "26398", familia: "H07V-K", modelo: "1 x 6", color: "Azul Ultramar", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29185", familia: "H07V-K", modelo: "1 x 6", color: "Amarillo", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29187", familia: "H07V-K", modelo: "1 x 6", color: "Verde", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29188", familia: "H07V-K", modelo: "1 x 6", color: "Transparente", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29389", familia: "H07V-K", modelo: "1 x 6", color: "Azul-Blanco", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29390", familia: "H07V-K", modelo: "1 x 6", color: "Marrón-Blanco", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29527", familia: "H07V-K", modelo: "1 x 6", color: "Azul Oscuro-Blanco", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29388", familia: "H07V-K", modelo: "1 x 6", color: "Rojo-Blanco", seccion: "6.0 mm² (10 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // --- 10.0 mm² (8 AWG) (En Caja de 100m) ---
+
+    { ref: "29392", familia: "H07V-K", modelo: "1 x 10", color: "Azul-Blanco", seccion: "10.0 mm² (8 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29393", familia: "H07V-K", modelo: "1 x 10", color: "Marrón-Blanco", seccion: "10.0 mm² (8 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29528", familia: "H07V-K", modelo: "1 x 10", color: "Azul Oscuro-Blanco", seccion: "10.0 mm² (8 AWG)", unidad: "Cajas (100m)" },
+
+    { ref: "29391", familia: "H07V-K", modelo: "1 x 10", color: "Rojo-Blanco", seccion: "10.0 mm² (8 AWG)", unidad: "Cajas (100m)" },
+
+
+
+    // ==========================================
+
+    // H07V-K (EN TAMBORES/BOBINAS - SE VENDE POR METRO)
+
+    // ==========================================
+
+
+
+    // --- 16.0 mm² (6 AWG) ---
+
+    { ref: "26841", familia: "H07V-K", modelo: "1 x 16", color: "Negro", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26842", familia: "H07V-K", modelo: "1 x 16", color: "Verde-Amarillo", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26843", familia: "H07V-K", modelo: "1 x 16", color: "Azul", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26844", familia: "H07V-K", modelo: "1 x 16", color: "Marrón", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26845", familia: "H07V-K", modelo: "1 x 16", color: "Rojo", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26846", familia: "H07V-K", modelo: "1 x 16", color: "Blanco", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26847", familia: "H07V-K", modelo: "1 x 16", color: "Gris", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26848", familia: "H07V-K", modelo: "1 x 16", color: "Violeta", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+    { ref: "26854", familia: "H07V-K", modelo: "1 x 16", color: "Naranja", seccion: "16.0 mm² (6 AWG)", unidad: "Metros" },
+
+
+
+    // --- 25.0 mm² (4 AWG) ---
+
+    { ref: "26857", familia: "H07V-K", modelo: "1 x 25", color: "Negro", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26858", familia: "H07V-K", modelo: "1 x 25", color: "Verde-Amarillo", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26859", familia: "H07V-K", modelo: "1 x 25", color: "Azul", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26860", familia: "H07V-K", modelo: "1 x 25", color: "Marrón", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26861", familia: "H07V-K", modelo: "1 x 25", color: "Rojo", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26862", familia: "H07V-K", modelo: "1 x 25", color: "Blanco", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26863", familia: "H07V-K", modelo: "1 x 25", color: "Gris", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26864", familia: "H07V-K", modelo: "1 x 25", color: "Violeta", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+    { ref: "26870", familia: "H07V-K", modelo: "1 x 25", color: "Naranja", seccion: "25.0 mm² (4 AWG)", unidad: "Metros" },
+
+
+
+    // --- 35.0 mm² (2 AWG) ---
+
+    { ref: "26873", familia: "H07V-K", modelo: "1 x 35", color: "Negro", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26874", familia: "H07V-K", modelo: "1 x 35", color: "Verde-Amarillo", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26875", familia: "H07V-K", modelo: "1 x 35", color: "Azul", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26876", familia: "H07V-K", modelo: "1 x 35", color: "Marrón", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26877", familia: "H07V-K", modelo: "1 x 35", color: "Rojo", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26878", familia: "H07V-K", modelo: "1 x 35", color: "Blanco", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26879", familia: "H07V-K", modelo: "1 x 35", color: "Gris", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26880", familia: "H07V-K", modelo: "1 x 35", color: "Violeta", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+    { ref: "26886", familia: "H07V-K", modelo: "1 x 35", color: "Naranja", seccion: "35.0 mm² (2 AWG)", unidad: "Metros" },
+
+
+
+    // --- 50.0 mm² (1 AWG) ---
+
+    { ref: "26889", familia: "H07V-K", modelo: "1 x 50", color: "Negro", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26890", familia: "H07V-K", modelo: "1 x 50", color: "Verde-Amarillo", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26891", familia: "H07V-K", modelo: "1 x 50", color: "Azul", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26892", familia: "H07V-K", modelo: "1 x 50", color: "Marrón", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26893", familia: "H07V-K", modelo: "1 x 50", color: "Rojo", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26894", familia: "H07V-K", modelo: "1 x 50", color: "Blanco", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26895", familia: "H07V-K", modelo: "1 x 50", color: "Gris", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26896", familia: "H07V-K", modelo: "1 x 50", color: "Violeta", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+    { ref: "26902", familia: "H07V-K", modelo: "1 x 50", color: "Naranja", seccion: "50.0 mm² (1 AWG)", unidad: "Metros" },
+
+
+
+    // --- 70.0 mm² (2/0 AWG) ---
+
+    { ref: "26905", familia: "H07V-K", modelo: "1 x 70", color: "Negro", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26906", familia: "H07V-K", modelo: "1 x 70", color: "Verde-Amarillo", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26907", familia: "H07V-K", modelo: "1 x 70", color: "Azul", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26908", familia: "H07V-K", modelo: "1 x 70", color: "Marrón", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26909", familia: "H07V-K", modelo: "1 x 70", color: "Rojo", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26910", familia: "H07V-K", modelo: "1 x 70", color: "Blanco", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26911", familia: "H07V-K", modelo: "1 x 70", color: "Gris", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26912", familia: "H07V-K", modelo: "1 x 70", color: "Violeta", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+    { ref: "26918", familia: "H07V-K", modelo: "1 x 70", color: "Naranja", seccion: "70.0 mm² (2/0 AWG)", unidad: "Metros" },
+
+
+
+    // --- 95.0 mm² (3/0 AWG) ---
+
+    { ref: "26921", familia: "H07V-K", modelo: "1 x 95", color: "Negro", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26922", familia: "H07V-K", modelo: "1 x 95", color: "Verde-Amarillo", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26923", familia: "H07V-K", modelo: "1 x 95", color: "Azul", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26924", familia: "H07V-K", modelo: "1 x 95", color: "Marrón", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26925", familia: "H07V-K", modelo: "1 x 95", color: "Rojo", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26926", familia: "H07V-K", modelo: "1 x 95", color: "Blanco", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26927", familia: "H07V-K", modelo: "1 x 95", color: "Gris", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26928", familia: "H07V-K", modelo: "1 x 95", color: "Violeta", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+    { ref: "26934", familia: "H07V-K", modelo: "1 x 95", color: "Naranja", seccion: "95.0 mm² (3/0 AWG)", unidad: "Metros" },
+
+
+
+    // --- 120.0 mm² (4/0 AWG) ---
+
+    { ref: "29305", familia: "H07V-K", modelo: "1 x 120", color: "Negro", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29306", familia: "H07V-K", modelo: "1 x 120", color: "Verde-Amarillo", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29307", familia: "H07V-K", modelo: "1 x 120", color: "Azul", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29308", familia: "H07V-K", modelo: "1 x 120", color: "Marrón", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29309", familia: "H07V-K", modelo: "1 x 120", color: "Rojo", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29310", familia: "H07V-K", modelo: "1 x 120", color: "Blanco", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29311", familia: "H07V-K", modelo: "1 x 120", color: "Gris", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29312", familia: "H07V-K", modelo: "1 x 120", color: "Violeta", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+    { ref: "29318", familia: "H07V-K", modelo: "1 x 120", color: "Naranja", seccion: "120.0 mm² (4/0 AWG)", unidad: "Metros" },
+
+
+
+    // --- 150.0 mm² (300 kcmil) ---
+
+    { ref: "29321", familia: "H07V-K", modelo: "1 x 150", color: "Negro", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29322", familia: "H07V-K", modelo: "1 x 150", color: "Verde-Amarillo", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29323", familia: "H07V-K", modelo: "1 x 150", color: "Azul", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29324", familia: "H07V-K", modelo: "1 x 150", color: "Marrón", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29325", familia: "H07V-K", modelo: "1 x 150", color: "Rojo", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29326", familia: "H07V-K", modelo: "1 x 150", color: "Blanco", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29327", familia: "H07V-K", modelo: "1 x 150", color: "Gris", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29328", familia: "H07V-K", modelo: "1 x 150", color: "Violeta", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+    { ref: "29334", familia: "H07V-K", modelo: "1 x 150", color: "Naranja", seccion: "150.0 mm² (300 kcmil)", unidad: "Metros" },
+
+
+
+    // --- 185.0 mm² (350 kcmil) ---
+
+    { ref: "29337", familia: "H07V-K", modelo: "1 x 185", color: "Negro", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29338", familia: "H07V-K", modelo: "1 x 185", color: "Verde-Amarillo", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29339", familia: "H07V-K", modelo: "1 x 185", color: "Azul", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29340", familia: "H07V-K", modelo: "1 x 185", color: "Marrón", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29341", familia: "H07V-K", modelo: "1 x 185", color: "Rojo", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29342", familia: "H07V-K", modelo: "1 x 185", color: "Blanco", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29343", familia: "H07V-K", modelo: "1 x 185", color: "Gris", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29344", familia: "H07V-K", modelo: "1 x 185", color: "Violeta", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+    { ref: "29350", familia: "H07V-K", modelo: "1 x 185", color: "Naranja", seccion: "185.0 mm² (350 kcmil)", unidad: "Metros" },
+
+
+
+    // --- 240.0 mm² (500 kcmil) ---
+
+    { ref: "29353", familia: "H07V-K", modelo: "1 x 240", color: "Negro", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29354", familia: "H07V-K", modelo: "1 x 240", color: "Verde-Amarillo", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29355", familia: "H07V-K", modelo: "1 x 240", color: "Azul", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29356", familia: "H07V-K", modelo: "1 x 240", color: "Marrón", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29357", familia: "H07V-K", modelo: "1 x 240", color: "Rojo", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29358", familia: "H07V-K", modelo: "1 x 240", color: "Blanco", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29359", familia: "H07V-K", modelo: "1 x 240", color: "Gris", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29360", familia: "H07V-K", modelo: "1 x 240", color: "Violeta", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" },
+
+    { ref: "29366", familia: "H07V-K", modelo: "1 x 240", color: "Naranja", seccion: "240.0 mm² (500 kcmil)", unidad: "Metros" }
+
+  ];
+
+
+
+  let carrito = [];
+
+
+
+  // ==========================================
+
+  // LÓGICA DE FILTROS DEPENDIENTES / CASCADA
+
+  // ==========================================
+
+  function manejarFiltrosDinamicos() {
+
+    const valS = document.getElementById("filtro-seccion").value;
+
+    const valC = document.getElementById("filtro-color").value;
+
+
+
+    const haceMatch = (cable, testS, testC) => {
+
+      return (testS === "Todos" || cable.seccion === testS) &&
+
+          (testC === "Todos" || cable.color === testC);
+
+    };
+
+
+
+    const validSecciones = new Set(baseDeDatos.filter(c => haceMatch(c, "Todos", valC)).map(c => c.seccion));
+
+    const validColores = new Set(baseDeDatos.filter(c => haceMatch(c, valS, "Todos")).map(c => c.color));
+
+
+
+    actualizarSelect("filtro-seccion", validSecciones);
+
+    actualizarSelect("filtro-color", validColores);
+
+
+
+    filtrarCables();
+
+  }
+
+
+
+  function actualizarSelect(id, setValido) {
+
+    const select = document.getElementById(id);
+
+    let actualVal = select.value;
+
+    let seleccionValida = false;
+
+
+
+    Array.from(select.options).forEach(opt => {
+
+      if (opt.value === "Todos" || setValido.has(opt.value)) {
+
+        opt.style.display = ""; 
+
+        opt.disabled = false;
+
+        if (opt.value === actualVal) seleccionValida = true;
+
+      } else {
+
+        opt.style.display = "none"; 
+
+        opt.disabled = true;
+
+      }
+
+    });
+
+
+
+    if (!seleccionValida) {
+
+      select.value = "Todos";
+
+    }
+
+  }
+
+
+
+  // ==========================================
+
+  // LÓGICA DE DIBUJO DE RESULTADOS
+
+  // ==========================================
+
+  function filtrarCables() {
+
+    const s = document.getElementById("filtro-seccion").value;
+
+    const c = document.getElementById("filtro-color").value;
+
+     
+
+    const contenedorResultados = document.getElementById("contenedor-resultados");
+
+    const tbody = document.getElementById("tabla-resultados");
+
+    const mensajeInicial = document.getElementById("mensaje-inicial");
+
+
+
+    if (s === "Todos" || c === "Todos") {
+
+      contenedorResultados.style.display = "none";
+
+      mensajeInicial.style.display = "block";
+
+      mensajeInicial.innerHTML = `<p style="color: #64748b; margin: 0; font-size: 14px; font-weight: 500;"><span style="margin-right: 8px; font-size: 16px;">🟥</span> Seleccione Sección y Color para revelar el número de parte exacto.</p>`;
+
+      return;
+
+    }
+
+
+
+    const res = baseDeDatos.filter(cable => {
+
+      return cable.seccion === s && 
+
+          cable.color === c;
+
+    });
+
+
+
+    mensajeInicial.style.display = "none";
+
+    contenedorResultados.style.display = "block";
+
+    tbody.innerHTML = "";
+
+
+
+    if (res.length > 0) {
+
+      res.forEach(item => {
+
+        let badgeStyle = "background: #ef4444; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;";
+
+
+
+        // Asignar un cuadrito de color visual, con soporte para BICOLORES
+
+        let colorBox = "";
+
+        const hexColors = {
+
+          "Negro": "#000000", "Verde-Amarillo": "linear-gradient(45deg, #22c55e 50%, #eab308 50%)", 
+
+          "Azul": "#3b82f6", "Marrón": "#78350f", "Rojo": "#ef4444", "Blanco": "#ffffff", 
+
+          "Gris": "#94a3b8", "Violeta": "#8b5cf6", "Amarillo": "#eab308", "Rosa": "#f472b6", 
+
+          "Verde": "#22c55e", "Azul Oscuro": "#1e3a8a", "Naranja": "#f97316", "Azul Ultramar": "#1d4ed8",
+
+          "Azul-Blanco": "linear-gradient(45deg, #3b82f6 50%, #ffffff 50%)",
+
+          "Marrón-Blanco": "linear-gradient(45deg, #78350f 50%, #ffffff 50%)",
+
+          "Azul Oscuro-Blanco": "linear-gradient(45deg, #1e3a8a 50%, #ffffff 50%)",
+
+          "Rojo-Blanco": "linear-gradient(45deg, #ef4444 50%, #ffffff 50%)"
+
+        };
+
+
+
+        if(hexColors[item.color]) {
+
+          colorBox = `<span style="display:inline-block; width:14px; height:14px; border-radius:50%; border:1px solid #94a3b8; background:${hexColors[item.color]}; margin-right:8px; vertical-align:middle;"></span>`;
+
+        }
+
+
+
+        tbody.innerHTML += `
+
+          <tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+
+            <td style="padding: 15px; font-style: italic; color: #94a3b8; font-size: 12px; width: 15%;">P/N ${item.ref}</td>
+
+            <td style="padding: 15px; font-weight: 800; color: #ef4444; font-size: 15px; width: 25%;">${item.familia} - ${item.modelo}</td>
+
+            <td style="padding: 15px; width: 15%; color: #334155; font-weight: 600;">${colorBox}${item.color}</td>
+
+            <td style="padding: 15px; text-align: center; width: 25%;">
+
+              <div style="display: inline-flex; align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 2px 10px;">
+
+                <input type="number" id="qty-${item.ref}" value="${item.unidad === 'Metros' ? '100' : '1'}" min="1" step="1" style="width: 50px; padding: 6px 0; border: none; outline: none; text-align: center; font-weight: 700; color: #0f172a;">
+
+                <span style="color: #64748b; font-size: 11px; margin-left: 8px; font-weight: 600; text-transform: uppercase;">${item.unidad}</span>
+
+              </div>
+
+            </td>
+
+            <td style="padding: 15px; text-align: right; width: 20%;">
+
+              <button onclick="agregarAlCarrito('${item.ref}', this)" style="background: transparent; color: #ef4444; border: 2px solid #ef4444; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;">
+
+                AÑADIR 📦
+
+              </button>
+
+            </td>
+
+          </tr>`;
+
+      });
+
+    } else {
+
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 50px 20px; color: #ef4444; font-weight: bold;">⚠️ No hay modelos que cumplan exactamente con esta combinación.</td></tr>`;
+
+    }
+
+  }
+
+
+
+  // ==========================================
+
+  // LÓGICA DEL CARRITO Y RESET AUTOMÁTICO
+
+  // ==========================================
+
+  function agregarAlCarrito(ref, btnElement) {
+
+    const item = baseDeDatos.find(i => i.ref === ref);
+
+    const qty = document.getElementById(`qty-${ref}`).value;
+
+     
+
+    if(qty <= 0 || qty === "") {
+
+      alert("Por favor ingrese una cantidad válida.");
+
+      return;
+
+    }
+
+
+
+    const existe = carrito.find(c => c.ref === ref);
+
+    if (existe) {
+
+      existe.cantidad = parseInt(existe.cantidad) + parseInt(qty);
+
+    } else {
+
+      carrito.push({ ...item, cantidad: qty });
+
+    }
+
+     
+
+    actualizarInterfazCarrito();
+
+     
+
+    const originalHTML = btnElement.innerHTML;
+
+    btnElement.style.background = "#ef4444";
+
+    btnElement.style.color = "white";
+
+    btnElement.innerHTML = "✓ LISTO";
+
+     
+
+    setTimeout(() => {
+
+      resetearFiltros();
+
+    }, 600);
+
+  }
+
+
+
+  function resetearFiltros() {
+
+    document.getElementById("filtro-seccion").value = "Todos";
+
+    document.getElementById("filtro-color").value = "Todos";
+
+
+
+    manejarFiltrosDinamicos(); 
+
+  }
+
+
+
+  function actualizarInterfazCarrito() {
+
+    const seccion = document.getElementById("seccion-carrito");
+
+    const lista = document.getElementById("lista-carrito");
+
+    const contador = document.getElementById("contador-items");
+
+
+
+    if (carrito.length > 0) {
+
+      seccion.style.display = "block";
+
+      contador.innerText = carrito.length;
+
+      lista.innerHTML = "";
+
+      carrito.forEach((item, index) => {
+
+        lista.innerHTML += `
+
+          <tr style="border-bottom: 1px solid #f1f5f9;">
+
+            <td style="padding: 15px; font-size: 15px; color: #0f172a; font-weight: 700;">
+
+              ${item.familia} (${item.seccion}) - ${item.color}
+
+              <span style="color: #94a3b8; font-size: 12px; font-weight: 400; margin-left: 10px;">P/N ${item.ref}</span>
+
+            </td>
+
+            <td style="padding: 15px; text-align: center;">
+
+              <span style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 15px; border-radius: 6px; font-weight: 700; color: #0f172a;">${item.cantidad}</span>
+
+              <span style="color: #94a3b8; font-size: 13px; margin-left: 5px;">${item.unidad}</span>
+
+            </td>
+
+            <td style="padding: 15px; text-align: right;">
+
+              <button onclick="removerDelCarrito(${index})" style="color: #ef4444; background: transparent; border: 1px solid #ef4444; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center;" title="Eliminar">🗑️</button>
+
+            </td>
+
+          </tr>`;
+
+      });
+
+    } else {
+
+      seccion.style.display = "none";
+
+    }
+
+  }
+
+
+
+  function removerDelCarrito(index) {
+
+    carrito.splice(index, 1);
+
+    actualizarInterfazCarrito();
+
+  }
+
+
+
+  function enviarPorCorreo() {
+
+    let listaCables = "Hola QBLE, solicito cotización formal de los siguientes cables Monopolares:\n\n";
+
+     
+
+    carrito.forEach(item => {
+
+      listaCables += `• ${item.cantidad} ${item.unidad} | ${item.familia} (${item.seccion}) Color: ${item.color} | P/N: ${item.ref}\n`;
+
+    });
+
+     
+
+    listaCables += "\nQuedo a la espera de su pronta respuesta. Saludos.";
+
+
+
+ window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(listaCables)}`;
+
+  }
+
+
+
+  window.onload = manejarFiltrosDinamicos;
+
+</script>
+
+
+
+</body>
+
+</html>
+

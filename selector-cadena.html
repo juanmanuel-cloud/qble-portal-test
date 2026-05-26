@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurador QBLE - Cadenas Portacables</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f8fafc; }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; }
+        /* Color Gris Industrial para Cadenas */
+        .text-chain-gray { color: #334155; }
+        .bg-chain-gray { background-color: #334155; }
+        .border-chain-gray { border-color: #334155; }
+        .ring-chain-gray:focus { --tw-ring-color: #334155; }
+    </style>
+</head>
+<body class="py-10 px-4 text-slate-800">
+
+    <div class="max-w-4xl mx-auto mb-4">
+        <a href="index.html?s=herramientas" class="text-xs font-bold text-gray-400 hover:text-chain-gray transition-colors flex items-center uppercase tracking-wider">
+            <span class="mr-2 text-lg leading-none">←</span> Volver a la Suite QBLE
+        </a>
+    </div>
+
+    <div class="max-w-4xl mx-auto bg-white p-6 md:p-10 rounded-xl shadow-lg border border-gray-100 border-t-4 border-chain-gray"> 
+        
+        <div class="mb-6 border-b border-gray-100 pb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl md:text-3xl text-slate-900 font-extrabold uppercase tracking-tight mb-2">Configurador de Cadenas Portacables</h2>
+                <p class="text-sm text-gray-500 font-medium">Levantamiento técnico para sistemas de protección en movimiento continuo.</p>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 flex items-center gap-3">
+                <div class="text-3xl">⛓️</div>
+                <div>
+                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-0.5">Sistemas</p>
+                    <p class="text-sm font-bold text-slate-800">Drag Chains</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded mb-8">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-800 font-medium">
+                        <strong>¡No se preocupe si no conoce todos los datos!</strong><br>
+                        Complete únicamente la información que tenga disponible sobre su proyecto. Nuestro equipo de ingeniería analizará sus requerimientos y se pondrá en contacto para ayudarle a definir el modelo y los accesorios exactos.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-8">
+            
+            <div>
+                <h3 class="text-xs font-black uppercase text-slate-400 tracking-widest mb-4 border-b border-slate-100 pb-2">1. Diseño General</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Tipo de Instalación</label>
+                        <select id="req-instalacion" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors cursor-pointer">
+                            <option value="No especificado">- Seleccionar -</option>
+                            <option value="Estándar (Movimiento lineal)">Estándar (Movimiento lineal)</option>
+                            <option value="Deslizante (Recorridos largos)">Deslizante (Recorridos largos)</option>
+                            <option value="Multieje / Robótica (3D)">Multieje / Robótica (3D)</option>
+                            <option value="Vertical (Suspendida)">Vertical (Suspendida)</option>
+                            <option value="Circular / Rotatoria">Circular / Rotatoria</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Material Deseado</label>
+                        <select id="req-material" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors cursor-pointer">
+                            <option value="No especificado">- Seleccionar -</option>
+                            <option value="Plástico (Nylon / Poliamida)">Plástico (Nylon / Poliamida)</option>
+                            <option value="Metal (Acero Galvanizado)">Metal (Acero Galvanizado)</option>
+                            <option value="Acero Inoxidable">Acero Inoxidable</option>
+                            <option value="Híbrida (Plástico/Aluminio)">Híbrida (Plástico/Aluminio)</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Estructura</label>
+                        <select id="req-estructura" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors cursor-pointer">
+                            <option value="No especificado">- Seleccionar -</option>
+                            <option value="Abierta (Con travesaños)">Abierta (Con travesaños)</option>
+                            <option value="Cerrada (Tubular / Protección virutas)">Cerrada (Tubular / Protección virutas)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-black uppercase text-slate-400 tracking-widest mb-4 border-b border-slate-100 pb-2">2. Medidas Aproximadas (Si las conoce)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Alto Interior (mm)</label>
+                        <input type="number" id="req-alto" placeholder="Ej. 35" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Ancho Interior (mm)</label>
+                        <input type="number" id="req-ancho" placeholder="Ej. 75" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Radio de Curvatura (mm)</label>
+                        <input type="number" id="req-radio" placeholder="Ej. 100" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Largo Total Deseado (m)</label>
+                        <input type="number" step="0.1" id="req-largo" placeholder="Ej. 2.5" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-black uppercase text-slate-400 tracking-widest mb-4 border-b border-slate-100 pb-2">3. Entorno y Carga</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Ambiente de Operación</label>
+                        <select id="req-ambiente" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors cursor-pointer">
+                            <option value="No especificado">- Seleccionar -</option>
+                            <option value="Interior (Taller / Nave normal)">Interior (Taller / Nave normal)</option>
+                            <option value="Exterior (Sol / Lluvia)">Exterior (Intemperie / UV)</option>
+                            <option value="Extremo (Refrigeración / Fundición)">Extremo (Altas/Bajas Temperaturas)</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-[10px] font-bold text-slate-600 mb-1.5">Condiciones Especiales (Polvo, Químicos, etc.)</label>
+                        <input type="text" id="req-condiciones" placeholder="Ej. Aceites, virutas calientes, cuarto limpio..." class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors">
+                    </div>
+                </div>
+                
+                <div class="flex flex-col">
+                    <label class="text-[10px] font-bold text-slate-600 mb-1.5">Cables y Mangueras a alojar</label>
+                    <textarea id="req-cables" rows="3" placeholder="Describa brevemente qué llevará dentro la cadena (Ej. 3 cables de servomotor de aprox 12mm de diámetro, 2 mangueras neumáticas...)" class="w-full p-2.5 bg-slate-50 border border-gray-200 rounded text-sm text-slate-700 outline-none focus:ring-2 ring-chain-gray focus:bg-white transition-colors"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-slate-100 flex justify-end">
+                <button onclick="enviarRequerimiento()" class="bg-chain-gray hover:bg-slate-800 text-white px-8 py-4 rounded-lg font-bold text-sm uppercase tracking-widest shadow-lg transition-all transform active:scale-95 flex items-center gap-2 w-full md:w-auto justify-center">
+                    Enviar Datos a Ingeniería ✉️
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+<script>
+    function enviarRequerimiento() {
+        // Recolectamos los datos de los campos
+        const instalacion = document.getElementById("req-instalacion").value;
+        const material = document.getElementById("req-material").value;
+        const estructura = document.getElementById("req-estructura").value;
+        
+        // Dimensiones (si están vacías ponemos "No especificado")
+        const alto = document.getElementById("req-alto").value || "No especificado";
+        const ancho = document.getElementById("req-ancho").value || "No especificado";
+        const radio = document.getElementById("req-radio").value || "No especificado";
+        const largo = document.getElementById("req-largo").value || "No especificado";
+        
+        const ambiente = document.getElementById("req-ambiente").value;
+        const condiciones = document.getElementById("req-condiciones").value || "Ninguna especificada";
+        const cables = document.getElementById("req-cables").value || "No especificado";
+
+        // Formateamos el mensaje para el correo
+        let mensaje = "Hola Ingeniería QBLE,\n\nSolicito apoyo para el cálculo y cotización de un sistema de cadena portacable. A continuación los datos de mi levantamiento:\n\n";
+        
+        mensaje += "--- 1. DISEÑO GENERAL ---\n";
+        mensaje += `• Instalación: ${instalacion}\n`;
+        mensaje += `• Material: ${material}\n`;
+        mensaje += `• Estructura: ${estructura}\n\n`;
+
+        mensaje += "--- 2. DIMENSIONES ---\n";
+        mensaje += `• Alto Interior: ${alto} ${alto !== "No especificado" ? "mm" : ""}\n`;
+        mensaje += `• Ancho Interior: ${ancho} ${ancho !== "No especificado" ? "mm" : ""}\n`;
+        mensaje += `• Radio de Curvatura (R): ${radio} ${radio !== "No especificado" ? "mm" : ""}\n`;
+        mensaje += `• Longitud Total: ${largo} ${largo !== "No especificado" ? "metros" : ""}\n\n`;
+
+        mensaje += "--- 3. ENTORNO Y CARGA ---\n";
+        mensaje += `• Ambiente: ${ambiente}\n`;
+        mensaje += `• Condiciones Especiales: ${condiciones}\n`;
+        mensaje += `• Cables/Mangueras a alojar: ${cables}\n\n`;
+
+        mensaje += "Quedo a la espera de su contacto para definir los detalles. Saludos.";
+
+        // Redirigimos al contacto pasándole el mensaje
+        window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(mensaje)}`;
+    }
+</script>
+
+</body>
+</html>

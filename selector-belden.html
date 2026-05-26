@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurador QBLE - Belden New Generation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f8fafc; }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; }
+        /* Color Azul Belden */
+        .text-belden-blue { color: #1d4ed8; }
+        .bg-belden-blue { background-color: #1d4ed8; }
+        .border-belden-blue { border-color: #1d4ed8; }
+        .ring-belden-blue:focus { --tw-ring-color: #1d4ed8; }
+    </style>
+</head>
+<body class="py-10 px-4 text-slate-800">
+
+    <div class="max-w-5xl mx-auto mb-4">
+        <a href="index.html?s=herramientas" class="text-xs font-bold text-gray-400 hover:text-belden-blue transition-colors flex items-center uppercase tracking-wider">
+            <span class="mr-2 text-lg leading-none">←</span> Volver a la Suite QBLE
+        </a>
+    </div>
+
+    <div class="max-w-5xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100 border-t-4 border-belden-blue"> 
+        
+        <div class="mb-6 border-b border-gray-100 pb-4">
+            <h2 class="text-xl md:text-2xl text-slate-900 font-extrabold uppercase tracking-tight mb-1">Selector Belden® New Generation</h2>
+            <p class="text-xs text-gray-500 font-medium">Cables multipropósito para Audio, Seguridad, Control de Acceso y Alarmas contra Incendio.</p>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                
+                <div class="flex flex-col">
+                    <label class="text-[9px] font-black uppercase text-gray-400 mb-1.5 tracking-widest">Calibre (AWG)</label>
+                    <select id="filtro-calibre" onchange="manejarFiltrosDinamicos()" class="w-full p-2.5 bg-white border border-gray-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 ring-belden-blue shadow-sm cursor-pointer hover:border-gray-300 transition-colors">
+                        <option value="Todos">Todos</option>
+                        <option value="22 AWG">22 AWG</option>
+                        <option value="20 AWG">20 AWG</option>
+                        <option value="18 AWG">18 AWG</option>
+                        <option value="16 AWG">16 AWG</option>
+                        <option value="14 AWG">14 AWG</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-[9px] font-black uppercase text-gray-400 mb-1.5 tracking-widest">Conductores</label>
+                    <select id="filtro-conductores" onchange="manejarFiltrosDinamicos()" class="w-full p-2.5 bg-white border border-gray-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 ring-belden-blue shadow-sm cursor-pointer hover:border-gray-300 transition-colors">
+                        <option value="Todos">Todos</option>
+                        <option value="2 Conductores">2 Conductores</option>
+                        <option value="3 Conductores">3 Conductores</option>
+                        <option value="4 Conductores">4 Conductores</option>
+                        <option value="6 Conductores">6 Conductores</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-[9px] font-black uppercase text-gray-400 mb-1.5 tracking-widest">Blindaje</label>
+                    <select id="filtro-blindaje" onchange="manejarFiltrosDinamicos()" class="w-full p-2.5 bg-white border border-gray-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 ring-belden-blue shadow-sm cursor-pointer hover:border-gray-300 transition-colors">
+                        <option value="Todos">Todos</option>
+                        <option value="Sí (Foil)">Sí (Foil / Cinta Alum.)</option>
+                        <option value="No (Unshielded)">No (Unshielded)</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-[9px] font-black uppercase text-gray-400 mb-1.5 tracking-widest">Aplicación / Normativa</label>
+                    <select id="filtro-aplicacion" onchange="manejarFiltrosDinamicos()" class="w-full p-2.5 bg-white border border-gray-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 ring-belden-blue shadow-sm cursor-pointer hover:border-gray-300 transition-colors">
+                        <option value="Todos">Todos</option>
+                        <option value="Multiusos (CMR)">Audio / Control / Seguridad (CMR)</option>
+                        <option value="Alarma Incendio (FPLR Sólido)">Alarma contra Incendio (FPLR Sólido)</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <p class="text-[10px] text-gray-500 italic text-center mb-6 max-w-2xl mx-auto">
+            *Nota Técnica: Aunque estos cables están certificados para audio, seguridad y control de acceso (CMR/FPLR), son frecuentemente utilizados por la industria mexicana para cableado de instrumentación y control de bajo voltaje.
+        </p>
+
+        <div id="mensaje-inicial" class="bg-blue-50 border border-blue-100 rounded py-2 px-4 text-center mb-6">
+            <p class="text-xs font-medium text-belden-blue m-0 flex items-center justify-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Seleccione las opciones en los filtros para revelar el número de parte exacto.
+            </p>
+        </div>
+
+        <div id="contenedor-resultados" style="display: none;" class="mb-6 border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-900 text-white text-[10px] uppercase tracking-widest">
+                    <tr>
+                        <th class="p-3 w-1/6 font-semibold">Belden P/N</th>
+                        <th class="p-3 w-1/4 font-semibold">Especificación</th>
+                        <th class="p-3 w-1/5 font-semibold">Aplicación</th>
+                        <th class="p-3 w-1/5 text-center font-semibold">Bobinas</th>
+                        <th class="p-3 w-1/6 text-right font-semibold">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-resultados" class="bg-white text-xs divide-y divide-slate-100">
+                    </tbody>
+            </table>
+        </div>
+        
+        <div id="seccion-carrito" style="display: none;" class="mt-8 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-inner">
+            
+            <div class="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 uppercase flex items-center m-0 tracking-tight">
+                        <span id="contador-items" class="bg-belden-blue text-white w-6 h-6 inline-flex items-center justify-center rounded-full text-xs mr-2 shadow-sm">0</span> 
+                        Mi Lista de Cotización
+                    </h3>
+                </div>
+                
+                <button onclick="enviarPorCorreo()" class="bg-belden-blue hover:opacity-90 text-white px-5 py-2.5 rounded text-xs font-bold uppercase tracking-widest shadow-md transition-all transform active:scale-95 w-full md:w-auto">
+                    Solicitar Cotización ✉️
+                </button>
+            </div>
+
+            <div class="border border-slate-200 rounded overflow-hidden bg-white">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-100 text-[9px] uppercase tracking-widest text-gray-500 border-b border-gray-200">
+                        <tr>
+                            <th class="p-3 font-bold">Modelo Seleccionado</th>
+                            <th class="p-3 text-center font-bold">Cantidad</th>
+                            <th class="p-3 text-right font-bold">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-carrito" class="text-xs divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+<script>
+    // ==========================================
+    // BASE DE DATOS BELDEN NEW GENERATION (1000 ft)
+    // ==========================================
+    const baseDeDatos = [
+        // 22 AWG
+        { ref: "5502FE", familia: "Belden New Gen", modelo: "22 AWG / 4 Cond", calibre: "22 AWG", conductores: "4 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5502UE", familia: "Belden New Gen", modelo: "22 AWG / 4 Cond", calibre: "22 AWG", conductores: "4 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5504FE", familia: "Belden New Gen", modelo: "22 AWG / 6 Cond", calibre: "22 AWG", conductores: "6 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5504UE", familia: "Belden New Gen", modelo: "22 AWG / 6 Cond", calibre: "22 AWG", conductores: "6 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        
+        // 20 AWG
+        { ref: "5400FE", familia: "Belden New Gen", modelo: "20 AWG / 2 Cond", calibre: "20 AWG", conductores: "2 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5400UE", familia: "Belden New Gen", modelo: "20 AWG / 2 Cond", calibre: "20 AWG", conductores: "2 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        
+        // 18 AWG
+        { ref: "5300FE", familia: "Belden New Gen", modelo: "18 AWG / 2 Cond", calibre: "18 AWG", conductores: "2 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5300UE", familia: "Belden New Gen", modelo: "18 AWG / 2 Cond", calibre: "18 AWG", conductores: "2 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5301FE", familia: "Belden New Gen", modelo: "18 AWG / 3 Cond", calibre: "18 AWG", conductores: "3 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5301UE", familia: "Belden New Gen", modelo: "18 AWG / 3 Cond", calibre: "18 AWG", conductores: "3 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5302FE", familia: "Belden New Gen", modelo: "18 AWG / 4 Cond", calibre: "18 AWG", conductores: "4 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5302UE", familia: "Belden New Gen", modelo: "18 AWG / 4 Cond", calibre: "18 AWG", conductores: "4 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5304FE", familia: "Belden New Gen", modelo: "18 AWG / 6 Cond", calibre: "18 AWG", conductores: "6 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5304UE", familia: "Belden New Gen", modelo: "18 AWG / 6 Cond", calibre: "18 AWG", conductores: "6 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5320FL", familia: "Belden FireAlarm", modelo: "18 AWG / 2 Cond (Sólido)", calibre: "18 AWG", conductores: "2 Conductores", blindaje: "Sí (Foil)", aplicacion: "Alarma Incendio (FPLR Sólido)", unidad: "Bobinas (1000ft)" },
+        { ref: "5320UL", familia: "Belden FireAlarm", modelo: "18 AWG / 2 Cond (Sólido)", calibre: "18 AWG", conductores: "2 Conductores", blindaje: "No (Unshielded)", aplicacion: "Alarma Incendio (FPLR Sólido)", unidad: "Bobinas (1000ft)" },
+
+        // 16 AWG
+        { ref: "5200FE", familia: "Belden New Gen", modelo: "16 AWG / 2 Cond", calibre: "16 AWG", conductores: "2 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5200UE", familia: "Belden New Gen", modelo: "16 AWG / 2 Cond", calibre: "16 AWG", conductores: "2 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5202FE", familia: "Belden New Gen", modelo: "16 AWG / 4 Cond", calibre: "16 AWG", conductores: "4 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5202UE", familia: "Belden New Gen", modelo: "16 AWG / 4 Cond", calibre: "16 AWG", conductores: "4 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5220FL", familia: "Belden FireAlarm", modelo: "16 AWG / 2 Cond (Sólido)", calibre: "16 AWG", conductores: "2 Conductores", blindaje: "Sí (Foil)", aplicacion: "Alarma Incendio (FPLR Sólido)", unidad: "Bobinas (1000ft)" },
+        { ref: "5220UL", familia: "Belden FireAlarm", modelo: "16 AWG / 2 Cond (Sólido)", calibre: "16 AWG", conductores: "2 Conductores", blindaje: "No (Unshielded)", aplicacion: "Alarma Incendio (FPLR Sólido)", unidad: "Bobinas (1000ft)" },
+
+        // 14 AWG
+        { ref: "5100FE", familia: "Belden New Gen", modelo: "14 AWG / 2 Cond", calibre: "14 AWG", conductores: "2 Conductores", blindaje: "Sí (Foil)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5100UE", familia: "Belden New Gen", modelo: "14 AWG / 2 Cond", calibre: "14 AWG", conductores: "2 Conductores", blindaje: "No (Unshielded)", aplicacion: "Multiusos (CMR)", unidad: "Bobinas (1000ft)" },
+        { ref: "5120FL", familia: "Belden FireAlarm", modelo: "14 AWG / 2 Cond (Sólido)", calibre: "14 AWG", conductores: "2 Conductores", blindaje: "Sí (Foil)", aplicacion: "Alarma Incendio (FPLR Sólido)", unidad: "Bobinas (1000ft)" },
+        { ref: "5120UL", familia: "Belden FireAlarm", modelo: "14 AWG / 2 Cond (Sólido)", calibre: "14 AWG", conductores: "2 Conductores", blindaje: "No (Unshielded)", aplicacion: "Alarma Incendio (FPLR Sólido)", unidad: "Bobinas (1000ft)" }
+    ];
+
+    let carrito = [];
+
+    function manejarFiltrosDinamicos() {
+        const valCal = document.getElementById("filtro-calibre").value;
+        const valCond = document.getElementById("filtro-conductores").value;
+        const valBli = document.getElementById("filtro-blindaje").value;
+        const valApp = document.getElementById("filtro-aplicacion").value;
+
+        const haceMatch = (cable, testCal, testCond, testBli, testApp) => {
+            return (testCal === "Todos" || cable.calibre === testCal) &&
+                   (testCond === "Todos" || cable.conductores === testCond) &&
+                   (testBli === "Todos" || cable.blindaje === testBli) &&
+                   (testApp === "Todos" || cable.aplicacion === testApp);
+        };
+
+        const validCalibres = new Set(baseDeDatos.filter(c => haceMatch(c, "Todos", valCond, valBli, valApp)).map(c => c.calibre));
+        const validConductores = new Set(baseDeDatos.filter(c => haceMatch(c, valCal, "Todos", valBli, valApp)).map(c => c.conductores));
+        const validBlindajes = new Set(baseDeDatos.filter(c => haceMatch(c, valCal, valCond, "Todos", valApp)).map(c => c.blindaje));
+        const validApps = new Set(baseDeDatos.filter(c => haceMatch(c, valCal, valCond, valBli, "Todos")).map(c => c.aplicacion));
+
+        actualizarSelect("filtro-calibre", validCalibres);
+        actualizarSelect("filtro-conductores", validConductores);
+        actualizarSelect("filtro-blindaje", validBlindajes);
+        actualizarSelect("filtro-aplicacion", validApps);
+
+        filtrarCables();
+    }
+
+    function actualizarSelect(id, setValido) {
+        const select = document.getElementById(id);
+        let actualVal = select.value;
+        let seleccionValida = false;
+
+        Array.from(select.options).forEach(opt => {
+            if (opt.value === "Todos" || setValido.has(opt.value)) {
+                opt.style.display = ""; 
+                opt.disabled = false;
+                if (opt.value === actualVal) seleccionValida = true;
+            } else {
+                opt.style.display = "none"; 
+                opt.disabled = true;
+            }
+        });
+
+        if (!seleccionValida) {
+            select.value = "Todos";
+        }
+    }
+
+    function filtrarCables() {
+        const cal = document.getElementById("filtro-calibre").value;
+        const cond = document.getElementById("filtro-conductores").value;
+        const bli = document.getElementById("filtro-blindaje").value;
+        const app = document.getElementById("filtro-aplicacion").value;
+        
+        const contenedorResultados = document.getElementById("contenedor-resultados");
+        const tbody = document.getElementById("tabla-resultados");
+        const mensajeInicial = document.getElementById("mensaje-inicial");
+
+        if (cal === "Todos" || cond === "Todos" || bli === "Todos" || app === "Todos") {
+            contenedorResultados.style.display = "none";
+            mensajeInicial.style.display = "block";
+            return;
+        }
+
+        const res = baseDeDatos.filter(cable => {
+            return cable.calibre === cal && 
+                   cable.conductores === cond && 
+                   cable.blindaje === bli &&
+                   cable.aplicacion === app;
+        });
+
+        mensajeInicial.style.display = "none";
+        contenedorResultados.style.display = "block";
+        tbody.innerHTML = "";
+
+        if (res.length > 0) {
+            res.forEach(item => {
+                
+                let badgeStyle = "background: #f1f5f9; color: #475569; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;";
+                if (item.aplicacion.includes("Incendio")) {
+                    badgeStyle = "background: #ef4444; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;";
+                } else {
+                    badgeStyle = "background: #1e3a8a; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;";
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100">
+                        <td class="p-4 text-gray-400 italic text-xs">P/N ${item.ref}</td>
+                        <td class="p-4 font-bold text-belden-blue text-sm">${item.modelo}</td>
+                        <td class="p-4"><span style="${badgeStyle}">${item.familia}</span></td>
+                        <td class="p-4 text-center">
+                            <div class="inline-flex items-center bg-white border border-gray-200 rounded px-2 py-1 shadow-sm">
+                                <input type="number" id="qty-${item.ref}" value="1" min="1" step="1" class="w-12 border-none outline-none text-center font-bold text-slate-800 text-sm">
+                                <span class="text-gray-400 text-[10px] ml-1 font-bold uppercase">Bobinas</span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-right">
+                            <button onclick="agregarAlCarrito('${item.ref}', this)" class="text-belden-blue border border-belden-blue hover:bg-belden-blue hover:text-white px-4 py-2 rounded font-bold text-xs uppercase tracking-wider transition-colors">
+                                AÑADIR 📦
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        } else {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-red-500 font-bold text-xs uppercase tracking-widest">⚠️ No hay modelos que cumplan exactamente con esta combinación.</td></tr>`;
+        }
+    }
+
+    function agregarAlCarrito(ref, btnElement) {
+        const item = baseDeDatos.find(i => i.ref === ref);
+        const qty = document.getElementById(`qty-${ref}`).value;
+        
+        if(qty <= 0 || qty === "") {
+            alert("Por favor ingrese una cantidad válida.");
+            return;
+        }
+
+        const existe = carrito.find(c => c.ref === ref);
+        if (existe) {
+            existe.cantidad = parseInt(existe.cantidad) + parseInt(qty);
+        } else {
+            carrito.push({ ...item, cantidad: qty });
+        }
+        
+        actualizarInterfazCarrito();
+        
+        btnElement.style.background = "#1d4ed8";
+        btnElement.style.color = "white";
+        btnElement.innerHTML = "LISTO ✓";
+        
+        setTimeout(() => {
+            resetearFiltros();
+        }, 600);
+    }
+
+    function resetearFiltros() {
+        document.getElementById("filtro-calibre").value = "Todos";
+        document.getElementById("filtro-conductores").value = "Todos";
+        document.getElementById("filtro-blindaje").value = "Todos";
+        document.getElementById("filtro-aplicacion").value = "Todos";
+
+        manejarFiltrosDinamicos(); 
+    }
+
+    function actualizarInterfazCarrito() {
+        const seccion = document.getElementById("seccion-carrito");
+        const lista = document.getElementById("lista-carrito");
+        const contador = document.getElementById("contador-items");
+
+        if (carrito.length > 0) {
+            seccion.style.display = "block";
+            contador.innerText = carrito.length;
+            lista.innerHTML = "";
+            carrito.forEach((item, index) => {
+                lista.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-gray-100">
+                        <td class="p-4 font-bold text-slate-800 text-sm">
+                            ${item.familia} - ${item.modelo} 
+                            <span class="text-gray-400 font-normal ml-2 text-xs uppercase">P/N ${item.ref}</span>
+                        </td>
+                        <td class="p-4 text-center">
+                            <span class="bg-gray-100 px-3 py-1 rounded font-bold text-slate-800">${item.cantidad} <span class="text-gray-500 font-normal ml-1">bobinas</span></span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <button onclick="removerDelCarrito(${index})" class="text-red-500 hover:bg-red-50 p-2 rounded transition-colors text-lg" title="Eliminar">🗑️</button>
+                        </td>
+                    </tr>`;
+            });
+        } else {
+            seccion.style.display = "none";
+        }
+    }
+
+    function removerDelCarrito(index) {
+        carrito.splice(index, 1);
+        actualizarInterfazCarrito();
+    }
+
+    function enviarPorCorreo() {
+        let listaCables = "Hola QBLE, solicito cotización formal de los siguientes cables Belden:\n\n";
+        
+        carrito.forEach(item => {
+            listaCables += `• ${item.cantidad} bobinas (1000ft) | ${item.familia} - ${item.modelo} | P/N: ${item.ref}\n`;
+        });
+        
+        listaCables += "\nQuedo a la espera de su pronta respuesta. Saludos.";
+
+        window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(listaCables)}`;
+    }
+
+    window.onload = manejarFiltrosDinamicos;
+</script>
+
+</body>
+</html>

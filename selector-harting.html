@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurador QBLE - Harting Connectors</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background-color: #f8fafc; }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; }
+        .text-harting-yellow { color: #ca8a04; }
+        .bg-harting-yellow { background-color: #ca8a04; }
+        .border-harting-yellow { border-color: #ca8a04; }
+        .ring-harting-yellow:focus { --tw-ring-color: #ca8a04; }
+    </style>
+</head>
+<body class="py-10 px-4 text-slate-800">
+
+    <div class="max-w-5xl mx-auto mb-4">
+        <a href="index.html?s=herramientas" class="text-xs font-bold text-gray-400 hover:text-harting-yellow transition-colors flex items-center uppercase tracking-wider">
+            <span class="mr-2 text-lg leading-none">←</span> Volver a la Suite QBLE
+        </a>
+    </div>
+
+    <div class="max-w-5xl mx-auto bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100 border-t-4 border-harting-yellow"> 
+        
+        <div class="mb-6 border-b border-gray-100 pb-4 flex items-center justify-between">
+            <div>
+                <h2 class="text-xl md:text-2xl text-slate-900 font-extrabold uppercase tracking-tight mb-1">Selector de Kits Han® (Harting)</h2>
+                <p class="text-xs text-gray-500 font-medium">Solución completa: Incluye Base, Carcasa (Salida Lateral), Insertos Macho/Hembra (16A/600V) y Prensaestopas.</p>
+            </div>
+            <div class="hidden md:block bg-yellow-50 p-3 rounded-lg border border-yellow-100 text-right">
+                <p class="text-[10px] font-black text-yellow-600 uppercase tracking-widest mb-1">Terminación</p>
+                <p class="text-sm font-bold text-slate-800">Tornillo (Screw)</p>
+            </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                
+                <div class="flex flex-col">
+                    <label class="text-[9px] font-black uppercase text-gray-400 mb-1.5 tracking-widest">Polos (Contactos)</label>
+                    <select id="filtro-polos" onchange="manejarFiltrosDinamicos()" class="w-full p-2.5 bg-white border border-gray-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 ring-harting-yellow shadow-sm cursor-pointer hover:border-gray-300 transition-colors">
+                        <option value="Todos">Todos</option>
+                        <option value="10 + Tierra">10 + Tierra (Han 10B)</option>
+                        <option value="16 + Tierra">16 + Tierra (Han 16B)</option>
+                        <option value="24 + Tierra">24 + Tierra (Han 24B)</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-[9px] font-black uppercase text-gray-400 mb-1.5 tracking-widest">Corriente Máxima</label>
+                    <select id="filtro-corriente" onchange="manejarFiltrosDinamicos()" class="w-full p-2.5 bg-white border border-gray-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 ring-harting-yellow shadow-sm cursor-pointer hover:border-gray-300 transition-colors">
+                        <option value="Todos">Todos</option>
+                        <option value="16A">16 Amperes (Serie E)</option>
+                    </select>
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-[9px] font-black uppercase text-gray-400 mb-1.5 tracking-widest">Base de Montaje</label>
+                    <select id="filtro-montaje" onchange="manejarFiltrosDinamicos()" class="w-full p-2.5 bg-white border border-gray-200 rounded text-xs font-bold text-slate-700 outline-none focus:ring-2 ring-harting-yellow shadow-sm cursor-pointer hover:border-gray-300 transition-colors">
+                        <option value="Todos">Todos</option>
+                        <option value="Panel Recto (Bulkhead)">Panel Recto (Bulkhead)</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <p class="text-[10px] text-gray-500 italic text-center mb-6 max-w-2xl mx-auto">
+            *Nota Técnica: Estos Kits incluyen la carcasa superior (Hood), la base para chasis (Housing), insertos atornillables tipo E (18-14 AWG) y un prensaestopas metálico IP65.
+        </p>
+
+        <div id="mensaje-inicial" class="bg-yellow-50 border border-yellow-100 rounded py-2 px-4 text-center mb-6">
+            <p class="text-xs font-medium text-harting-yellow m-0 flex items-center justify-center">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Seleccione el número de polos para revelar el kit exacto.
+            </p>
+        </div>
+
+        <div id="contenedor-resultados" style="display: none;" class="mb-6 border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-900 text-white text-[10px] uppercase tracking-widest">
+                    <tr>
+                        <th class="p-3 w-1/6 font-semibold">Harting P/N</th>
+                        <th class="p-3 w-1/4 font-semibold">Configuración</th>
+                        <th class="p-3 w-1/5 font-semibold">Familia / Tamaño</th>
+                        <th class="p-3 w-1/5 text-center font-semibold">Kits (Juegos)</th>
+                        <th class="p-3 w-1/6 text-right font-semibold">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-resultados" class="bg-white text-xs divide-y divide-slate-100"></tbody>
+            </table>
+        </div>
+        
+        <div id="seccion-carrito" style="display: none;" class="mt-8 bg-slate-50 p-6 rounded-xl border border-slate-200 shadow-inner">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-5 gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 uppercase flex items-center m-0 tracking-tight">
+                        <span id="contador-items" class="bg-harting-yellow text-white w-6 h-6 inline-flex items-center justify-center rounded-full text-xs mr-2 shadow-sm">0</span> 
+                        Mi Lista de Cotización
+                    </h3>
+                </div>
+                <button onclick="enviarPorCorreo()" class="bg-harting-yellow hover:opacity-90 text-white px-5 py-2.5 rounded text-xs font-bold uppercase tracking-widest shadow-md transition-all transform active:scale-95 w-full md:w-auto">
+                    Solicitar Cotización ✉️
+                </button>
+            </div>
+
+            <div class="border border-slate-200 rounded overflow-hidden bg-white">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-100 text-[9px] uppercase tracking-widest text-gray-500 border-b border-gray-200">
+                        <tr>
+                            <th class="p-3 font-bold">Kit Seleccionado</th>
+                            <th class="p-3 text-center font-bold">Cantidad</th>
+                            <th class="p-3 text-right font-bold">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-carrito" class="text-xs divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ==========================================
+    // BASE DE DATOS KITS HARTING (REAL, SIN SALIDAS SUPERIORES)
+    // ==========================================
+    const baseDeDatos = [
+        { ref: "10330100000", familia: "Han 10B", modelo: "Kit Han E (16A)", polos: "10 + Tierra", corriente: "16A", montaje: "Panel Recto (Bulkhead)" },
+        { ref: "10330160000", familia: "Han 16B", modelo: "Kit Han E (16A)", polos: "16 + Tierra", corriente: "16A", montaje: "Panel Recto (Bulkhead)" },
+        { ref: "10330240000", familia: "Han 24B", modelo: "Kit Han E (16A)", polos: "24 + Tierra", corriente: "16A", montaje: "Panel Recto (Bulkhead)" }
+    ];
+
+    let carrito = [];
+
+    function manejarFiltrosDinamicos() {
+        const valPol = document.getElementById("filtro-polos").value;
+        const valCor = document.getElementById("filtro-corriente").value;
+        const valMon = document.getElementById("filtro-montaje").value;
+
+        const haceMatch = (cable, testPol, testCor, testMon) => {
+            return (testPol === "Todos" || cable.polos === testPol) &&
+                   (testCor === "Todos" || cable.corriente === testCor) &&
+                   (testMon === "Todos" || cable.montaje === testMon);
+        };
+
+        const validPolos = new Set(baseDeDatos.filter(c => haceMatch(c, "Todos", valCor, valMon)).map(c => c.polos));
+        const validCorrientes = new Set(baseDeDatos.filter(c => haceMatch(c, valPol, "Todos", valMon)).map(c => c.corriente));
+        const validMontajes = new Set(baseDeDatos.filter(c => haceMatch(c, valPol, valCor, "Todos")).map(c => c.montaje));
+
+        actualizarSelect("filtro-polos", validPolos);
+        actualizarSelect("filtro-corriente", validCorrientes);
+        actualizarSelect("filtro-montaje", validMontajes);
+
+        filtrarCables();
+    }
+
+    function actualizarSelect(id, setValido) {
+        const select = document.getElementById(id);
+        let actualVal = select.value;
+        let seleccionValida = false;
+
+        Array.from(select.options).forEach(opt => {
+            if (opt.value === "Todos" || setValido.has(opt.value)) {
+                opt.style.display = ""; 
+                opt.disabled = false;
+                if (opt.value === actualVal) seleccionValida = true;
+            } else {
+                opt.style.display = "none"; 
+                opt.disabled = true;
+            }
+        });
+
+        if (!seleccionValida) { select.value = "Todos"; }
+    }
+
+    function filtrarCables() {
+        const pol = document.getElementById("filtro-polos").value;
+        const cor = document.getElementById("filtro-corriente").value;
+        const mon = document.getElementById("filtro-montaje").value;
+        
+        const contenedorResultados = document.getElementById("contenedor-resultados");
+        const tbody = document.getElementById("tabla-resultados");
+        const mensajeInicial = document.getElementById("mensaje-inicial");
+
+        if (pol === "Todos" || cor === "Todos" || mon === "Todos") {
+            contenedorResultados.style.display = "none";
+            mensajeInicial.style.display = "block";
+            return;
+        }
+
+        const res = baseDeDatos.filter(cable => {
+            return cable.polos === pol && 
+                   cable.corriente === cor && 
+                   cable.montaje === mon;
+        });
+
+        mensajeInicial.style.display = "none";
+        contenedorResultados.style.display = "block";
+        tbody.innerHTML = "";
+
+        if (res.length > 0) {
+            res.forEach(item => {
+                let badgeStyle = "background: #fef08a; color: #a16207; border: 1px solid #fde047; padding: 4px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; text-transform: uppercase;";
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-colors border-b border-slate-100">
+                        <td class="p-4 text-gray-400 italic text-xs">P/N ${item.ref}</td>
+                        <td class="p-4 font-bold text-slate-800 text-sm">
+                            ${item.polos} <span class="font-normal text-xs text-gray-500 block">Salida Lateral</span>
+                        </td>
+                        <td class="p-4"><span style="${badgeStyle}">${item.familia}</span></td>
+                        <td class="p-4 text-center">
+                            <div class="inline-flex items-center bg-white border border-gray-200 rounded px-2 py-1 shadow-sm">
+                                <input type="number" id="qty-${item.ref}" value="1" min="1" step="1" class="w-12 border-none outline-none text-center font-bold text-slate-800 text-sm">
+                                <span class="text-gray-400 text-[10px] ml-1 font-bold uppercase">Kits</span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-right">
+                            <button onclick="agregarAlCarrito('${item.ref}', this)" class="text-harting-yellow border border-harting-yellow hover:bg-harting-yellow hover:text-white px-4 py-2 rounded font-bold text-xs uppercase tracking-wider transition-colors">
+                                AÑADIR 📦
+                            </button>
+                        </td>
+                    </tr>`;
+            });
+        } else {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-red-500 font-bold text-xs uppercase tracking-widest">⚠️ No hay kits que cumplan exactamente con esta combinación.</td></tr>`;
+        }
+    }
+
+    function agregarAlCarrito(ref, btnElement) {
+        const item = baseDeDatos.find(i => i.ref === ref);
+        const qty = document.getElementById(`qty-${ref}`).value;
+        
+        if(qty <= 0 || qty === "") {
+            alert("Por favor ingrese una cantidad válida.");
+            return;
+        }
+
+        const existe = carrito.find(c => c.ref === ref);
+        if (existe) {
+            existe.cantidad = parseInt(existe.cantidad) + parseInt(qty);
+        } else {
+            carrito.push({ ...item, cantidad: qty });
+        }
+        
+        actualizarInterfazCarrito();
+        
+        btnElement.style.background = "#ca8a04";
+        btnElement.style.color = "white";
+        btnElement.innerHTML = "LISTO ✓";
+        
+        setTimeout(() => {
+            resetearFiltros();
+        }, 600);
+    }
+
+    function resetearFiltros() {
+        document.getElementById("filtro-polos").value = "Todos";
+        document.getElementById("filtro-corriente").value = "Todos";
+        document.getElementById("filtro-montaje").value = "Todos";
+        manejarFiltrosDinamicos(); 
+    }
+
+    function actualizarInterfazCarrito() {
+        const seccion = document.getElementById("seccion-carrito");
+        const lista = document.getElementById("lista-carrito");
+        const contador = document.getElementById("contador-items");
+
+        if (carrito.length > 0) {
+            seccion.style.display = "block";
+            contador.innerText = carrito.length;
+            lista.innerHTML = "";
+            carrito.forEach((item, index) => {
+                lista.innerHTML += `
+                    <tr class="hover:bg-slate-50 border-b border-gray-100">
+                        <td class="p-4 font-bold text-slate-800 text-sm">
+                            ${item.familia} - ${item.modelo} (${item.polos})
+                            <span class="text-gray-400 font-normal ml-2 text-xs uppercase block mt-1">P/N ${item.ref}</span>
+                        </td>
+                        <td class="p-4 text-center">
+                            <span class="bg-gray-100 px-3 py-1 rounded font-bold text-slate-800">${item.cantidad} <span class="text-gray-500 font-normal ml-1">Kits</span></span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <button onclick="removerDelCarrito(${index})" class="text-red-500 hover:bg-red-50 p-2 rounded transition-colors text-lg" title="Eliminar">🗑️</button>
+                        </td>
+                    </tr>`;
+            });
+        } else {
+            seccion.style.display = "none";
+        }
+    }
+
+    function removerDelCarrito(index) {
+        carrito.splice(index, 1);
+        actualizarInterfazCarrito();
+    }
+
+    function enviarPorCorreo() {
+        let listaCables = "Hola QBLE, solicito cotización formal de los siguientes Kits Harting:\n\n";
+        
+        carrito.forEach(item => {
+            listaCables += `• ${item.cantidad} Kits | ${item.familia} (${item.polos}) Salida Lateral | P/N: ${item.ref}\n`;
+        });
+        
+        listaCables += "\nQuedo a la espera de su pronta respuesta. Saludos.";
+
+        window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(listaCables)}`;
+    }
+
+    window.onload = manejarFiltrosDinamicos;
+</script>
+
+</body>
+</html>

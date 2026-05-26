@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>Configurador QBLE - Cables VFD (Ultra Rápido)</title>
+
+</head>
+
+<body style="background-color: #f1f5f9; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif;">
+
+<div style="max-width: 1050px; margin: 0 auto; padding-bottom: 20px;">
+        <a href="index.html?s=herramientas" style="color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#64748b'">
+            <span style="margin-right: 5px;">←</span> Volver a la Suite QBLE
+        </a>
+    </div>
+
+<div style="max-width: 1050px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #2563eb;">
+
+<div style="text-align: left; margin-bottom: 30px;">
+
+<h2 style="color: #0f172a; margin-bottom: 5px; text-transform: uppercase; font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">SELECTOR DE CABLES PARA VARIADOR (VFD)</h2>
+
+<p style="color: #64748b; font-size: 15px;">Cables especializados con blindaje EMC para motores, servos y control de variadores de frecuencia.</p>
+
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; background: #ffffff; padding: 25px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
+
+<div style="display: flex; flex-direction: column;">
+
+<label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">Calibre</label>
+
+<select id="filtro-calibre" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+<option value="Todos">Todos</option>
+
+<option value="18 AWG">18 AWG</option>
+
+<option value="16 AWG">16 AWG</option><option value="14 AWG">14 AWG</option>
+
+<option value="12 AWG">12 AWG</option><option value="10 AWG">10 AWG</option>
+
+<option value="8 AWG">8 AWG</option><option value="6 AWG">6 AWG</option>
+
+<option value="4 AWG">4 AWG</option><option value="2 AWG">2 AWG</option>
+
+<option value="1 AWG">1 AWG</option><option value="1/0 AWG">1/0 AWG</option>
+
+<option value="2/0 AWG">2/0 AWG</option><option value="3/0 AWG">3/0 AWG</option>
+
+<option value="4/0 AWG">4/0 AWG</option><option value="250 kcmil">250 kcmil</option>
+
+<option value="300 kcmil">300 kcmil</option><option value="350 kcmil">350 kcmil</option>
+
+<option value="400 kcmil">400 kcmil</option><option value="500 kcmil">500 kcmil</option>
+
+</select>
+
+</div>
+
+<div style="display: flex; flex-direction: column;">
+
+<label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">Configuración</label>
+
+<select id="filtro-configuracion" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+<option value="Todos">Todos</option>
+
+<option value="4 Conductores">4 Conductores (Clásico)</option>
+
+<option value="3+3 Simétrico">3+3 Simétrico</option>
+
+</select>
+
+</div>
+
+<div style="display: flex; flex-direction: column;">
+
+<label style="font-weight: 700; font-size: 11px; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px;">TC-ER (Charola)</label>
+
+<select id="filtro-tcer" onchange="manejarFiltrosDinamicos()" style="padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; font-size: 14px; color: #1e293b; font-weight: 600;">
+
+<option value="Todos">Todos</option>
+
+<option value="Sí">Sí (Apto Charola)</option>
+
+<option value="No">No</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div id="mensaje-inicial" style="text-align: center; padding: 20px; border: 1px dashed #cbd5e1; border-radius: 8px; margin-bottom: 30px; background-color: #f8fafc;">
+
+<p style="color: #64748b; margin: 0; font-size: 14px; font-weight: 500;"><span style="margin-right: 8px; font-size: 16px;">⚡</span> Seleccione una opción en los 3 filtros para revelar el modelo exacto.</p>
+
+</div>
+
+<div id="contenedor-resultados" style="display: none; margin-bottom: 30px;">
+
+<div style="border: 1px solid #1e293b; border-radius: 8px; overflow: hidden;">
+
+<table style="width: 100%; border-collapse: collapse; background: #0f172a;">
+
+<thead>
+
+<tr style="color: #ffffff; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">
+
+<th style="padding: 15px; text-align: left; width: 15%;">REF / P/N</th>
+
+<th style="padding: 15px; text-align: left; width: 30%;">MODELO</th>
+
+<th style="padding: 15px; text-align: left; width: 15%;">FAMILIA</th>
+
+<th style="padding: 15px; text-align: center; width: 20%;">METROS</th>
+
+<th style="padding: 15px; text-align: right; width: 20%;">ACCIÓN</th>
+
+</tr>
+
+</thead>
+
+</table>
+
+<div style="max-height: 400px; overflow-y: auto; background: #ffffff;">
+
+<table style="width: 100%; border-collapse: collapse;">
+
+<tbody id="tabla-resultados">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="seccion-carrito" style="display: none; background: #ffffff; padding: 25px; border-radius: 12px; border: 2px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); margin-top: 40px;">
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+
+<div>
+
+<h3 style="color: #0f172a; margin: 0 0 5px 0; font-size: 22px; text-transform: uppercase; display: flex; align-items: center;">
+
+<span style="background: #2563eb; color: white; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 16px; margin-right: 12px;" id="contador-items">0</span>
+
+MI LISTA DE COTIZACIÓN (VFD)
+
+</h3>
+
+<p style="color: #64748b; font-size: 13px; margin: 0;">Revise los modelos y cantidades antes de solicitar su presupuesto formal.</p>
+
+</div>
+
+<button onclick="enviarPorCorreo()" style="background: #2563eb; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3); transition: transform 0.2s;">
+
+COTIZACIÓN FORMAL ✉️
+
+</button>
+
+</div>
+
+<div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+
+<table style="width: 100%; border-collapse: collapse; background: #fff;">
+
+<thead style="background: #f8fafc;">
+
+<tr style="border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">
+
+<th style="padding: 15px; text-align: left;">Modelo Seleccionado</th>
+
+<th style="padding: 15px; text-align: center;">Cantidad</th>
+
+<th style="padding: 15px; text-align: right;">Eliminar</th>
+
+</tr>
+
+</thead>
+
+<tbody id="lista-carrito"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+// ==========================================
+
+// BASE DE DATOS DE CABLES VFD
+
+// ==========================================
+
+const baseDeDatos = [
+
+// --- 1. VFD 4 CONDUCTORES (EUROPEOS - NO TC-ER) ---
+
+{ ref: "22234", familia: "VFD Europeo", modelo: "4 G 1.5", configuracion: "4 Conductores", calibre: "16 AWG", tcer: "No" },
+
+{ ref: "22235", familia: "VFD Europeo", modelo: "4 G 2.5", configuracion: "4 Conductores", calibre: "14 AWG", tcer: "No" },
+
+{ ref: "22236", familia: "VFD Europeo", modelo: "4 G 4", configuracion: "4 Conductores", calibre: "12 AWG", tcer: "No" },
+
+{ ref: "22237", familia: "VFD Europeo", modelo: "4 G 6", configuracion: "4 Conductores", calibre: "10 AWG", tcer: "No" },
+
+{ ref: "22238", familia: "VFD Europeo", modelo: "4 G 10", configuracion: "4 Conductores", calibre: "8 AWG", tcer: "No" },
+
+{ ref: "22239", familia: "VFD Europeo", modelo: "4 G 16", configuracion: "4 Conductores", calibre: "6 AWG", tcer: "No" },
+
+{ ref: "22240", familia: "VFD Europeo", modelo: "4 G 25", configuracion: "4 Conductores", calibre: "4 AWG", tcer: "No" },
+
+{ ref: "22241", familia: "VFD Europeo", modelo: "4 G 35", configuracion: "4 Conductores", calibre: "2 AWG", tcer: "No" },
+
+{ ref: "22242", familia: "VFD Europeo", modelo: "4 G 50", configuracion: "4 Conductores", calibre: "1 AWG", tcer: "No" },
+
+{ ref: "22243", familia: "VFD Europeo", modelo: "4 G 70", configuracion: "4 Conductores", calibre: "2/0 AWG", tcer: "No" },
+
+{ ref: "22244", familia: "VFD Europeo", modelo: "4 G 95", configuracion: "4 Conductores", calibre: "3/0 AWG", tcer: "No" },
+
+{ ref: "22245", familia: "VFD Europeo", modelo: "4 G 120", configuracion: "4 Conductores", calibre: "4/0 AWG", tcer: "No" },
+
+{ ref: "22246", familia: "VFD Europeo", modelo: "4 G 150", configuracion: "4 Conductores", calibre: "300 kcmil", tcer: "No" },
+
+{ ref: "22247", familia: "VFD Europeo", modelo: "4 G 185", configuracion: "4 Conductores", calibre: "350 kcmil", tcer: "No" },
+
+// --- 2. VFD 3+3 SIMÉTRICO (EUROPEOS - NO TC-ER) ---
+
+{ ref: "22673", familia: "VFD Europeo", modelo: "3 x 1.5 + 3 G 0.25", configuracion: "3+3 Simétrico", calibre: "16 AWG", tcer: "No" },
+
+{ ref: "22674", familia: "VFD Europeo", modelo: "3 x 2.5 + 3 G 0.5", configuracion: "3+3 Simétrico", calibre: "14 AWG", tcer: "No" },
+
+{ ref: "22675", familia: "VFD Europeo", modelo: "3 x 4 + 3 G 0.75", configuracion: "3+3 Simétrico", calibre: "12 AWG", tcer: "No" },
+
+{ ref: "22676", familia: "VFD Europeo", modelo: "3 x 6 + 3 G 1", configuracion: "3+3 Simétrico", calibre: "10 AWG", tcer: "No" },
+
+{ ref: "22677", familia: "VFD Europeo", modelo: "3 x 10 + 3 G 1.5", configuracion: "3+3 Simétrico", calibre: "8 AWG", tcer: "No" },
+
+{ ref: "22678", familia: "VFD Europeo", modelo: "3 x 16 + 3 G 2.5", configuracion: "3+3 Simétrico", calibre: "6 AWG", tcer: "No" },
+
+{ ref: "22679", familia: "VFD Europeo", modelo: "3 x 25 + 3 G 4", configuracion: "3+3 Simétrico", calibre: "4 AWG", tcer: "No" },
+
+{ ref: "22680", familia: "VFD Europeo", modelo: "3 x 35 + 3 G 6", configuracion: "3+3 Simétrico", calibre: "2 AWG", tcer: "No" },
+
+{ ref: "22681", familia: "VFD Europeo", modelo: "3 x 50 + 3 G 10", configuracion: "3+3 Simétrico", calibre: "1 AWG", tcer: "No" },
+
+{ ref: "22682", familia: "VFD Europeo", modelo: "3 x 70 + 3 G 10", configuracion: "3+3 Simétrico", calibre: "2/0 AWG", tcer: "No" },
+
+{ ref: "22684", familia: "VFD Europeo", modelo: "3 x 120 + 3 G 16", configuracion: "3+3 Simétrico", calibre: "4/0 AWG", tcer: "No" },
+
+{ ref: "22685", familia: "VFD Europeo", modelo: "3 x 150 + 3 G 25", configuracion: "3+3 Simétrico", calibre: "300 kcmil", tcer: "No" },
+
+{ ref: "22686", familia: "VFD Europeo", modelo: "3 x 185 + 3 G 35", configuracion: "3+3 Simétrico", calibre: "350 kcmil", tcer: "No" },
+
+{ ref: "22687", familia: "VFD Europeo", modelo: "3 x 240 + 3 G 42.5", configuracion: "3+3 Simétrico", calibre: "500 kcmil", tcer: "No" },
+
+// --- 3. VFD 4 CONDUCTORES (AMERICANOS NEGROS - TC-ER SÍ) ---
+
+{ ref: "63139", familia: "VFD Americano TC-ER", modelo: "4 G 0.82", configuracion: "4 Conductores", calibre: "18 AWG", tcer: "Sí" },
+
+{ ref: "63140", familia: "VFD Americano TC-ER", modelo: "4 G 1.31", configuracion: "4 Conductores", calibre: "16 AWG", tcer: "Sí" },
+
+{ ref: "63137", familia: "VFD Americano TC-ER", modelo: "4 G 2.08", configuracion: "4 Conductores", calibre: "14 AWG", tcer: "Sí" },
+
+{ ref: "63141", familia: "VFD Americano TC-ER", modelo: "4 G 3.31", configuracion: "4 Conductores", calibre: "12 AWG", tcer: "Sí" },
+
+{ ref: "63142", familia: "VFD Americano TC-ER", modelo: "4 G 5.26", configuracion: "4 Conductores", calibre: "10 AWG", tcer: "Sí" },
+
+{ ref: "63143", familia: "VFD Americano TC-ER", modelo: "4 G 8.37", configuracion: "4 Conductores", calibre: "8 AWG", tcer: "Sí" },
+
+{ ref: "63144", familia: "VFD Americano TC-ER", modelo: "4 G 13.30", configuracion: "4 Conductores", calibre: "6 AWG", tcer: "Sí" },
+
+{ ref: "63145", familia: "VFD Americano TC-ER", modelo: "4 G 21.20", configuracion: "4 Conductores", calibre: "4 AWG", tcer: "Sí" },
+
+{ ref: "63146", familia: "VFD Americano TC-ER", modelo: "4 G 33.60", configuracion: "4 Conductores", calibre: "2 AWG", tcer: "Sí" },
+
+// --- 4. VFD 3+3 SIMÉTRICO (AMERICANOS - TC-ER SÍ) ---
+
+{ ref: "59398", familia: "VFD Americano TC-ER", modelo: "3 x 8.37 + 3 G 2.08", configuracion: "3+3 Simétrico", calibre: "8 AWG", tcer: "Sí" },
+
+{ ref: "59399", familia: "VFD Americano TC-ER", modelo: "3 x 13.3 + 3 G 3.3", configuracion: "3+3 Simétrico", calibre: "6 AWG", tcer: "Sí" },
+
+{ ref: "59400", familia: "VFD Americano TC-ER", modelo: "3 x 21.2 + 3 G 3.3", configuracion: "3+3 Simétrico", calibre: "4 AWG", tcer: "Sí" },
+
+{ ref: "59401", familia: "VFD Americano TC-ER", modelo: "3 x 33.6 + 3 G 5.26", configuracion: "3+3 Simétrico", calibre: "2 AWG", tcer: "Sí" },
+
+{ ref: "59402", familia: "VFD Americano TC-ER", modelo: "3 x 42.4 + 3 G 8.37", configuracion: "3+3 Simétrico", calibre: "1 AWG", tcer: "Sí" },
+
+{ ref: "59403", familia: "VFD Americano TC-ER", modelo: "3 x 53.4 + 3 G 8.37", configuracion: "3+3 Simétrico", calibre: "1/0 AWG", tcer: "Sí" },
+
+{ ref: "59404", familia: "VFD Americano TC-ER", modelo: "3 x 67.5 + 3 G 8.37", configuracion: "3+3 Simétrico", calibre: "2/0 AWG", tcer: "Sí" },
+
+{ ref: "59405", familia: "VFD Americano TC-ER", modelo: "3 x 85.0 + 3 G 13.3", configuracion: "3+3 Simétrico", calibre: "3/0 AWG", tcer: "Sí" },
+
+{ ref: "59406", familia: "VFD Americano TC-ER", modelo: "3 x 107.2 + 3 G 13.3", configuracion: "3+3 Simétrico", calibre: "4/0 AWG", tcer: "Sí" },
+
+{ ref: "59407", familia: "VFD Americano TC-ER", modelo: "3 x 127.0 + 3 G 13.3", configuracion: "3+3 Simétrico", calibre: "250 kcmil", tcer: "Sí" },
+
+{ ref: "59408", familia: "VFD Americano TC-ER", modelo: "3 x 152.0 + 3 G 21.2", configuracion: "3+3 Simétrico", calibre: "300 kcmil", tcer: "Sí" },
+
+{ ref: "59409", familia: "VFD Americano TC-ER", modelo: "3 x 178.0 + 3 G 33.6", configuracion: "3+3 Simétrico", calibre: "350 kcmil", tcer: "Sí" },
+
+{ ref: "59410", familia: "VFD Americano TC-ER", modelo: "3 x 203.0 + 3 G 33.6", configuracion: "3+3 Simétrico", calibre: "400 kcmil", tcer: "Sí" },
+
+{ ref: "59411", familia: "VFD Americano TC-ER", modelo: "3 x 254.0 + 3 G 33.6", configuracion: "3+3 Simétrico", calibre: "500 kcmil", tcer: "Sí" }
+
+];
+
+let carrito = [];
+
+// ==========================================
+
+// LÓGICA DE FILTROS DEPENDIENTES / CASCADA
+
+// ==========================================
+
+function manejarFiltrosDinamicos() {
+
+const valC = document.getElementById("filtro-calibre").value;
+
+const valConf = document.getElementById("filtro-configuracion").value;
+
+const valTC = document.getElementById("filtro-tcer").value;
+
+const haceMatch = (cable, testC, testConf, testTC) => {
+
+return (testC === "Todos" || cable.calibre === testC) &&
+
+(testConf === "Todos" || cable.configuracion === testConf) &&
+
+(testTC === "Todos" || cable.tcer === testTC);
+
+};
+
+const validCalibres = new Set(baseDeDatos.filter(c => haceMatch(c, "Todos", valConf, valTC)).map(c => c.calibre));
+
+const validConfig = new Set(baseDeDatos.filter(c => haceMatch(c, valC, "Todos", valTC)).map(c => c.configuracion));
+
+const validTcer = new Set(baseDeDatos.filter(c => haceMatch(c, valC, valConf, "Todos")).map(c => c.tcer));
+
+actualizarSelect("filtro-calibre", validCalibres);
+
+actualizarSelect("filtro-configuracion", validConfig);
+
+actualizarSelect("filtro-tcer", validTcer);
+
+filtrarCables();
+
+}
+
+function actualizarSelect(id, setValido) {
+
+const select = document.getElementById(id);
+
+let actualVal = select.value;
+
+let seleccionValida = false;
+
+Array.from(select.options).forEach(opt => {
+
+if (opt.value === "Todos" || setValido.has(opt.value)) {
+
+opt.style.display = "";
+
+opt.disabled = false;
+
+if (opt.value === actualVal) seleccionValida = true;
+
+} else {
+
+opt.style.display = "none";
+
+opt.disabled = true;
+
+}
+
+});
+
+if (!seleccionValida) {
+
+select.value = "Todos";
+
+}
+
+}
+
+// ==========================================
+
+// LÓGICA DE DIBUJO DE RESULTADOS
+
+// ==========================================
+
+function filtrarCables() {
+
+const c = document.getElementById("filtro-calibre").value;
+
+const conf = document.getElementById("filtro-configuracion").value;
+
+const tc = document.getElementById("filtro-tcer").value;
+
+const contenedorResultados = document.getElementById("contenedor-resultados");
+
+const tbody = document.getElementById("tabla-resultados");
+
+const mensajeInicial = document.getElementById("mensaje-inicial");
+
+// Regla: Los 3 campos deben estar seleccionados
+
+if (c === "Todos" || conf === "Todos" || tc === "Todos") {
+
+contenedorResultados.style.display = "none";
+
+mensajeInicial.style.display = "block";
+
+mensajeInicial.innerHTML = `<p style="color: #64748b; margin: 0; font-size: 14px; font-weight: 500;"><span style="margin-right: 8px; font-size: 16px;">⚡</span> Seleccione una opción en los 3 filtros para revelar el modelo exacto.</p>`;
+
+return;
+
+}
+
+const res = baseDeDatos.filter(cable => {
+
+return cable.calibre === c &&
+
+cable.configuracion === conf &&
+
+cable.tcer === tc;
+
+});
+
+mensajeInicial.style.display = "none";
+
+contenedorResultados.style.display = "block";
+
+tbody.innerHTML = "";
+
+if (res.length > 0) {
+
+res.forEach(item => {
+
+let badgeStyle = "background: #2563eb; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;";
+
+if (item.familia === "VFD Americano TC-ER") {
+
+badgeStyle = "background: #0f172a; color: #ffffff; padding: 4px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; text-transform: uppercase;";
+
+}
+
+tbody.innerHTML += `
+
+<tr style="border-bottom: 1px solid #f1f5f9; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+
+<td style="padding: 15px; font-style: italic; color: #94a3b8; font-size: 12px; width: 15%;">P/N ${item.ref}</td>
+
+<td style="padding: 15px; font-weight: 800; color: #2563eb; font-size: 14px; width: 30%;">${item.modelo}</td>
+
+<td style="padding: 15px; width: 15%;"><span style="${badgeStyle}">${item.familia}</span></td>
+
+<td style="padding: 15px; text-align: center; width: 20%;">
+
+<div style="display: inline-flex; align-items: center; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; padding: 2px 10px;">
+
+<input type="number" id="qty-${item.ref}" value="1" min="1" step="1" style="width: 50px; padding: 6px 0; border: none; outline: none; text-align: center; font-weight: 700; color: #0f172a;">
+
+</div>
+
+</td>
+
+<td style="padding: 15px; text-align: right; width: 20%;">
+
+<button onclick="agregarAlCarrito('${item.ref}', this)" style="background: transparent; color: #2563eb; border: 2px solid #2563eb; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 800; text-transform: uppercase; transition: all 0.2s; display: inline-flex; align-items: center; gap: 5px;">
+
+AÑADIR 📦
+
+</button>
+
+</td>
+
+</tr>`;
+
+});
+
+} else {
+
+tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 50px 20px; color: #ef4444; font-weight: bold;">⚠️ No hay modelos que cumplan exactamente con esta combinación.</td></tr>`;
+
+}
+
+}
+
+// ==========================================
+
+// LÓGICA DEL CARRITO Y RESET AUTOMÁTICO
+
+// ==========================================
+
+function agregarAlCarrito(ref, btnElement) {
+
+const item = baseDeDatos.find(i => i.ref === ref);
+
+const qty = document.getElementById(`qty-${ref}`).value;
+
+if(qty <= 0 || qty === "") {
+
+alert("Por favor ingrese una cantidad válida en metros.");
+
+return;
+
+}
+
+const existe = carrito.find(c => c.ref === ref);
+
+if (existe) {
+
+existe.cantidad = parseInt(existe.cantidad) + parseInt(qty);
+
+} else {
+
+carrito.push({ ...item, cantidad: qty });
+
+}
+
+actualizarInterfazCarrito();
+
+const originalHTML = btnElement.innerHTML;
+
+btnElement.style.background = "#2563eb";
+
+btnElement.style.color = "white";
+
+btnElement.innerHTML = "✓ LISTO";
+
+setTimeout(() => {
+
+resetearFiltros();
+
+}, 600);
+
+}
+
+function resetearFiltros() {
+
+document.getElementById("filtro-calibre").value = "Todos";
+
+document.getElementById("filtro-configuracion").value = "Todos";
+
+document.getElementById("filtro-tcer").value = "Todos";
+
+manejarFiltrosDinamicos();
+
+}
+
+function actualizarInterfazCarrito() {
+
+const seccion = document.getElementById("seccion-carrito");
+
+const lista = document.getElementById("lista-carrito");
+
+const contador = document.getElementById("contador-items");
+
+if (carrito.length > 0) {
+
+seccion.style.display = "block";
+
+contador.innerText = carrito.length;
+
+lista.innerHTML = "";
+
+carrito.forEach((item, index) => {
+
+lista.innerHTML += `
+
+<tr style="border-bottom: 1px solid #f1f5f9;">
+
+<td style="padding: 15px; font-size: 15px; color: #0f172a; font-weight: 700;">
+
+${item.modelo}
+
+<span style="color: #94a3b8; font-size: 12px; font-weight: 400; margin-left: 10px;">${item.familia} · P/N ${item.ref}</span>
+
+</td>
+
+<td style="padding: 15px; text-align: center;">
+
+<span style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 6px 15px; border-radius: 6px; font-weight: 700; color: #0f172a;">${item.cantidad}</span>
+
+<span style="color: #94a3b8; font-size: 13px; margin-left: 5px;">metros</span>
+
+</td>
+
+<td style="padding: 15px; text-align: right;">
+
+<button onclick="removerDelCarrito(${index})" style="color: #ef4444; background: transparent; border: 1px solid #ef4444; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 16px; display: inline-flex; align-items: center; justify-content: center;" title="Eliminar">🗑️</button>
+
+</td>
+
+</tr>`;
+
+});
+
+} else {
+
+seccion.style.display = "none";
+
+}
+
+}
+
+function removerDelCarrito(index) {
+
+carrito.splice(index, 1);
+
+actualizarInterfazCarrito();
+
+}
+
+function enviarPorCorreo() {
+
+let listaCables = "Hola QBLE, solicito cotización formal de los siguientes cables VFD:\n\n";
+
+carrito.forEach(item => {
+
+listaCables += `• ${item.cantidad} metros | ${item.modelo} (${item.familia}) | P/N: ${item.ref}\n`;
+
+});
+
+listaCables += "\nQuedo a la espera de su pronta respuesta. Saludos.";
+
+window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(listaCables)}`;
+
+}
+
+window.onload = manejarFiltrosDinamicos;
+
+</script>
+
+</body>
+
+</html>
