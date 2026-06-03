@@ -12,6 +12,11 @@
         h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
         .text-qble-orange { color: #F58220; }
         .bg-qble-orange { background-color: #F58220; }
+        .step-active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
+        .step-completed { background-color: #10b981; color: white; border-color: #10b981; }
+        .step-pending { background-color: white; color: #94a3b8; border-color: #cbd5e1; }
+        .line-completed { background-color: #10b981; }
+        .line-pending { background-color: #e2e8f0; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden text-slate-800" x-data="{ menuAbierto: true, seccionActiva: 'tablero', mostrarModalPerdida: false }">
@@ -32,8 +37,9 @@
             <button @click="seccionActiva = 'cotizaciones'" :class="seccionActiva === 'cotizaciones' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
                 <span class="text-lg">📄</span><span class="ml-3" x-show="menuAbierto">Cotizaciones</span>
             </button>
-            <button @click="seccionActiva = 'logistica'" :class="seccionActiva === 'logistica' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
-                <span class="text-lg">🚚</span><span class="ml-3" x-show="menuAbierto">Logística y Envíos</span>
+            <button @click="seccionActiva = 'pedidos'" :class="seccionActiva === 'pedidos' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all relative">
+                <span class="text-lg">📦</span><span class="ml-3" x-show="menuAbierto">Mis Pedidos y Envíos</span>
+                <span class="absolute right-4 w-2 h-2 bg-emerald-500 rounded-full" x-show="menuAbierto"></span>
             </button>
             <button @click="seccionActiva = 'finanzas'" :class="seccionActiva === 'finanzas' ? 'bg-qble-orange text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'" class="w-full flex items-center px-4 py-3 rounded-lg font-bold text-sm transition-all">
                 <span class="text-lg">💳</span><span class="ml-3" x-show="menuAbierto">Estado de Cuenta</span>
@@ -223,35 +229,35 @@
                     </h3>
                     
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-3 mb-4">
-                        <button class="bg-white border border-slate-200 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-control.html'" class="bg-white border border-slate-200 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚙️</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Cable<br>Control</span>
                         </button>
-                        <button class="bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-vfd.html'" class="bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚡</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Variador<br>(VFD)</span>
                         </button>
-                        <button class="bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-instrumentacion.html'" class="bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">📡</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Instrum.</span>
                         </button>
-                        <button class="bg-white border border-slate-200 hover:border-red-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-monopolares.html'" class="bg-white border border-slate-200 hover:border-red-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🟥</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Monopolares</span>
                         </button>
-                        <button class="bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-redes.html'" class="bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🌐</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Redes / LAN</span>
                         </button>
-                        <button class="bg-white border border-slate-200 hover:border-indigo-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-belden.html'" class="bg-white border border-slate-200 hover:border-indigo-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🛡️</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Belden<br>NewGen</span>
                         </button>
-                        <button class="bg-white border border-slate-200 hover:border-yellow-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-harting.html'" class="bg-white border border-slate-200 hover:border-yellow-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🔌</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Kits<br>Harting</span>
                         </button>
-                        <button class="bg-white border border-slate-200 hover:border-slate-700 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-cadena.html'" class="bg-white border border-slate-200 hover:border-slate-700 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⛓️</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Cadenas<br>Portacables</span>
                         </button>
@@ -337,70 +343,126 @@
                 </div>
             </div>
 
-            <div x-show="seccionActiva === 'logistica'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+            <div x-show="seccionActiva === 'pedidos'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
                 <div class="border-b border-slate-200 pb-6">
-                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Logística y Envíos</h2>
-                    <p class="text-slate-500 mt-2 text-base">Rastree sus pedidos en curso y descargue las evidencias de entrega (PoD).</p>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Rastreador de Pedidos</h2>
+                    <p class="text-slate-500 mt-2 text-base">Siga el progreso de su material en tiempo real, descargue facturas y evidencias.</p>
                 </div>
 
-                <div>
-                    <h3 class="text-xs font-black text-qble-orange uppercase tracking-[0.2em] mb-4">Pedidos en Curso</h3>
+                <div class="bg-white rounded-2xl border border-blue-200 shadow-md p-6 lg:p-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
                     
-                    <div class="bg-white rounded-2xl border border-blue-200 p-6 shadow-sm relative overflow-hidden">
-                        <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
-                        <div class="flex justify-between items-start mb-6 border-b border-slate-100 pb-4">
-                            <div>
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Orden S09143</p>
-                                <h4 class="text-xl font-bold text-slate-900">Cableado VFD Extrusora</h4>
+                    <div class="flex flex-col md:flex-row justify-between items-start border-b border-slate-100 pb-6 mb-6">
+                        <div>
+                            <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-3 py-1 rounded-md uppercase tracking-widest">Pedido Activo</span>
+                            <h3 class="text-2xl font-bold text-slate-900 mt-2">Pedido P-2026-0042</h3>
+                            <p class="text-sm text-slate-500 font-medium mt-1">Ref: Cableado VFD Extrusora | OC: 450099812</p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-left md:text-right">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Entrega Estimada Total</p>
+                            <p class="text-xl font-black text-slate-800">08 de Junio, 2026</p>
+                            <p class="text-xs text-blue-600 font-bold mt-1">Parcialidades: Sí (Ver notas)</p>
+                        </div>
+                    </div>
+
+                    <div class="relative mt-10 mb-8">
+                        <div class="absolute top-5 left-0 w-full h-1 bg-slate-200 hidden md:block"></div>
+                        <div class="absolute top-5 left-0 w-2/5 h-1 line-completed hidden md:block"></div>
+
+                        <div class="flex flex-col md:flex-row justify-between relative z-10 space-y-6 md:space-y-0">
+                            
+                            <div class="flex flex-row md:flex-col items-center md:w-1/6 text-left md:text-center">
+                                <div class="w-10 h-10 border-4 rounded-full flex items-center justify-center font-bold shadow-sm step-completed z-10 flex-shrink-0">✓</div>
+                                <div class="ml-4 md:ml-0 md:mt-3">
+                                    <p class="text-xs font-black uppercase text-slate-800">En Revisión</p>
+                                    <p class="text-[10px] text-slate-500">28/May/2026</p>
+                                </div>
                             </div>
-                            <div class="text-right">
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Entrega Estimada</p>
-                                <p class="text-lg font-bold text-blue-600">22 de Mayo, 2026</p>
+
+                            <div class="flex flex-row md:flex-col items-center md:w-1/6 text-left md:text-center">
+                                <div class="w-10 h-10 border-4 rounded-full flex items-center justify-center font-bold shadow-sm step-completed z-10 flex-shrink-0">✓</div>
+                                <div class="ml-4 md:ml-0 md:mt-3">
+                                    <p class="text-xs font-black uppercase text-slate-800">Aceptado</p>
+                                    <p class="text-[10px] text-slate-500">29/May/2026</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-row md:flex-col items-center md:w-1/6 text-left md:text-center">
+                                <div class="w-10 h-10 border-4 rounded-full flex items-center justify-center font-bold shadow-md step-active z-10 flex-shrink-0">⚙️</div>
+                                <div class="ml-4 md:ml-0 md:mt-3">
+                                    <p class="text-xs font-black uppercase text-blue-600">Preparación</p>
+                                    <p class="text-[10px] text-blue-500 font-bold">Consolidando</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-row md:flex-col items-center md:w-1/6 text-left md:text-center">
+                                <div class="w-10 h-10 border-4 rounded-full flex items-center justify-center font-bold step-pending z-10 flex-shrink-0">🧾</div>
+                                <div class="ml-4 md:ml-0 md:mt-3">
+                                    <p class="text-xs font-bold uppercase text-slate-400">Facturado</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-row md:flex-col items-center md:w-1/6 text-left md:text-center">
+                                <div class="w-10 h-10 border-4 rounded-full flex items-center justify-center font-bold step-pending z-10 flex-shrink-0">🚚</div>
+                                <div class="ml-4 md:ml-0 md:mt-3">
+                                    <p class="text-xs font-bold uppercase text-slate-400">En Ruta</p>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-row md:flex-col items-center md:w-1/6 text-left md:text-center">
+                                <div class="w-10 h-10 border-4 rounded-full flex items-center justify-center font-bold step-pending z-10 flex-shrink-0">🤝</div>
+                                <div class="ml-4 md:ml-0 md:mt-3">
+                                    <p class="text-xs font-bold uppercase text-slate-400">Entregado</p>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="flex items-center justify-between mt-8 mb-4 px-2 md:px-10">
-                            <div class="flex flex-col items-center relative w-1/3">
-                                <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-md z-10">✓</div>
-                                <p class="text-[10px] md:text-xs font-bold text-slate-800 mt-2 uppercase text-center">Confirmado</p>
-                                <div class="absolute top-4 left-1/2 w-full h-1 bg-blue-500"></div>
-                            </div>
-                            <div class="flex flex-col items-center relative w-1/3">
-                                <div class="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold shadow-md z-10">✂️</div>
-                                <p class="text-[10px] md:text-xs font-bold text-slate-800 mt-2 uppercase text-center">Corte/Empaque</p>
-                                <div class="absolute top-4 left-1/2 w-full h-1 bg-slate-200"></div>
-                            </div>
-                            <div class="flex flex-col items-center relative w-1/3">
-                                <div class="w-8 h-8 bg-white border-2 border-slate-300 text-slate-300 rounded-full flex items-center justify-center font-bold z-10">🚚</div>
-                                <p class="text-[10px] md:text-xs font-bold text-slate-400 mt-2 uppercase text-center">En Tránsito</p>
-                            </div>
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-start mt-6">
+                        <span class="text-xl mr-3">ℹ️</span>
+                        <div>
+                            <p class="text-sm font-bold text-blue-900">Nota del equipo QBLE:</p>
+                            <p class="text-xs text-blue-800 mt-1">El material viene en camino desde planta del proveedor. Estaremos recibiendo en nuestra bodega el día 05/Jun para hacer el cruce y enviarlo a su planta de Silao.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="mt-12">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Entregas Finalizadas (Evidencias)</h3>
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-400 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
-                                <tr>
-                                    <th class="px-6 py-4">Orden / Proyecto</th>
-                                    <th class="px-6 py-4">Fecha de Entrega</th>
-                                    <th class="px-6 py-4">Recibido por</th>
-                                    <th class="px-6 py-4 text-right">Evidencia</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                <tr class="hover:bg-slate-50 transition-colors">
-                                    <td class="px-6 py-4 font-bold text-slate-900">S08990 - Alimentación General</td>
-                                    <td class="px-6 py-4 text-slate-600">02/May/2026</td>
-                                    <td class="px-6 py-4 text-slate-600">Almacén (Firma: Juan P.)</td>
-                                    <td class="px-6 py-4 text-right">
-                                        <button class="bg-slate-900 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-qble-orange transition-colors">📄 Ver Acuse (PoD)</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Pedidos Anteriores</h3>
+                    <div class="bg-white rounded-2xl border border-emerald-200 shadow-sm p-6 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-2 h-full bg-emerald-500"></div>
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">Pedido P-2026-0012</h3>
+                                <p class="text-sm text-slate-500 mt-1">Ref: Alimentación General Tableros | Entregado: 02/May/2026</p>
+                            </div>
+                            <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
+                                <button class="bg-white border border-slate-300 text-slate-700 font-bold px-4 py-2 rounded-lg text-xs hover:bg-slate-50 flex items-center">
+                                    🧾 Descargar Factura
+                                </button>
+                                <button class="bg-slate-900 text-white font-bold px-4 py-2 rounded-lg text-xs hover:bg-slate-800 shadow-sm flex items-center">
+                                    📄 Ver Evidencia (Acuse)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'finanzas'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+                <div>
+                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Estado de Cuenta</h2>
+                    <p class="text-slate-500 mt-1">Panorama general de sus facturas y pagos.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl border border-red-200 p-6 shadow-sm">
+                        <h3 class="text-xs font-black text-red-500 uppercase tracking-widest mb-2">Vencido (> 30 días)</h3>
+                        <p class="text-3xl font-black text-slate-800">$0.00</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-amber-200 p-6 shadow-sm">
+                        <h3 class="text-xs font-black text-amber-500 uppercase tracking-widest mb-2">Por Vencer (Esta Semana)</h3>
+                        <p class="text-3xl font-black text-slate-800">$42,150.00</p>
                     </div>
                 </div>
             </div>
@@ -414,7 +476,7 @@
                     <div class="text-7xl mb-6">💬</div>
                     <h3 class="text-2xl font-bold text-slate-800">Inicia una conversación directa</h3>
                     <p class="text-slate-500 mt-3 max-w-lg mx-auto text-base">Todo tu historial se queda guardado aquí mismo. Si nos escribes fuera de horario, tu ticket quedará abierto para el día siguiente.</p>
-                    <button onclick="if(typeof Tawk_API !== 'undefined'){ Tawk_API.maximize(); }" class="mt-8 bg-slate-900 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-slate-800 transition-colors transform active:scale-95 text-lg">
+                    <button onclick="if(typeof Tawk_API !== 'undefined'){ Tawk_API.showWidget(); Tawk_API.maximize(); }" class="mt-8 bg-slate-900 text-white font-bold px-8 py-4 rounded-xl shadow-lg hover:bg-slate-800 transition-colors transform active:scale-95 text-lg">
                         Iniciar Conversación
                     </button>
                 </div>
@@ -422,21 +484,11 @@
 
         </div>
     </main>
-
     
 <script type="text/javascript">
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-
-    // 1. Ocultar el chat por defecto al cargar la página
-    Tawk_API.onLoad = function(){
-        Tawk_API.hideWidget();
-    };
-
-    // 2. Si el cliente presiona "minimizar", lo volvemos a ocultar por completo
-    Tawk_API.onChatMinimized = function(){
-        Tawk_API.hideWidget();
-    };
-
+    Tawk_API.onLoad = function(){ Tawk_API.hideWidget(); };
+    Tawk_API.onChatMinimized = function(){ Tawk_API.hideWidget(); };
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
     s1.async=true;
@@ -446,3 +498,32 @@
     s0.parentNode.insertBefore(s1,s0);
     })();
 </script>
+<script type="module">
+    // 1. Importamos las herramientas de Firebase directo de la nube de Google
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // 2. Tus llaves de acceso únicas
+    const firebaseConfig = {
+        apiKey: "AIzaSyBUv6YvGpm67_PHk9Li0btjOPDW2lH7fJg",
+        authDomain: "qble-portal.firebaseapp.com",
+        projectId: "qble-portal",
+        storageBucket: "qble-portal.firebasestorage.app",
+        messagingSenderId: "1001400925259",
+        appId: "1:1001400925259:web:adb53f3926dacfdba061ce",
+        measurementId: "G-5GXKVD80L3"
+    };
+
+    // 3. Encendemos el motor
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 4. Hacemos la base de datos pública para que nuestros botones la puedan usar
+    window.db = db;
+    window.collection = collection;
+    window.addDoc = addDoc;
+
+    console.log("🔥 ¡Firebase conectado exitosamente!");
+</script>
+</body>
+</html>
