@@ -663,75 +663,82 @@
 
         </div>
     </main>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    // IMPORTAMOS AUTH DE GOOGLE
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+</div> <!-- ESTE DIV CIERRA LA ENVOLTURA DE SEGURIDAD -->
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyBUv6YvGpm67_PHk9Li0btjOPDW2lH7fJg",
-        authDomain: "qble-portal.firebaseapp.com",
-        projectId: "qble-portal",
-        storageBucket: "qble-portal.firebasestorage.app",
-        messagingSenderId: "1001400925259",
-        appId: "1:1001400925259:web:adb53f3926dacfdba061ce"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    // Guardar variables globalmente para usarlas en los botones
-    window.db = db;
-    window.auth = auth;
-
-    // Función para el botón de Google
-    window.iniciarSesionGoogle = () => {
-        signInWithPopup(auth, provider).catch((error) => {
-            console.error("Error al iniciar sesión", error);
+    <!-- SCRIPT 1: MOTOR VISUAL (Alpine.js) -->
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('appData', () => ({
+                // Variables del menú
+                menuAbierto: true,
+                seccionActiva: 'pedidos',
+                filtroChat: 'todos',
+                // Variables de seguridad
+                autenticado: false,
+                cargandoAuth: true,
+                errorMsg: '',
+                
+                init() {
+                    // Escucha el aviso de que Firebase ya está listo
+                    window.addEventListener('firebase-listo', () => {
+                        window.onAuthStateChanged(window.auth, (user) => {
+                            if (user) {
+                                if(user.email.endsWith('@qble.com.mx')){
+                                    this.autenticado = true;
+                                    this.cargandoAuth = false;
+                                    this.errorMsg = '';
+                                } else {
+                                    window.signOut(window.auth);
+                                    this.errorMsg = 'Acceso denegado. Utilice una cuenta corporativa @qble.com.mx';
+                                    this.cargandoAuth = false;
+                                }
+                            } else {
+                                this.autenticado = false;
+                                this.cargandoAuth = false;
+                            }
+                        });
+                    });
+                }
+            }))
         });
-    };
+    </script>
 
-    window.cerrarSesion = () => { signOut(auth); };
+    <!-- SCRIPT 2: CONEXIÓN A FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-// Escuchar si alguien entra o sale
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('appData', () => ({
-            // Variables visuales del portal
-            menuAbierto: true,
-            seccionActiva: 'pedidos',
-            filtroChat: 'todos',
-            // Variables de seguridad
-            autenticado: false,
-            cargandoAuth: true,
-            errorMsg: '',
-            
-            init() {
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        // VERIFICACIÓN DEL DOMINIO
-                        if(user.email.endsWith('@qble.com.mx')){
-                            this.autenticado = true;
-                            this.cargandoAuth = false;
-                            this.errorMsg = '';
-                            console.log("Acceso concedido a:", user.email);
-                        } else {
-                            // Si no es de QBLE, lo pateamos
-                            signOut(auth);
-                            this.errorMsg = 'Acceso denegado. Utilice una cuenta corporativa @qble.com.mx';
-                            this.cargandoAuth = false;
-                        }
-                    } else {
-                        this.autenticado = false;
-                        this.cargandoAuth = false;
-                    }
-                });
-            }
-        }))
-    });
+        // Tus llaves de acceso
+        const firebaseConfig = {
+            apiKey: "AIzaSyBUv6YvGpm67_PHk9Li0btjOPDW2lH7fJg",
+            authDomain: "qble-portal.firebaseapp.com",
+            projectId: "qble-portal",
+            storageBucket: "qble-portal.firebasestorage.app",
+            messagingSenderId: "1001400925259",
+            appId: "1:1001400925259:web:adb53f3926dacfdba061ce"
+        };
 
+        // Encendido de módulos
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Guardamos las herramientas globales para que el otro script las vea
+        window.db = getFirestore(app);
+        window.auth = auth;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut = signOut;
+
+        // Función del botón
+        window.iniciarSesionGoogle = () => {
+            signInWithPopup(auth, provider).catch((error) => {
+                console.error("Error al iniciar sesión:", error);
+            });
+        };
+
+        // Enviar aviso de que Firebase ya cargó y está listo para usarse
+        window.dispatchEvent(new Event('firebase-listo'));
     </script>
 </body>
 </html>
