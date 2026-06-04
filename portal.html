@@ -552,7 +552,9 @@
                 email: '',
                 password: '',
                 
-                // VARIABLES DEL NUEVO PROYECTO
+                // Aquí guardaremos los datos del cliente cuando lo dejen pasar
+                clienteActual: {},
+
                 nuevoProyecto: {
                     cliente: '',
                     nombre: '',
@@ -563,12 +565,10 @@
                     cantidad: 1
                 },
 
-                // FUNCIÓN 1: Autoguardado silencioso en la compu del cliente
                 guardarLocal() {
                     localStorage.setItem('qble_borrador', JSON.stringify(this.nuevoProyecto));
                 },
 
-                // FUNCIÓN 2: Agregar item a la tabla
                 agregarItemEspecial() {
                     if(this.itemTemporal.descripcion.trim() === '') return;
                     this.nuevoProyecto.items.push({
@@ -577,44 +577,39 @@
                     });
                     this.itemTemporal.descripcion = '';
                     this.itemTemporal.cantidad = 1;
-                    this.guardarLocal(); // Guarda en automático
+                    this.guardarLocal();
                 },
 
-                // FUNCIÓN 3: Quitar item de la tabla
                 eliminarItem(index) {
                     this.nuevoProyecto.items.splice(index, 1);
-                    this.guardarLocal(); // Guarda en automático
+                    this.guardarLocal();
                 },
 
-                // FUNCIÓN 4: Enviar a la Base de Datos (Firebase)
                 async guardarEnFirebase(estado) {
-                    if(this.nuevoProyecto.cliente === '' || this.nuevoProyecto.nombre === '' || this.nuevoProyecto.items.length === 0) {
-                        alert("⚠️ Completa el cliente, el proyecto y agrega al menos un material.");
+                    if(this.nuevoProyecto.nombre === '' || this.nuevoProyecto.items.length === 0) {
+                        alert("⚠️ Completa el nombre del proyecto y agrega al menos un material.");
                         return;
                     }
 
                     try {
-                        // Empaquetamos los datos con la fecha y quién lo hizo
                         const paquete = {
                             ...this.nuevoProyecto,
-                            estadoCotizacion: estado, // 'borrador' o 'enviado'
+                            // Inyectamos el nombre de la empresa automáticamente desde su perfil
+                            cliente: this.clienteActual.empresa || 'Empresa Desconocida',
+                            estadoCotizacion: estado,
                             fechaCreacion: new Date().toISOString(),
                             creadoPor: window.auth.currentUser ? window.auth.currentUser.email : 'desconocido'
                         };
 
-                        // Instrucción a Firebase: "Abre la colección 'proyectos' y avienta este paquete"
                         await window.addDoc(window.collection(window.db, "proyectos"), paquete);
                         
-                        alert(estado === 'borrador' ? "✅ Borrador respaldado en la nube." : "🚀 ¡Proyecto enviado a cotización exitosamente!");
-                        
-                        // Limpiamos la mesa
+                        alert(estado === 'borrador' ? "✅ Borrador respaldado." : "🚀 ¡Proyecto enviado!");
                         this.nuevoProyecto = { cliente: '', nombre: '', items: [] };
                         localStorage.removeItem('qble_borrador');
-                        this.seccionActiva = 'boms'; // Lo regresamos a la pantalla de proyectos
-
+                        this.seccionActiva = 'boms';
                     } catch (error) {
-                        console.error("Error al guardar en la nube: ", error);
-                        alert("Hubo un error de conexión. Intente de nuevo.");
+                        console.error("Error al guardar:", error);
+                        alert("Hubo un error de conexión.");
                     }
                 },
                 
@@ -629,24 +624,60 @@
                     window.signInWithEmailAndPassword(window.auth, this.email, this.password)
                         .catch((error) => {
                             this.cargandoAuth = false;
-                            this.errorMsg = 'Credenciales incorrectas. Verifique e intente de nuevo.';
-                            console.error(error);
+                            this.errorMsg = 'Credenciales incorrectas.';
                         });
                 },
 
                 init() {
-                    // Si el cliente regresa o el reloj lo sacó, buscamos su borrador
                     const borradorRecuperado = localStorage.getItem('qble_borrador');
                     if(borradorRecuperado) {
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
                     }
 
                     window.addEventListener('firebase-listo', () => {
-                        window.onAuthStateChanged(window.auth, (user) => {
+                        window.onAuthStateChanged(window.auth, async (user) => {
                             if (user) {
-                                this.autenticado = true;
-                                this.cargandoAuth = false;
-                                this.errorMsg = '';
+                                try {
+                                    // 1. EL CADENERO: Buscamos el correo en la base de datos
+                                    const consulta = window.query(
+                                        window.collection(window.db, "clientes_autorizados"), 
+                                        window.where("email", "==", user.email.toLowerCase())
+                                    );
+                                    const resultados = await window.getDocs(consulta);
+
+                                    if (!resultados.empty) {
+                                        const datosCliente = resultados.docs[0].data();
+                                        const idDocumento = resultados.docs[0].id;
+
+                                        // 2. VERIFICAR SI NO LO HAN DADO DE BAJA
+                                        if(datosCliente.estado !== 'activo') {
+                                            window.signOut(window.auth);
+                                            this.errorMsg = 'Su cuenta ha sido deshabilitada por inactividad o baja. Contacte a QBLE.';
+                                            this.cargandoAuth = false;
+                                            return;
+                                        }
+
+                                        // 3. TODO EN ORDEN: Actualizamos su "Última vez visto"
+                                        await window.updateDoc(window.doc(window.db, "clientes_autorizados", idDocumento), {
+                                            ultimoAcceso: new Date().toISOString()
+                                        });
+
+                                        this.clienteActual = datosCliente;
+                                        this.autenticado = true;
+                                        this.cargandoAuth = false;
+                                        this.errorMsg = '';
+                                    } else {
+                                        // SI NO ESTÁ EN LA LISTA
+                                        window.signOut(window.auth);
+                                        this.errorMsg = 'Acceso denegado. Este portal es estrictamente por invitación.';
+                                        this.cargandoAuth = false;
+                                    }
+                                } catch (error) {
+                                    console.error("Error del cadenero:", error);
+                                    window.signOut(window.auth);
+                                    this.errorMsg = 'Error de validación. Intente de nuevo.';
+                                    this.cargandoAuth = false;
+                                }
                             } else {
                                 this.autenticado = false;
                                 this.cargandoAuth = false;
@@ -658,11 +689,11 @@
         });
     </script>
 
-    <!-- SCRIPT 2: CONEXIÓN A FIREBASE -->
+    <!-- SCRIPT 2: CONEXIÓN A FIREBASE Y HERRAMIENTAS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        // Importamos TODOS los métodos de autenticación
+        // Traemos todas las herramientas de búsqueda de la base de datos
+        import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -677,14 +708,20 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+        const db = getFirestore(app);
 
-        window.db = getFirestore(app);
+        // Guardamos todo globalmente para que Alpine (el motor) pueda usarlas
+        window.db = db;
         window.auth = auth;
         window.onAuthStateChanged = onAuthStateChanged;
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
         window.signOut = signOut;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
+        window.updateDoc = updateDoc;
+        window.doc = doc;
 
-        // Función del botón de Google para Clientes
         window.iniciarSesionGoogleCliente = () => {
             signInWithPopup(auth, provider).catch((error) => {
                 console.error("Error al iniciar sesión con Google:", error);
@@ -708,15 +745,13 @@
         s0.parentNode.insertBefore(s1,s0);
         })();
     </script>
-<!-- SCRIPT DE AUTO-CIERRE POR INACTIVIDAD (60 MINUTOS) -->
+
+    <!-- SCRIPT DE AUTO-CIERRE POR INACTIVIDAD (60 MINUTOS) -->
     <script>
         let temporizadorInactividad;
-        
         function reiniciarTemporizador() {
             clearTimeout(temporizadorInactividad);
-            // 3600000 milisegundos = exactamente 60 minutos
             temporizadorInactividad = setTimeout(() => {
-                // Verificamos si hay alguien dentro antes de intentar sacarlo
                 if(window.auth && window.auth.currentUser) {
                     window.signOut(window.auth).then(() => {
                         alert("Por seguridad, tu sesión ha expirado tras 60 minutos de inactividad.");
@@ -724,8 +759,6 @@
                 }
             }, 3600000); 
         }
-
-        // Sensores de actividad (vigilan que el usuario siga ahí)
         window.onload = reiniciarTemporizador;
         document.onmousemove = reiniciarTemporizador;
         document.onkeypress = reiniciarTemporizador;
