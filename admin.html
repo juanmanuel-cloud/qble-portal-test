@@ -864,6 +864,8 @@
         window.getDocs = getDocs;
         window.updateDoc = updateDoc;
         window.doc = doc;
+        window.collection = collection;
+        window.addDoc = addDoc;
 
         window.iniciarSesionGoogle = () => {
             signInWithPopup(auth, provider).catch((error) => {
