@@ -687,8 +687,7 @@
     </main>
 </div> <!-- ESTE DIV CIERRA LA ENVOLTURA DE SEGURIDAD -->
 
-    <!-- SCRIPT 1: MOTOR VISUAL (Alpine.js) -->
-    <script>
+<script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('appData', () => ({
                 // Variables del menú
@@ -699,6 +698,9 @@
                 autenticado: false,
                 cargandoAuth: true,
                 errorMsg: '',
+
+                // Datos del empleado logueado
+                empleadoActual: {},
 
                 // VARIABLES DEL NUEVO PROYECTO (ADMIN)
                 nuevoProyecto: {
@@ -725,13 +727,13 @@
                     });
                     this.itemTemporal.descripcion = '';
                     this.itemTemporal.cantidad = 1;
-                    this.guardarLocal(); // Guarda en automático
+                    this.guardarLocal();
                 },
 
                 // FUNCIÓN 3: Quitar item de la tabla
                 eliminarItem(index) {
                     this.nuevoProyecto.items.splice(index, 1);
-                    this.guardarLocal(); // Guarda en automático
+                    this.guardarLocal();
                 },
 
                 // FUNCIÓN 4: Enviar a la Base de Datos (Firebase)
@@ -746,14 +748,14 @@
                             ...this.nuevoProyecto,
                             estadoCotizacion: estado,
                             fechaCreacion: new Date().toISOString(),
-                            creadoPor: window.auth.currentUser ? window.auth.currentUser.email : 'admin_desconocido'
+                            // Registramos quién hizo el movimiento usando su perfil
+                            creadoPor: this.empleadoActual.email || window.auth.currentUser.email
                         };
 
                         await window.addDoc(window.collection(window.db, "proyectos"), paquete);
                         
                         alert(estado === 'borrador' ? "✅ Borrador respaldado en la nube." : "🚀 ¡Proyecto enviado a cotización exitosamente!");
                         
-                        // Limpiamos la mesa
                         this.nuevoProyecto = { cliente: '', nombre: '', items: [] };
                         localStorage.removeItem('qble_admin_borrador');
                         this.seccionActiva = 'cotizador';
@@ -765,23 +767,60 @@
                 },
                 
                 init() {
-                    // Recuperamos el borrador del Admin si existe
                     const borradorRecuperado = localStorage.getItem('qble_admin_borrador');
                     if(borradorRecuperado) {
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
                     }
 
-                    // Escucha el aviso de que Firebase ya está listo
                     window.addEventListener('firebase-listo', () => {
-                        window.onAuthStateChanged(window.auth, (user) => {
+                        window.onAuthStateChanged(window.auth, async (user) => {
                             if (user) {
-                                if(user.email.endsWith('@qble.com.mx')){
-                                    this.autenticado = true;
-                                    this.cargandoAuth = false;
-                                    this.errorMsg = '';
-                                } else {
+                                // 1. FILTRO BÁSICO: Solo correos corporativos
+                                if(!user.email.endsWith('@qble.com.mx')) {
                                     window.signOut(window.auth);
-                                    this.errorMsg = 'Acceso denegado. Utilice una cuenta corporativa @qble.com.mx';
+                                    this.errorMsg = 'Acceso denegado. Utilice una cuenta @qble.com.mx';
+                                    this.cargandoAuth = false;
+                                    return;
+                                }
+
+                                try {
+                                    // 2. EL CADENERO VIP: Buscamos al empleado en la base de datos
+                                    const consulta = window.query(
+                                        window.collection(window.db, "empleados_autorizados"), 
+                                        window.where("email", "==", user.email.toLowerCase())
+                                    );
+                                    const resultados = await window.getDocs(consulta);
+
+                                    if (!resultados.empty) {
+                                        const datosEmpleado = resultados.docs[0].data();
+                                        const idDocumento = resultados.docs[0].id;
+
+                                        // 3. REVISAR QUE NO ESTÉ SUSPENDIDO
+                                        if(datosEmpleado.estado !== 'activo') {
+                                            window.signOut(window.auth);
+                                            this.errorMsg = 'Tu cuenta corporativa ha sido suspendida. Contacta a Dirección.';
+                                            this.cargandoAuth = false;
+                                            return;
+                                        }
+
+                                        // 4. TODO EN ORDEN: Actualizamos su "Última vez visto"
+                                        await window.updateDoc(window.doc(window.db, "empleados_autorizados", idDocumento), {
+                                            ultimoAcceso: new Date().toISOString()
+                                        });
+
+                                        this.empleadoActual = datosEmpleado;
+                                        this.autenticado = true;
+                                        this.cargandoAuth = false;
+                                        this.errorMsg = '';
+                                    } else {
+                                        window.signOut(window.auth);
+                                        this.errorMsg = 'No estás en la lista de empleados autorizados. Contacta a Sistemas.';
+                                        this.cargandoAuth = false;
+                                    }
+                                } catch (error) {
+                                    console.error("Error del cadenero interno:", error);
+                                    window.signOut(window.auth);
+                                    this.errorMsg = 'Error de validación. Intente de nuevo.';
                                     this.cargandoAuth = false;
                                 }
                             } else {
@@ -795,13 +834,12 @@
         });
     </script>
 
-    <!-- SCRIPT 2: CONEXIÓN A FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        // Traemos todas las herramientas de búsqueda de la base de datos
+        import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-        // Tus llaves de acceso
         const firebaseConfig = {
             apiKey: "AIzaSyBUv6YvGpm67_PHk9Li0btjOPDW2lH7fJg",
             authDomain: "qble-portal.firebaseapp.com",
@@ -811,28 +849,32 @@
             appId: "1:1001400925259:web:adb53f3926dacfdba061ce"
         };
 
-        // Encendido de módulos
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+        const db = getFirestore(app);
 
-        // Guardamos las herramientas globales para que el otro script las vea
-        window.db = getFirestore(app);
+        // Guardamos todo globalmente para que Alpine (el motor) pueda usarlas
+        window.db = db;
         window.auth = auth;
         window.onAuthStateChanged = onAuthStateChanged;
         window.signOut = signOut;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
+        window.updateDoc = updateDoc;
+        window.doc = doc;
 
-        // Función del botón
         window.iniciarSesionGoogle = () => {
             signInWithPopup(auth, provider).catch((error) => {
                 console.error("Error al iniciar sesión:", error);
             });
         };
 
-        // Enviar aviso de que Firebase ya cargó y está listo para usarse
         window.dispatchEvent(new Event('firebase-listo'));
     </script>
-<!-- SCRIPT DE AUTO-CIERRE POR INACTIVIDAD (60 MINUTOS) -->
+
+    <!-- SCRIPT DE AUTO-CIERRE POR INACTIVIDAD (60 MINUTOS) -->
     <script>
         let temporizadorInactividad;
         
