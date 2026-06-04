@@ -92,6 +92,11 @@
                 <span class="text-lg">📈</span><span class="ml-3" x-show="menuAbierto">Cobranza y Finanzas</span>
             </button>
         </nav>
+<div class="p-4 border-t border-slate-800">
+            <button onclick="window.signOut(window.auth)" class="flex items-center text-slate-400 hover:text-white text-sm font-bold w-full transition-colors">
+                <span>🚪</span><span class="ml-3" x-show="menuAbierto">Cerrar Sesión</span>
+            </button>
+        </div>
     </aside>
 
     <main class="flex-1 flex flex-col overflow-hidden bg-slate-100 relative">
@@ -284,7 +289,7 @@
                 </div>
             </div>
 
-            <div x-show="seccionActiva === 'nuevo-bom'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+<div x-show="seccionActiva === 'nuevo-bom'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 gap-4">
                     <div>
                         <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Solicitar Cotización (BOM)</h2>
@@ -292,18 +297,19 @@
                     </div>
                     <div class="flex space-x-3 w-full md:w-auto">
                         <button @click="seccionActiva = 'cotizador'" class="px-5 py-3 rounded-lg font-bold text-sm text-slate-600 border border-slate-200 hover:bg-slate-50 w-full md:w-auto">Cancelar</button>
-                        <button @click="seccionActiva = 'cotizador'" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-slate-800 w-full md:w-auto">📥 Enviar a Cotización Interna</button>
+                        <button @click="guardarEnFirebase('borrador')" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-slate-800 w-full md:w-auto">💾 Guardar Borrador</button>
+                        <button @click="guardarEnFirebase('enviado')" class="bg-qble-orange text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-orange-600 w-full md:w-auto">📥 Enviar a Cotización</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">1. Nombre del Cliente / Empresa</label>
-                        <input type="text" placeholder="Ej. Flex Automotriz, KUKA..." class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors">
+                        <input type="text" x-model="nuevoProyecto.cliente" @input="guardarLocal()" placeholder="Ej. Flex Automotriz, KUKA..." class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors">
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">2. Nombre del Proyecto</label>
-                        <input type="text" placeholder="Ej. Actualización de Tableros..." class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors">
+                        <input type="text" x-model="nuevoProyecto.nombre" @input="guardarLocal()" placeholder="Ej. Actualización de Tableros..." class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors">
                     </div>
                 </div>
 
@@ -314,58 +320,74 @@
                     </h3>
                     
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-3 mb-4">
-                        <button onclick="window.location.href='selector-control.html'" class="bg-white border border-slate-200 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-control.html'" class="bg-white border border-slate-200 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group opacity-50 cursor-not-allowed">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚙️</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Cable<br>Control</span>
                         </button>
-                        <button onclick="window.location.href='selector-vfd.html'" class="bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button onclick="window.location.href='selector-vfd.html'" class="bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group opacity-50 cursor-not-allowed">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚡</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Variador<br>(VFD)</span>
                         </button>
-                        <button onclick="window.location.href='selector-instrumentacion.html'" class="bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button class="bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group opacity-50 cursor-not-allowed">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">📡</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Instrum.</span>
                         </button>
-                        <button onclick="window.location.href='selector-monopolares.html'" class="bg-white border border-slate-200 hover:border-red-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
+                        <button class="bg-white border border-slate-200 hover:border-red-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group opacity-50 cursor-not-allowed">
                             <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🟥</span>
                             <span class="text-[10px] font-bold text-slate-700 leading-tight">Monopolares</span>
-                        </button>
-                        <button onclick="window.location.href='selector-redes.html'" class="bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🌐</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Redes / LAN</span>
-                        </button>
-                        <button onclick="window.location.href='selector-belden.html'" class="bg-white border border-slate-200 hover:border-indigo-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🛡️</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Belden<br>NewGen</span>
-                        </button>
-                        <button onclick="window.location.href='selector-harting.html'" class="bg-white border border-slate-200 hover:border-yellow-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🔌</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Kits<br>Harting</span>
-                        </button>
-                        <button onclick="window.location.href='selector-cadena.html'" class="bg-white border border-slate-200 hover:border-slate-700 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⛓️</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Cadenas<br>Portacables</span>
                         </button>
                     </div>
 
                     <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 mt-4 flex flex-col md:flex-row gap-4 items-center">
                         <div class="flex-shrink-0 text-2xl">✍️</div>
                         <div class="flex-1 w-full">
-                            <input type="text" placeholder="¿No encontró lo que busca? Escriba aquí la marca, modelo o descripción libre..." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-qble-orange">
+                            <input type="text" x-model="itemTemporal.descripcion" @keyup.enter="agregarItemEspecial()" placeholder="Escriba aquí la marca, modelo o descripción libre..." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-qble-orange">
                         </div>
                         <div class="w-full md:w-32">
-                            <input type="number" placeholder="Cant." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none text-center">
+                            <input type="number" x-model="itemTemporal.cantidad" @keyup.enter="agregarItemEspecial()" placeholder="Cant." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none text-center">
                         </div>
-                        <button class="w-full md:w-auto bg-slate-800 text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-slate-700 whitespace-nowrap">Añadir Especial</button>
+                        <button @click="agregarItemEspecial()" class="w-full md:w-auto bg-slate-800 text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-slate-700 whitespace-nowrap">Añadir Material</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-end mb-4">
+                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center">
+                            <span class="bg-qble-orange text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">2</span> Lista de Materiales (BOM)
+                        </h3>
                     </div>
 
-                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center mt-6">
+                    <div x-show="nuevoProyecto.items.length === 0" class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center mt-6">
                         <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📥</div>
-                        <h4 class="text-lg font-bold text-slate-700 mb-1">Tu proyecto está vacío</h4>
+                        <h4 class="text-lg font-bold text-slate-700 mb-1">El proyecto está vacío</h4>
                         <p class="text-sm text-slate-500 max-w-md mx-auto">Comienza agregando materiales para enviar a la mesa de cotización.</p>
+                    </div>
+
+                    <div x-show="nuevoProyecto.items.length > 0" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-6" style="display: none;">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4">Descripción del Material</th>
+                                    <th class="px-6 py-4 text-center">Cantidad</th>
+                                    <th class="px-6 py-4 text-right">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <template x-for="(item, index) in nuevoProyecto.items" :key="index">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="px-6 py-4 font-bold text-slate-800" x-text="item.descripcion"></td>
+                                        <td class="px-6 py-4 text-center font-bold text-qble-orange text-lg" x-text="item.cantidad"></td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button @click="eliminarItem(index)" class="text-red-500 hover:text-red-700 font-bold text-[10px] uppercase tracking-widest bg-red-50 px-3 py-1 rounded">Eliminar ❌</button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+            
 
             <div x-show="seccionActiva === 'pedidos'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
                 <div class="flex justify-between items-end border-b border-slate-200 pb-6">
@@ -677,8 +699,78 @@
                 autenticado: false,
                 cargandoAuth: true,
                 errorMsg: '',
+
+                // VARIABLES DEL NUEVO PROYECTO (ADMIN)
+                nuevoProyecto: {
+                    cliente: '',
+                    nombre: '',
+                    items: []
+                },
+                itemTemporal: {
+                    descripcion: '',
+                    cantidad: 1
+                },
+
+                // FUNCIÓN 1: Autoguardado silencioso para el equipo interno
+                guardarLocal() {
+                    localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
+                },
+
+                // FUNCIÓN 2: Agregar item a la tabla
+                agregarItemEspecial() {
+                    if(this.itemTemporal.descripcion.trim() === '') return;
+                    this.nuevoProyecto.items.push({
+                        descripcion: this.itemTemporal.descripcion,
+                        cantidad: this.itemTemporal.cantidad
+                    });
+                    this.itemTemporal.descripcion = '';
+                    this.itemTemporal.cantidad = 1;
+                    this.guardarLocal(); // Guarda en automático
+                },
+
+                // FUNCIÓN 3: Quitar item de la tabla
+                eliminarItem(index) {
+                    this.nuevoProyecto.items.splice(index, 1);
+                    this.guardarLocal(); // Guarda en automático
+                },
+
+                // FUNCIÓN 4: Enviar a la Base de Datos (Firebase)
+                async guardarEnFirebase(estado) {
+                    if(this.nuevoProyecto.cliente === '' || this.nuevoProyecto.nombre === '' || this.nuevoProyecto.items.length === 0) {
+                        alert("⚠️ Completa el cliente, el proyecto y agrega al menos un material.");
+                        return;
+                    }
+
+                    try {
+                        const paquete = {
+                            ...this.nuevoProyecto,
+                            estadoCotizacion: estado,
+                            fechaCreacion: new Date().toISOString(),
+                            creadoPor: window.auth.currentUser ? window.auth.currentUser.email : 'admin_desconocido'
+                        };
+
+                        await window.addDoc(window.collection(window.db, "proyectos"), paquete);
+                        
+                        alert(estado === 'borrador' ? "✅ Borrador respaldado en la nube." : "🚀 ¡Proyecto enviado a cotización exitosamente!");
+                        
+                        // Limpiamos la mesa
+                        this.nuevoProyecto = { cliente: '', nombre: '', items: [] };
+                        localStorage.removeItem('qble_admin_borrador');
+                        this.seccionActiva = 'cotizador';
+
+                    } catch (error) {
+                        console.error("Error al guardar en la nube: ", error);
+                        alert("Hubo un error de conexión. Intente de nuevo.");
+                    }
+                },
                 
                 init() {
+                    // Recuperamos el borrador del Admin si existe
+                    const borradorRecuperado = localStorage.getItem('qble_admin_borrador');
+                    if(borradorRecuperado) {
+                        this.nuevoProyecto = JSON.parse(borradorRecuperado);
+                    }
+
                     // Escucha el aviso de que Firebase ya está listo
                     window.addEventListener('firebase-listo', () => {
                         window.onAuthStateChanged(window.auth, (user) => {
@@ -739,6 +831,31 @@
 
         // Enviar aviso de que Firebase ya cargó y está listo para usarse
         window.dispatchEvent(new Event('firebase-listo'));
+    </script>
+<!-- SCRIPT DE AUTO-CIERRE POR INACTIVIDAD (60 MINUTOS) -->
+    <script>
+        let temporizadorInactividad;
+        
+        function reiniciarTemporizador() {
+            clearTimeout(temporizadorInactividad);
+            // 3600000 milisegundos = exactamente 60 minutos
+            temporizadorInactividad = setTimeout(() => {
+                // Verificamos si hay alguien dentro antes de intentar sacarlo
+                if(window.auth && window.auth.currentUser) {
+                    window.signOut(window.auth).then(() => {
+                        alert("Por seguridad, tu sesión ha expirado tras 60 minutos de inactividad.");
+                    });
+                }
+            }, 3600000); 
+        }
+
+        // Sensores de actividad (vigilan que el usuario siga ahí)
+        window.onload = reiniciarTemporizador;
+        document.onmousemove = reiniciarTemporizador;
+        document.onkeypress = reiniciarTemporizador;
+        document.ontouchstart = reiniciarTemporizador;
+        document.onclick = reiniciarTemporizador;
+        document.onscroll = reiniciarTemporizador;
     </script>
 </body>
 </html>
