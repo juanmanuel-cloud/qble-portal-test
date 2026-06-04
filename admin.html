@@ -820,7 +820,7 @@
                                 } catch (error) {
                                     console.error("Error del cadenero interno:", error);
                                     window.signOut(window.auth);
-                                    this.errorMsg = 'Error de validación. Intente de nuevo.';
+                                    this.errorMsg = 'Causa del bloqueo: ' + error.message;
                                     this.cargandoAuth = false;
                                 }
                             } else {
