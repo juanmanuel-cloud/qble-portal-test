@@ -9,7 +9,7 @@
 <div style="max-width: 1050px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-top: 6px solid #f97316;">
    
   <div style="text-align: left; margin-bottom: 30px;">
-    <a href="index.html?s=herramientas" style="display: inline-block; margin-bottom: 15px; font-size: 13px; color: #f97316; text-decoration: none; font-weight: bold;">← Volver a Herramientas QBLE</a>
+    <a href="javascript:history.back()" style="display: inline-block; margin-bottom: 15px; font-size: 13px; color: #f97316; text-decoration: none; font-weight: bold;">← Volver a Herramientas QBLE</a>
     <h2 style="color: #0f172a; margin-bottom: 5px; text-transform: uppercase; font-size: 26px; font-weight: 800; letter-spacing: -0.5px;">SELECTOR DE CABLES DE CONTROL</h2>
     <p style="color: #64748b; font-size: 15px;">Complete todos los filtros técnicos para encontrar el cable exacto según las normativas de su proyecto.</p>
   </div>
@@ -112,8 +112,8 @@
         <p style="color: #64748b; font-size: 13px; margin: 0;">Revise los modelos y cantidades antes de solicitar su presupuesto formal.</p>
       </div>
        
-      <button onclick="enviarPorCorreo()" style="background: #f97316; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(249, 115, 22, 0.3); transition: transform 0.2s;">
-        COTIZACIÓN FORMAL ✉️
+      <button onclick="enviarAlPortal()" style="background: #f97316; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(249, 115, 22, 0.3); transition: transform 0.2s;">
+        AÑADIR AL BOM 📥
       </button>
     </div>
 
@@ -874,6 +874,39 @@
 
   // Inicializa la página para mostrar el mensaje discreto
   window.onload = manejarFiltrosDinamicos;
+
+function enviarAlPortal() {
+        const origen = new URLSearchParams(window.location.search).get('origen');
+        
+        // Si alguien entra directo sin pasar por el portal, manda correo
+        if (!origen) {
+            enviarPorCorreo(); 
+            return;
+        }
+
+        // Si viene del portal, detectamos cuál es su "mochila" de memoria
+        const llave = origen === 'admin' ? 'qble_admin_borrador' : 'qble_borrador';
+        const redireccion = origen === 'admin' ? 'admin.html' : 'portal.html';
+        
+        let borrador = JSON.parse(localStorage.getItem(llave));
+        if(!borrador) {
+            borrador = { cliente: '', nombre: '', items: [] };
+        }
+
+        // Inyectamos los cables seleccionados al BOM
+        carrito.forEach(item => {
+            // Maneja variaciones entre los nombres de las bases de datos (modelo, polos, configuracion)
+            let desc = item.modelo || item.configuracion || item.polos || '';
+            borrador.items.push({
+                descripcion: `[${item.familia}] ${desc} - P/N: ${item.ref}`,
+                cantidad: parseInt(item.cantidad)
+            });
+        });
+
+        localStorage.setItem(llave, JSON.stringify(borrador));
+        window.location.href = redireccion;
+    }
+
 </script>
 
 </body>
