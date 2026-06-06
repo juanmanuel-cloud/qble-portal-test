@@ -162,12 +162,31 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-100" id="tabla-proyectos-reales">
-                                <tr>
+                                <!-- Mensaje si no hay nada en Firebase -->
+                                <tr x-show="proyectos.length === 0">
                                     <td colspan="4" class="px-6 py-8 text-center text-slate-500 font-bold">
                                         <span class="text-2xl block mb-2">📥</span>
                                         La bóveda está limpia. Esperando nuevos proyectos...
                                     </td>
                                 </tr>
+                                <!-- Plantilla que se multiplica por cada proyecto real -->
+                                <template x-for="proyecto in proyectos" :key="proyecto.id">
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="px-6 py-4">
+                                            <div class="font-bold text-slate-900 text-base" x-text="proyecto.cliente"></div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="font-bold text-slate-700" x-text="proyecto.nombre"></div>
+                                            <div class="text-slate-500 text-xs mt-1" x-text="'Contiene: ' + proyecto.items.length + ' partida(s)'"></div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <span class="bg-blue-100 text-blue-800 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-md" x-text="proyecto.creadoPor"></span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <span class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-2 rounded-lg" x-text="proyecto.estadoCotizacion"></span>
+                                        </td>
+                                    </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
@@ -438,6 +457,24 @@
 
                 // Datos del empleado logueado
                 empleadoActual: {},
+// Lista donde guardaremos los proyectos que lleguen de la nube
+                proyectos: [],
+
+                // Función maestra para descargar proyectos de Firebase
+                async cargarProyectos() {
+                    try {
+                        const consulta = await window.getDocs(window.collection(window.db, "proyectos"));
+                        let listaTemp = [];
+                        consulta.forEach((doc) => {
+                            listaTemp.push({ id: doc.id, ...doc.data() });
+                        });
+                        // Ordenar para que los más nuevos salgan arriba
+                        listaTemp.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
+                        this.proyectos = listaTemp;
+                    } catch (error) {
+                        console.error("Error al descargar proyectos:", error);
+                    }
+                },
 
                 // VARIABLES DEL NUEVO PROYECTO (ADMIN)
                 nuevoProyecto: {
@@ -496,6 +533,7 @@
                         this.nuevoProyecto = { cliente: '', nombre: '', items: [] };
                         localStorage.removeItem('qble_admin_borrador');
                         this.seccionActiva = 'cotizador';
+                        `this.cargarProyectos();`
 
                     } catch (error) {
                         console.error("Error al guardar en la nube: ", error);
@@ -549,6 +587,7 @@
                                         this.autenticado = true;
                                         this.cargandoAuth = false;
                                         this.errorMsg = '';
+                                        this.cargarProyectos();
                                     } else {
                                         window.signOut(window.auth);
                                         this.errorMsg = 'No estás en la lista de empleados autorizados. Contacta a Sistemas.';
