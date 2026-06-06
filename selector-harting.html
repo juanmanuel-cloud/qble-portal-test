@@ -18,7 +18,7 @@
 <body class="py-10 px-4 text-slate-800">
 
     <div class="max-w-5xl mx-auto mb-4">
-        <a href="index.html?s=herramientas" class="text-xs font-bold text-gray-400 hover:text-harting-yellow transition-colors flex items-center uppercase tracking-wider">
+        <a href="javascript:history.back()" class="text-xs font-bold text-gray-400 hover:text-harting-yellow transition-colors flex items-center uppercase tracking-wider">
             <span class="mr-2 text-lg leading-none">←</span> Volver a la Suite QBLE
         </a>
     </div>
@@ -102,7 +102,7 @@
                         Mi Lista de Cotización
                     </h3>
                 </div>
-                <button onclick="enviarPorCorreo()" class="bg-harting-yellow hover:opacity-90 text-white px-5 py-2.5 rounded text-xs font-bold uppercase tracking-widest shadow-md transition-all transform active:scale-95 w-full md:w-auto">
+                <button onclick="enviarAlPortal()" class="bg-harting-yellow hover:opacity-90 text-white px-5 py-2.5 rounded text-xs font-bold uppercase tracking-widest shadow-md transition-all transform active:scale-95 w-full md:w-auto">
                     Solicitar Cotización ✉️
                 </button>
             </div>
@@ -310,6 +310,38 @@
     }
 
     window.onload = manejarFiltrosDinamicos;
+
+function enviarAlPortal() {
+        const origen = new URLSearchParams(window.location.search).get('origen');
+        
+        // Si alguien entra directo sin pasar por el portal, manda correo
+        if (!origen) {
+            enviarPorCorreo(); 
+            return;
+        }
+
+        // Si viene del portal, detectamos cuál es su "mochila" de memoria
+        const llave = origen === 'admin' ? 'qble_admin_borrador' : 'qble_borrador';
+        const redireccion = origen === 'admin' ? 'admin.html' : 'portal.html';
+        
+        let borrador = JSON.parse(localStorage.getItem(llave));
+        if(!borrador) {
+            borrador = { cliente: '', nombre: '', items: [] };
+        }
+
+        // Inyectamos los cables seleccionados al BOM
+        carrito.forEach(item => {
+            // Maneja variaciones entre los nombres de las bases de datos (modelo, polos, configuracion)
+            let desc = item.modelo || item.configuracion || item.polos || '';
+            borrador.items.push({
+                descripcion: `[${item.familia}] ${desc} - P/N: ${item.ref}`,
+                cantidad: parseInt(item.cantidad)
+            });
+        });
+
+        localStorage.setItem(llave, JSON.stringify(borrador));
+        window.location.href = redireccion;
+    }
 </script>
 
 </body>

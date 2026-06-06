@@ -13,7 +13,7 @@
 <body style="background-color: #f1f5f9; padding: 20px; font-family: 'Segoe UI', Arial, sans-serif;">
 
 <div style="max-width: 1050px; margin: 0 auto; padding-bottom: 20px;">
-        <a href="index.html?s=herramientas" style="color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#0d9488'" onmouseout="this.style.color='#64748b'">
+        <a href="javascript:history.back()" style="color: #64748b; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; transition: color 0.2s;" onmouseover="this.style.color='#0d9488'" onmouseout="this.style.color='#64748b'">
             <span style="margin-right: 5px;">←</span> Volver a la Suite QBLE
         </a>
     </div>
@@ -188,9 +188,9 @@ MI LISTA DE REDES
 
 </div>
 
-<button onclick="enviarPorCorreo()" style="background: #0d9488; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.3); transition: transform 0.2s;">
+<button onclick="enviarAlPortal()" style="background: #0d9488; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(13, 148, 136, 0.3); transition: transform 0.2s;">
 
-COTIZACIÓN FORMAL ✉️
+AÑADIR AL BOM 📥
 
 </button>
 
@@ -725,6 +725,38 @@ window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(lista
 }
 
 window.onload = manejarFiltrosDinamicos;
+
+function enviarAlPortal() {
+        const origen = new URLSearchParams(window.location.search).get('origen');
+        
+        // Si alguien entra directo sin pasar por el portal, manda correo
+        if (!origen) {
+            enviarPorCorreo(); 
+            return;
+        }
+
+        // Si viene del portal, detectamos cuál es su "mochila" de memoria
+        const llave = origen === 'admin' ? 'qble_admin_borrador' : 'qble_borrador';
+        const redireccion = origen === 'admin' ? 'admin.html' : 'portal.html';
+        
+        let borrador = JSON.parse(localStorage.getItem(llave));
+        if(!borrador) {
+            borrador = { cliente: '', nombre: '', items: [] };
+        }
+
+        // Inyectamos los cables seleccionados al BOM
+        carrito.forEach(item => {
+            // Maneja variaciones entre los nombres de las bases de datos (modelo, polos, configuracion)
+            let desc = item.modelo || item.configuracion || item.polos || '';
+            borrador.items.push({
+                descripcion: `[${item.familia}] ${desc} - P/N: ${item.ref}`,
+                cantidad: parseInt(item.cantidad)
+            });
+        });
+
+        localStorage.setItem(llave, JSON.stringify(borrador));
+        window.location.href = redireccion;
+    }
 
 </script>
 
