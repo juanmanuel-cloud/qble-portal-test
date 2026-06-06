@@ -177,13 +177,19 @@
                                         </td>
                                         <td class="px-6 py-4">
                                             <div class="font-bold text-slate-700" x-text="proyecto.nombre"></div>
-                                            <div class="text-slate-500 text-xs mt-1" x-text="'Contiene: ' + proyecto.items.length + ' partida(s)'"></div>
+                                            <div class="text-slate-500 text-[10px] mt-1 flex items-center">
+                                                <span class="mr-2" x-text="'📦 ' + (proyecto.items ? proyecto.items.length : 0) + ' partida(s)'"></span>
+                                                <span class="text-red-500 font-bold" x-text="'⏱️ ' + calcularTiempo(proyecto.fechaCreacion)"></span>
+                                            </div>
                                         </td>
                                         <td class="px-6 py-4">
                                             <span class="bg-blue-100 text-blue-800 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-md" x-text="proyecto.creadoPor"></span>
                                         </td>
-                                        <td class="px-6 py-4 text-right">
+                                        <td class="px-6 py-4 text-right flex justify-end items-center gap-3">
                                             <span class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-2 rounded-lg" x-text="proyecto.estadoCotizacion"></span>
+                                            <button @click="abrirProyecto(proyecto)" class="bg-slate-900 hover:bg-qble-orange text-white px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors shadow-sm">
+                                                Abrir 👁️
+                                            </button>
                                         </td>
                                     </tr>
                                 </template>
@@ -487,6 +493,23 @@
                     cantidad: 1
                 },
 
+                // FUNCIÓN NUEVA: Calcular cuánto tiempo ha pasado (SLA)
+                calcularTiempo(fechaISO) {
+                    if(!fechaISO) return '';
+                    const inicio = new Date(fechaISO);
+                    const ahora = new Date();
+                    const diff = Math.floor((ahora - inicio) / 60000); // Diferencia en minutos
+                    if (diff < 60) return `Hace ${diff} min`;
+                    const horas = Math.floor(diff / 60);
+                    return `Hace ${horas} hora(s)`;
+                },
+
+                // FUNCIÓN NUEVA: Abrir un proyecto de la tabla para verlo
+                abrirProyecto(proyecto) {
+                    this.nuevoProyecto = { ...proyecto };
+                    this.seccionActiva = 'nuevo-bom';
+                },
+
                 // FUNCIÓN 1: Autoguardado silencioso para el equipo interno
                 guardarLocal() {
                     localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
@@ -545,6 +568,10 @@
                     const borradorRecuperado = localStorage.getItem('qble_admin_borrador');
                     if(borradorRecuperado) {
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
+                    // Si hay un borrador en curso, abre la pantalla del BOM automáticamente
+                        if(this.nuevoProyecto.items.length > 0) {
+                            this.seccionActiva = 'nuevo-bom';
+                        }
                     }
 
                     window.addEventListener('firebase-listo', () => {
