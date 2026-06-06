@@ -190,32 +190,28 @@
         // Redirigimos al contacto pasándole el mensaje
         window.location.href = `index.html?s=contacto&mensaje=${encodeURIComponent(mensaje)}`;
     }
-function enviarAlPortal() {
+function enviarAlPortalCadena() {
         const origen = new URLSearchParams(window.location.search).get('origen');
-        
-        // Si alguien entra directo sin pasar por el portal, manda correo
         if (!origen) {
-            enviarPorCorreo(); 
+            enviarRequerimiento(); 
             return;
         }
 
-        // Si viene del portal, detectamos cuál es su "mochila" de memoria
         const llave = origen === 'admin' ? 'qble_admin_borrador' : 'qble_borrador';
         const redireccion = origen === 'admin' ? 'admin.html' : 'portal.html';
         
         let borrador = JSON.parse(localStorage.getItem(llave));
-        if(!borrador) {
-            borrador = { cliente: '', nombre: '', items: [] };
-        }
+        if(!borrador) borrador = { cliente: '', nombre: '', items: [] };
 
-        // Inyectamos los cables seleccionados al BOM
-        carrito.forEach(item => {
-            // Maneja variaciones entre los nombres de las bases de datos (modelo, polos, configuracion)
-            let desc = item.modelo || item.configuracion || item.polos || '';
-            borrador.items.push({
-                descripcion: `[${item.familia}] ${desc} - P/N: ${item.ref}`,
-                cantidad: parseInt(item.cantidad)
-            });
+        // Capturamos los datos más importantes del formulario
+        const instalacion = document.getElementById("req-instalacion").value;
+        const material = document.getElementById("req-material").value;
+        const alto = document.getElementById("req-alto").value || "N/D";
+        const largo = document.getElementById("req-largo").value || "N/D";
+
+        borrador.items.push({
+            descripcion: `[CADENA PORTACABLES] Tipo: ${instalacion} | Mat: ${material} | Alto Int: ${alto}mm | Largo Total: ${largo}m`,
+            cantidad: 1
         });
 
         localStorage.setItem(llave, JSON.stringify(borrador));
