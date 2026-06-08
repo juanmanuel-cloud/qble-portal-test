@@ -662,11 +662,10 @@
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
                     }
 
-                    window.addEventListener('firebase-listo', () => {
+                    const arrancarCadeneroCliente = () => {
                         window.onAuthStateChanged(window.auth, async (user) => {
                             if (user) {
                                 try {
-                                    // 1. EL CADENERO: Buscamos el correo en la base de datos
                                     const consulta = window.query(
                                         window.collection(window.db, "clientes_autorizados"), 
                                         window.where("email", "==", user.email.toLowerCase())
@@ -675,9 +674,6 @@
 
                                     if (!resultados.empty) {
                                         const datosCliente = resultados.docs[0].data();
-                                        const idDocumento = resultados.docs[0].id;
-
-                                        // 2. VERIFICAR SI NO LO HAN DADO DE BAJA
                                         if(datosCliente.estado !== 'activo') {
                                             window.signOut(window.auth);
                                             this.errorMsg = 'Su cuenta ha sido deshabilitada por inactividad o baja. Contacte a QBLE.';
@@ -685,8 +681,7 @@
                                             return;
                                         }
 
-                                        // 3. TODO EN ORDEN: Actualizamos su "Última vez visto"
-                                        await window.updateDoc(window.doc(window.db, "clientes_autorizados", idDocumento), {
+                                        await window.updateDoc(window.doc(window.db, "clientes_autorizados", resultados.docs[0].id), {
                                             ultimoAcceso: new Date().toISOString()
                                         });
 
@@ -695,7 +690,6 @@
                                         this.cargandoAuth = false;
                                         this.errorMsg = '';
                                     } else {
-                                        // SI NO ESTÁ EN LA LISTA
                                         window.signOut(window.auth);
                                         this.errorMsg = 'Acceso denegado. Este portal es estrictamente por invitación.';
                                         this.cargandoAuth = false;
@@ -711,9 +705,15 @@
                                 this.cargandoAuth = false;
                             }
                         });
-                    });
+                    };
+
+                    // Control de carga para clientes
+                    if (window.auth) {
+                        arrancarCadeneroCliente();
+                    } else {
+                        window.addEventListener('firebase-listo', arrancarCadeneroCliente);
+                    }
                 }
-            }))
         });
     </script>
 
