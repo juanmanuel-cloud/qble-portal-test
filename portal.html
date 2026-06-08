@@ -674,6 +674,8 @@
 
                                     if (!resultados.empty) {
                                         const datosCliente = resultados.docs[0].data();
+                                        const idDocumento = resultados.docs[0].id;
+
                                         if(datosCliente.estado !== 'activo') {
                                             window.signOut(window.auth);
                                             this.errorMsg = 'Su cuenta ha sido deshabilitada por inactividad o baja. Contacte a QBLE.';
@@ -681,7 +683,7 @@
                                             return;
                                         }
 
-                                        await window.updateDoc(window.doc(window.db, "clientes_autorizados", resultados.docs[0].id), {
+                                        await window.updateDoc(window.doc(window.db, "clientes_autorizados", idDocumento), {
                                             ultimoAcceso: new Date().toISOString()
                                         });
 
@@ -714,6 +716,7 @@
                         window.addEventListener('firebase-listo', arrancarCadeneroCliente);
                     }
                 }
+            }))
         });
     </script>
 
