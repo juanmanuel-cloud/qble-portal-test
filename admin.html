@@ -545,7 +545,6 @@
                             ...this.nuevoProyecto,
                             estadoCotizacion: estado,
                             fechaCreacion: new Date().toISOString(),
-                            // Registramos quién hizo el movimiento usando su perfil
                             creadoPor: this.empleadoActual.email || window.auth.currentUser.email
                         };
 
@@ -556,7 +555,7 @@
                         this.nuevoProyecto = { cliente: '', nombre: '', items: [] };
                         localStorage.removeItem('qble_admin_borrador');
                         this.seccionActiva = 'cotizador';
-                        `this.cargarProyectos();`
+                        this.cargarProyectos(); // <- ¡Corregido! Sin comillas raras
 
                     } catch (error) {
                         console.error("Error al guardar en la nube: ", error);
@@ -568,25 +567,22 @@
                     const borradorRecuperado = localStorage.getItem('qble_admin_borrador');
                     if(borradorRecuperado) {
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
-                    // Si hay un borrador en curso, abre la pantalla del BOM automáticamente
                         if(this.nuevoProyecto.items.length > 0) {
                             this.seccionActiva = 'nuevo-bom';
                         }
                     }
 
-                    window.addEventListener('firebase-listo', () => {
+                    // Encapsulamos la vigilancia del Cadenero para evitar que se quede pasmado
+                    const arrancarCadenero = () => {
                         window.onAuthStateChanged(window.auth, async (user) => {
                             if (user) {
-                                // 1. FILTRO BÁSICO: Solo correos corporativos
                                 if(!user.email.endsWith('@qble.com.mx')) {
                                     window.signOut(window.auth);
                                     this.errorMsg = 'Acceso denegado. Utilice una cuenta @qble.com.mx';
                                     this.cargandoAuth = false;
                                     return;
                                 }
-
                                 try {
-                                    // 2. EL CADENERO VIP: Buscamos al empleado en la base de datos
                                     const consulta = window.query(
                                         window.collection(window.db, "empleados_autorizados"), 
                                         window.where("email", "==", user.email.toLowerCase())
@@ -595,18 +591,13 @@
 
                                     if (!resultados.empty) {
                                         const datosEmpleado = resultados.docs[0].data();
-                                        const idDocumento = resultados.docs[0].id;
-
-                                        // 3. REVISAR QUE NO ESTÉ SUSPENDIDO
                                         if(datosEmpleado.estado !== 'activo') {
                                             window.signOut(window.auth);
                                             this.errorMsg = 'Tu cuenta corporativa ha sido suspendida. Contacta a Dirección.';
                                             this.cargandoAuth = false;
                                             return;
                                         }
-
-                                        // 4. TODO EN ORDEN: Actualizamos su "Última vez visto"
-                                        await window.updateDoc(window.doc(window.db, "empleados_autorizados", idDocumento), {
+                                        await window.updateDoc(window.doc(window.db, "empleados_autorizados", resultados.docs[0].id), {
                                             ultimoAcceso: new Date().toISOString()
                                         });
 
@@ -631,10 +622,15 @@
                                 this.cargandoAuth = false;
                             }
                         });
-                    });
-                }
-            }))
-        });
+                    };
+
+                    // Solución a la "carrera de velocidad": Si Firebase ya cargó, arranca. Si no, espéralo.
+                    if (window.auth) {
+                        arrancarCadenero();
+                    } else {
+                        window.addEventListener('firebase-listo', arrancarCadenero);
+                    }
+                }        });
     </script>
 
     <script type="module">
