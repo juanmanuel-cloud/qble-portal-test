@@ -137,227 +137,183 @@
 
             <!-- COTIZACIONES LIMPIAS -->
             <div x-show="seccionActiva === 'cotizador'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
-                <div class="flex justify-between items-end">
+                
+                <div class="flex justify-between items-end border-b border-slate-200 pb-6">
                     <div>
-                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Gestión de Cotizaciones</h2>
-                        <p class="text-slate-500 mt-1">Cumplimiento de tiempos de respuesta (SLA 2hrs) y seguimiento de cierres de venta.</p>
+                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Centro de Gestión Comercial</h2>
+                        <p class="text-slate-500 mt-1" x-text="'Perfil operativo detectado: ' + empleadoActual.rol"></p>
                     </div>
                     <button @click="seccionActiva = 'nuevo-bom'" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl shadow-md hover:bg-qble-orange transition-colors flex items-center transform active:scale-95">
-                        <span class="text-xl mr-2">+</span> Nueva Solicitud (BOM)
+                        <span class="text-xl mr-2">+</span> Crear Nuevo BOM
                     </button>
                 </div>
 
-                <div class="mt-8">
-                    <h3 class="text-xs font-black text-blue-500 uppercase tracking-[0.2em] mb-4 flex items-center">
-                        <span class="text-blue-500 mr-2 text-lg">📥</span> Nuevas Solicitudes de Cotización (BOMs)
-                    </h3>
-                    <div class="bg-white rounded-2xl border border-blue-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-blue-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-blue-100">
-                                <tr>
-                                    <th class="px-6 py-4">Cliente / Empresa</th>
-                                    <th class="px-6 py-4">Proyecto</th>
-                                    <th class="px-6 py-4">Solicitado por</th>
-                                    <th class="px-6 py-4 text-right">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100" id="tabla-proyectos-reales">
-                                <!-- Mensaje si no hay nada en Firebase -->
-                                <tr x-show="proyectos.length === 0">
-                                    <td colspan="4" class="px-6 py-8 text-center text-slate-500 font-bold">
-                                        <span class="text-2xl block mb-2">📥</span>
-                                        La bóveda está limpia. Esperando nuevos proyectos...
-                                    </td>
-                                </tr>
-                                <!-- Plantilla que se multiplica por cada proyecto real -->
-                                <template x-for="proyecto in proyectos" :key="proyecto.id">
-                                    <tr class="hover:bg-slate-50 transition-colors">
-                                        <td class="px-6 py-4">
-                                            <div class="font-bold text-slate-900 text-base" x-text="proyecto.cliente"></div>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <div class="font-bold text-slate-700" x-text="proyecto.nombre"></div>
-                                            <div class="text-slate-500 text-[10px] mt-1 flex items-center">
-                                                <span class="mr-2" x-text="'📦 ' + (proyecto.items ? proyecto.items.length : 0) + ' partida(s)'"></span>
-                                                <span class="text-red-500 font-bold" x-text="'⏱️ ' + calcularTiempo(proyecto.fechaCreacion)"></span>
-                                            </div>
-                                        </td>
-                                        <td class="px-6 py-4">
-                                            <span class="bg-blue-100 text-blue-800 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-md" x-text="proyecto.creadoPor"></span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right flex justify-end items-center gap-3">
-                                            <span class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-2 rounded-lg" x-text="proyecto.estadoCotizacion"></span>
-                                            <button @click="abrirProyecto(proyecto)" class="bg-slate-900 hover:bg-qble-orange text-white px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors shadow-sm">
-                                                Abrir 👁️
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="mt-8">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center">
-                        <span class="text-red-500 mr-2 text-lg">⏱️</span> Modificaciones Pendientes (SLA: 2 Horas Máximo)
-                    </h3>
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
-                                <tr>
-                                    <th class="px-6 py-4">Cliente / Proyecto</th>
-                                    <th class="px-6 py-4">Solicitud de Cambio</th>
-                                    <th class="px-6 py-4 text-center">Tiempo Transcurrido</th>
-                                    <th class="px-6 py-4 text-right">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                <tr><td colspan="4" class="px-6 py-6 text-center text-slate-400 font-bold">Sin modificaciones pendientes.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="mt-12">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center">
-                        <span class="text-qble-orange mr-2 text-lg">🎯</span> Enfoque de Cierre (Cotizaciones Enviadas)
-                    </h3>
-                    <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center">
-                        <p class="text-sm text-slate-500 font-bold">No hay cotizaciones enviadas en proceso de cierre.</p>
-                    </div>
-                </div>
-            </div>  
-
-<div x-show="seccionActiva === 'nuevo-bom'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-slate-200 pb-6 gap-4">
-                    <div>
-                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Solicitar Cotización (BOM)</h2>
-                        <p class="text-slate-500 mt-1">Genera la lista de materiales y envíala al vendedor interno para ser cotizada.</p>
-                    </div>
-                    <div class="flex space-x-3 w-full md:w-auto">
-                        <button @click="seccionActiva = 'cotizador'" class="px-5 py-3 rounded-lg font-bold text-sm text-slate-600 border border-slate-200 hover:bg-slate-50 w-full md:w-auto">Cancelar</button>
-                        <button @click="guardarEnFirebase('borrador')" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-slate-800 w-full md:w-auto">💾 Guardar Borrador</button>
-                        <button @click="guardarEnFirebase('enviado')" class="bg-qble-orange text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-orange-600 w-full md:w-auto">📥 Enviar a Cotización</button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">1. Nombre del Cliente / Empresa</label>
-                        <input type="text" x-model="nuevoProyecto.cliente" @input="guardarLocal()" placeholder="Ej. Flex Automotriz, KUKA..." class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors">
-                    </div>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">2. Nombre del Proyecto</label>
-                        <input type="text" x-model="nuevoProyecto.nombre" @input="guardarLocal()" placeholder="Ej. Actualización de Tableros..." class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors">
-                    </div>
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
-                        <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">3</span> 
-                        Agregue materiales a su proyecto (BOM)
-                    </h3>
+                <div x-show="['Director', 'Interno'].includes(empleadoActual.rol)" class="space-y-8">
                     
-                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8 gap-3 mb-4">
-                        <button onclick="window.location.href='selector-control.html?origen=admin'" class="bg-white border border-slate-200 hover:border-orange-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚙️</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Cable<br>Control</span>
-                        </button>
-                        <button onclick="window.location.href='selector-vfd.html?origen=admin'" class="bg-white border border-slate-200 hover:border-blue-600 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⚡</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Variador<br>(VFD)</span>
-                        </button>
-                        <button onclick="window.location.href='selector-instrumentacion.html?origen=admin'" class="bg-white border border-slate-200 hover:border-emerald-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">📡</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Instrum.</span>
-                        </button>
-                        <button onclick="window.location.href='selector-monopolares.html?origen=admin'" class="bg-white border border-slate-200 hover:border-red-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🟥</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Monopolares</span>
-                        </button>
-                        <button onclick="window.location.href='selector-redes.html?origen=admin'" class="bg-white border border-slate-200 hover:border-teal-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🌐</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Redes /<br>Profinet</span>
-                        </button>
-                        <button onclick="window.location.href='selector-harting.html?origen=admin'" class="bg-white border border-slate-200 hover:border-yellow-500 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🔌</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Harting<br>(Kits)</span>
-                        </button>
-                        <button onclick="window.location.href='selector-belden.html?origen=admin'" class="bg-white border border-slate-200 hover:border-blue-800 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">🔊</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Belden<br>Audio</span>
-                        </button>
-                        <button onclick="window.location.href='selector-cadena.html?origen=admin'" class="bg-white border border-slate-200 hover:border-slate-800 hover:shadow-md rounded-xl p-3 flex flex-col items-center justify-center text-center transition-all group">
-                            <span class="text-2xl mb-1 group-hover:scale-110 transition-transform">⛓️</span>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight">Cadenas<br>Portacables</span>
-                        </button>
+                    <div>
+                        <h3 class="text-xs font-black text-blue-600 uppercase tracking-[0.2em] mb-4 flex items-center">
+                            <span class="animate-pulse mr-2 w-2.5 h-2.5 rounded-full bg-blue-600"></span> 📥 BANDEJA DE ENTRADA: BOMs Pendientes por Cotizar
+                        </h3>
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                                    <tr>
+                                        <th class="px-6 py-4">Cliente / Proyecto</th>
+                                        <th class="px-6 py-4">Solicitante</th>
+                                        <th class="px-6 py-4">Tiempo en Espera</th>
+                                        <th class="px-6 py-4 text-right">Acciones de Cómputo</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'BOM Pendiente')" :key="p.id">
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-6 py-4">
+                                                <div class="font-bold text-slate-900 text-base" x-text="p.cliente"></div>
+                                                <div class="text-slate-500 text-xs" x-text="p.nombre"></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-slate-600 font-medium" x-text="p.creadoPor"></td>
+                                            <td class="px-6 py-4 font-bold" :class="esFueraDeSla(p.fechaModificacion || p.fechaCreacion) ? 'text-red-500' : 'text-slate-700'">
+                                                <span x-text="'⏱️ ' + calcularTiempo(p.fechaModificacion || p.fechaCreacion)"></span>
+                                                <span x-show="esFueraDeSla(p.fechaModificacion || p.fechaCreacion)" class="text-[9px] block text-red-600 font-black">FUERA DE SLA (2HRS)</span>
+                                            </td>
+                                            <td class="px-6 py-4 text-right space-y-2">
+                                                <button @click="abrirProyecto(p)" class="bg-slate-100 text-slate-700 hover:bg-slate-200 px-3 py-1.5 rounded-lg font-bold text-xs mr-2">Revisar Partidas 👁️</button>
+                                                <div class="inline-flex items-center gap-1">
+                                                    <input type="text" placeholder="Pegar link de Odoo/PDF" x-model="urlCotizacionPdf" class="border border-slate-300 rounded px-2 py-1 text-xs w-44 focus:outline-none focus:border-blue-500">
+                                                    <button @click="if(urlCotizacionPdf) { actualizarEstadoBOM(p.id, 'Cotizado', { urlPdf: urlCotizacionPdf }) } else { alert('Escribe la liga de la cotización') }" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Enviar 🚀</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'BOM Pendiente').length === 0">
+                                        <td colspan="4" class="px-6 py-6 text-center text-slate-400 font-medium">Felicidades Mariano, no tienes BOMs pendientes en bandeja de entrada. 🎉</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 mt-4 flex flex-col md:flex-row gap-4 items-center">
-                        <div class="flex-shrink-0 text-2xl">✍️</div>
-                        <div class="flex-1 w-full">
-                            <input type="text" x-model="itemTemporal.descripcion" @keyup.enter="agregarItemEspecial()" placeholder="Escriba aquí la marca, modelo o descripción libre..." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-qble-orange">
+                    <div>
+                        <h3 class="text-xs font-black text-red-600 uppercase tracking-[0.2em] mb-4 flex items-center">
+                            <span class="animate-ping mr-2 w-2.5 h-2.5 rounded-full bg-red-600"></span> ⏱️ RECHAZADAS: Modificaciones Pendientes (SLA Crítico)
+                        </h3>
+                        <div class="bg-white rounded-2xl border border-red-200 shadow-sm overflow-hidden">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-red-50 text-red-700 text-[10px] uppercase tracking-widest font-black border-b border-red-100">
+                                    <tr>
+                                        <th class="px-6 py-4">Cliente / Proyecto</th>
+                                        <th class="px-6 py-4">Motivo del Cambio solicitado</th>
+                                        <th class="px-6 py-4">Tiempo Transcurrido</th>
+                                        <th class="px-6 py-4 text-right">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'Cambios Solicitados')" :key="p.id">
+                                        <tr class="hover:bg-red-50 bg-red-50 bg-opacity-20">
+                                            <td class="px-6 py-4">
+                                                <div class="font-bold text-slate-900" x-text="p.cliente"></div>
+                                                <div class="text-slate-500 text-xs" x-text="p.nombre"></div>
+                                            </td>
+                                            <td class="px-6 py-4 text-red-900 font-bold text-xs bg-red-50 bg-opacity-40" x-text="p.comentariosRechazo"></td>
+                                            <td class="px-6 py-4 font-black text-red-600" x-text="'⏱️ ' + calcularTiempo(p.fechaModificacion)"></td>
+                                            <td class="px-6 py-4 text-right">
+                                                <button @click="abrirProyecto(p)" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-lg text-xs uppercase tracking-wider">Corregir BOM 🛠️</button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'Cambios Solicitados').length === 0">
+                                        <td colspan="4" class="px-6 py-6 text-center text-slate-400 font-medium">Sin solicitudes de cambio pendientes. Excelente control de calidad.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="w-full md:w-32">
-                            <input type="number" x-model="itemTemporal.cantidad" @keyup.enter="agregarItemEspecial()" placeholder="Cant." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none text-center">
-                        </div>
-                        <button @click="agregarItemEspecial()" class="w-full md:w-auto bg-slate-800 text-white px-6 py-3 rounded-lg font-bold text-sm hover:bg-slate-700 whitespace-nowrap">Añadir Material</button>
                     </div>
                 </div>
 
-                <div>
-                    <div class="flex justify-between items-end mb-4">
-                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center">
-                            <span class="bg-qble-orange text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">2</span> Lista de Materiales (BOM)
+
+                <div x-show="['Director', 'Ventas'].includes(empleadoActual.rol)" class="space-y-8 mt-12">
+                    
+                    <div>
+                        <h3 class="text-xs font-black text-emerald-600 uppercase tracking-[0.2em] mb-4 flex items-center">
+                            <span>📋</span> COTIZACIONES LISTAS: Revisar y Mandar al Cliente
                         </h3>
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                                    <tr>
+                                        <th class="px-6 py-4">Cliente / Proyecto</th>
+                                        <th class="px-6 py-4">Ver Cotización (PDF)</th>
+                                        <th class="px-6 py-4 text-right">Decisión del Asesor</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'Cotizado')" :key="p.id">
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-6 py-4">
+                                                <div class="font-bold text-slate-900 text-base" x-text="p.cliente"></div>
+                                                <div class="text-slate-500 text-xs" x-text="p.nombre"></div>
+                                            </td>
+                                            <td class="px-6 py-4">
+                                                <a :href="p.urlPdf" target="_blank" class="inline-flex items-center text-blue-600 font-bold hover:underline text-xs bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200">
+                                                    Abrir Propuesta Comercial 📄
+                                                </a>
+                                            </td>
+                                            <td class="px-6 py-4 text-right space-y-2">
+                                                <button @click="actualizarEstadoBOM(p.id, 'Aprobado / En Cierre')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs mr-2">Aprobar y Enviar 🚀</button>
+                                                
+                                                <div class="inline-flex items-center gap-1">
+                                                    <input type="text" placeholder="¿Qué cambios requiere?" x-model="comentariosCambio" class="border border-slate-300 rounded px-2 py-1 text-xs w-44 focus:outline-none">
+                                                    <button @click="if(comentariosCambio) { actualizarEstadoBOM(p.id, 'Cambios Solicitados', { comentariosRechazo: comentariosCambio }) } else { alert('Explica qué cambios se necesitan') }" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Rechazar ❌</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'Cotizado').length === 0">
+                                        <td colspan="3" class="px-6 py-6 text-center text-slate-400 font-medium">Esperando que Mariano termine de computar las cotizaciones pendientes.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <div x-show="nuevoProyecto.items.length === 0" class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center mt-6">
-                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">📥</div>
-                        <h4 class="text-lg font-bold text-slate-700 mb-1">El proyecto está vacío</h4>
-                        <p class="text-sm text-slate-500 max-w-md mx-auto">Comienza agregando materiales para enviar a la mesa de cotización.</p>
-                    </div>
-
-                    <div x-show="nuevoProyecto.items.length > 0" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mt-6" style="display: none;">
-                        <table class="w-full text-sm text-left">
-                            <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
-                                <tr>
-                                    <th class="px-6 py-4">Descripción del Material</th>
-                                    <th class="px-6 py-4 text-center">Cantidad</th>
-                                    <th class="px-6 py-4 text-right">Acción</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                <template x-for="(item, index) in nuevoProyecto.items" :key="index">
-                                    <tr class="hover:bg-slate-50">
-                                        <td class="px-6 py-4 font-bold text-slate-800" x-text="item.descripcion"></td>
-                                        <td class="px-6 py-4 text-center font-bold text-qble-orange text-lg" x-text="item.cantidad"></td>
-                                        <td class="px-6 py-4 text-right">
-                                            <button @click="eliminarItem(index)" class="text-red-500 hover:text-red-700 font-bold text-[10px] uppercase tracking-widest bg-red-50 px-3 py-1 rounded">Eliminar ❌</button>
+                    <div>
+                        <h3 class="text-xs font-black text-qble-orange uppercase tracking-[0.2em] mb-4 flex items-center">
+                            <span>🎯</span> ENFOQUE DE CIERRE: Proyectos en Negociación con Clientes
+                        </h3>
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-orange-50 text-orange-800 text-[10px] uppercase tracking-widest font-black border-b border-orange-100">
+                                    <tr>
+                                        <th class="px-6 py-4">Cliente Corporativo</th>
+                                        <th class="px-6 py-4">Nombre del Proyecto</th>
+                                        <th class="px-6 py-4">Última Interacción</th>
+                                        <th class="px-6 py-4 text-center">Acción Logística</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'Aprobado / En Cierre')" :key="p.id">
+                                        <tr class="hover:bg-orange-50 bg-orange-50 bg-opacity-5">
+                                            <td class="px-6 py-4 font-extrabold text-slate-900 text-base" x-text="p.cliente"></td>
+                                            <td class="px-6 py-4 font-medium text-slate-700" x-text="p.nombre"></td>
+                                            <td class="px-6 py-4 text-xs text-slate-500" x-text="'Enviado hace: ' + calcularTiempo(p.fechaModificacion)"></td>
+                                            <td class="px-6 py-4 text-center">
+                                                <button @click="actualizarEstadoBOM(p.id, 'Ganado - Pasar a Tracking Logistics')" class="bg-slate-900 hover:bg-qble-orange text-white font-bold px-4 py-2 rounded-lg text-xs uppercase tracking-wider transition-colors shadow-sm">
+                                                    ¡PROYECTO GANADO! 🏆
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'Aprobado / En Cierre').length === 0">
+                                        <td colspan="4" class="px-6 py-8 text-center text-slate-500 font-medium">
+                                            <span class="text-xl block mb-1">🎯</span> No hay proyectos en fase de cierre en este momento. ¡A meterle acelerador!
                                         </td>
                                     </tr>
-                                </template>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-
-            <div x-show="seccionActiva === 'pedidos'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
-                <div class="flex justify-between items-end border-b border-slate-200 pb-6">
-                    <div>
-                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Pedidos de Clientes (Tracking)</h2>
-                        <p class="text-slate-500 mt-1">Visibilidad total para Directores y Vendedores. Seguimiento desde OC hasta entrega.</p>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center mt-8">
-                    <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">📦</div>
-                    <h4 class="text-lg font-bold text-slate-700 mb-1">Aún no hay pedidos en curso</h4>
-                    <p class="text-sm text-slate-500 max-w-md mx-auto">Cuando se apruebe una cotización, aparecerá aquí para su seguimiento logístico.</p>
-                </div>
             </div>
 
              <!-- FINANZAS LIMPIO -->
@@ -465,8 +421,10 @@
                 empleadoActual: {},
 // Lista donde guardaremos los proyectos que lleguen de la nube
                 proyectos: [],
+                urlCotizacionPdf: '', // Guarda la liga del PDF temporalmente al cotizar
+                comentariosCambio: '', // Guarda los motivos de rechazo
 
-                // Función maestra para descargar proyectos de Firebase
+                // 1. Descargar proyectos en tiempo real
                 async cargarProyectos() {
                     try {
                         const consulta = await window.getDocs(window.collection(window.db, "proyectos"));
@@ -474,40 +432,55 @@
                         consulta.forEach((doc) => {
                             listaTemp.push({ id: doc.id, ...doc.data() });
                         });
-                        // Ordenar para que los más nuevos salgan arriba
-                        listaTemp.sort((a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion));
+                        listaTemp.sort((a, b) => new Date(b.fechaModificacion || b.fechaCreacion) - new Date(a.fechaModificacion || a.fechaCreacion));
                         this.proyectos = listaTemp;
                     } catch (error) {
                         console.error("Error al descargar proyectos:", error);
                     }
                 },
 
-                // VARIABLES DEL NUEVO PROYECTO (ADMIN)
-                nuevoProyecto: {
-                    cliente: '',
-                    nombre: '',
-                    items: []
-                },
-                itemTemporal: {
-                    descripcion: '',
-                    cantidad: 1
-                },
-
-                // FUNCIÓN NUEVA: Calcular cuánto tiempo ha pasado (SLA)
+                // 2. Calcular SLA (Tiempo transcurrido estricto)
                 calcularTiempo(fechaISO) {
-                    if(!fechaISO) return '';
+                    if(!fechaISO) return '0 min';
                     const inicio = new Date(fechaISO);
                     const ahora = new Date();
-                    const diff = Math.floor((ahora - inicio) / 60000); // Diferencia en minutos
-                    if (diff < 60) return `Hace ${diff} min`;
+                    const diff = Math.floor((ahora - inicio) / 60000);
+                    if (diff < 60) return `${diff} min`;
                     const horas = Math.floor(diff / 60);
-                    return `Hace ${horas} hora(s)`;
+                    const mins = diff % 60;
+                    return `${horas}h ${mins}m`;
                 },
 
-                // FUNCIÓN NUEVA: Abrir un proyecto de la tabla para verlo
+                // 3. Determinar si un proyecto está fuera de SLA (> 2 horas / 120 mins)
+                esFueraDeSla(fechaISO) {
+                    if(!fechaISO) return false;
+                    const diff = Math.floor((new Date() - new Date(fechaISO)) / 60000);
+                    return diff > 120;
+                },
+
+                // 4. Abrir panel de edición/vista de un BOM
                 abrirProyecto(proyecto) {
                     this.nuevoProyecto = { ...proyecto };
                     this.seccionActiva = 'nuevo-bom';
+                },
+
+                // 5. AUTOMATIZACIÓN: Cambiar el estado de un BOM en Firebase
+                async actualizarEstadoBOM(proyectoId, nuevoEstado, extras = {}) {
+                    try {
+                        const datosActualizados = {
+                            estadoCotizacion: nuevoEstado,
+                            fechaModificacion: new Date().toISOString(),
+                            ...extras
+                        };
+                        await window.updateDoc(window.doc(window.db, "proyectos", proyectoId), datosActualizados);
+                        alert(`🚀 BOM actualizado a: ${nuevoEstado}`);
+                        this.urlCotizacionPdf = '';
+                        this.comentariosCambio = '';
+                        this.cargarProyectos();
+                    } catch (error) {
+                        console.error("Error al actualizar estado:", error);
+                        alert("Error de comunicación con la base de datos.");
+                    }
                 },
 
                 // FUNCIÓN 1: Autoguardado silencioso para el equipo interno
@@ -543,7 +516,7 @@
                     try {
                         const paquete = {
                             ...this.nuevoProyecto,
-                            estadoCotizacion: estado,
+                            estadoCotizacion: estado === 'borrador' ? 'borrador' : 'BOM Pendiente',
                             fechaCreacion: new Date().toISOString(),
                             creadoPor: this.empleadoActual.email || window.auth.currentUser.email
                         };
