@@ -297,9 +297,12 @@
                                             <td class="px-6 py-4 font-medium text-slate-700" x-text="p.nombre"></td>
                                             <td class="px-6 py-4 text-xs text-slate-500" x-text="'Enviado hace: ' + calcularTiempo(p.fechaModificacion)"></td>
                                             <td class="px-6 py-4 text-center" x-data="{ motivoPerdida: '' }">
-                                                <button @click="actualizarEstadoBOM(p.id, 'Ganado - Pasar a Tracking Logistics')" class="w-full mb-3 bg-slate-900 hover:bg-qble-orange text-white font-bold px-4 py-2 rounded-lg text-[10px] uppercase tracking-wider transition-colors shadow-sm">
-                                                    ¡PROYECTO GANADO! 🏆
-                                                </button>
+                                                <div class="mb-3 p-2 bg-emerald-50 rounded-lg border border-emerald-100" x-data="{ ocCliente: '' }">
+                                                    <input type="text" placeholder="No. de OC o Link del PDF" x-model="ocCliente" class="w-full text-xs font-bold text-slate-700 p-2 border border-slate-300 rounded mb-2 focus:outline-none focus:border-emerald-500 text-center">
+                                                    <button @click="if(ocCliente) { actualizarEstadoBOM(p.id, 'Ganado - Pasar a Tracking Logistics', { ordenCompra: ocCliente }) } else { alert('⚠️ Ingrese el número de OC o link del PDF antes de marcarlo como ganado.') }" class="w-full bg-slate-900 hover:bg-qble-orange text-white font-bold px-4 py-2 rounded-lg text-[10px] uppercase tracking-wider transition-colors shadow-sm">
+                                                        ¡PROYECTO GANADO! 🏆
+                                                    </button>
+                                                </div>
                                                 
                                                 <div class="flex flex-col gap-1 border-t border-orange-100 pt-3">
                                                     <select x-model="motivoPerdida" class="border border-slate-300 rounded px-2 py-1 text-[10px] w-full focus:outline-none bg-white font-bold text-slate-600">
@@ -356,12 +359,30 @@
                 <div>
                     <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
                         <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">💬</span> 
-                        Notas, Instrucciones y Comentarios
+                        Bitácora del Proyecto (Notas e Instrucciones)
                     </h3>
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <textarea x-model="nuevoProyecto.notas" @input="guardarLocal()" rows="3" placeholder="Escribe aquí las instrucciones para Mariano, dudas técnicas, o detalles para el vendedor..." class="w-full p-3 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 transition-colors"></textarea>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                        
+                        <div class="space-y-3 max-h-60 overflow-y-auto pr-2" x-show="nuevoProyecto.historialNotas && nuevoProyecto.historialNotas.length > 0">
+                            <template x-for="(nota, index) in nuevoProyecto.historialNotas" :key="index">
+                                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-xs font-black text-blue-700 uppercase tracking-widest" x-text="nota.autor"></span>
+                                        <span class="text-[10px] text-slate-400 font-bold" x-text="calcularTiempo(nota.fecha)"></span>
+                                    </div>
+                                    <p class="text-sm text-slate-700 font-medium" x-text="nota.texto"></p>
+                                </div>
+                            </template>
+                        </div>
+                        <div x-show="!nuevoProyecto.historialNotas || nuevoProyecto.historialNotas.length === 0" class="text-center py-4 text-slate-400 text-sm italic font-medium">
+                            Aún no hay instrucciones en la bitácora de este proyecto.
+                        </div>
+                        
+                        <div class="flex gap-2 border-t border-slate-100 pt-4">
+                            <input type="text" x-model="nuevoComentario" @keyup.enter="agregarComentario()" placeholder="Escriba aquí sus instrucciones para Mariano o notas del cliente..." class="flex-1 p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-medium text-slate-800">
+                            <button @click="agregarComentario()" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-slate-800 transition-colors">Añadir Nota</button>
+                        </div>
                     </div>
-                </div>
 
 
 
@@ -540,12 +561,27 @@
                 urlCotizacionPdf: '', // Guarda la liga del PDF temporalmente al cotizar
                 comentariosCambio: '', // Guarda los motivos de rechazo
 // VARIABLES RECUPERADAS (Para crear nuevos proyectos)
-                nuevoProyecto: { cliente: '', nombre: '', items: [], notas: '' },
+                nuevoProyecto: { cliente: '', nombre: '', items: [], historialNotas: [] },
+                nuevoComentario: '',
                 itemTemporal: { descripcion: '', cantidad: 1 },
                 proyectoEditandoId: null,
                 // Guarda los cambios temporalmente mientras se edita el BOM
                 guardarLocal() {
                     localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
+                },
+                // Agrega un comentario imborrable a la bitácora del BOM
+                agregarComentario() {
+                    if (this.nuevoComentario.trim() === '') return;
+                    if (!this.nuevoProyecto.historialNotas) this.nuevoProyecto.historialNotas = [];
+                    
+                    this.nuevoProyecto.historialNotas.push({
+                        autor: this.empleadoActual.nombre || 'Usuario',
+                        fecha: new Date().toISOString(),
+                        texto: this.nuevoComentario
+                    });
+                    
+                    this.nuevoComentario = '';
+                    this.guardarLocal();
                 },
 
                 // Agrega un ítem escrito manualmente a la lista
