@@ -536,6 +536,12 @@
                     this.guardarLocal();
                 },
 
+                // Elimina un renglón de la lista de materiales
+                eliminarItem(index) {
+                    this.nuevoProyecto.items.splice(index, 1);
+                    this.guardarLocal();
+                },
+
 
                 // 1. Descargar proyectos en tiempo real
                 async cargarProyectos() {
