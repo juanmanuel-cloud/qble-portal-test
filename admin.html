@@ -342,6 +342,18 @@
 
                 <div>
                     <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
+                        <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">💬</span> 
+                        Notas, Instrucciones y Comentarios
+                    </h3>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <textarea x-model="nuevoProyecto.notas" @input="guardarLocal()" rows="3" placeholder="Escribe aquí las instrucciones para Mariano, dudas técnicas, o detalles para el vendedor..." class="w-full p-3 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:border-blue-500 transition-colors"></textarea>
+                    </div>
+                </div>
+
+
+
+                <div>
+                    <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
                         <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">3</span> 
                         Agregue materiales a su proyecto (BOM)
                     </h3>
@@ -515,7 +527,7 @@
                 urlCotizacionPdf: '', // Guarda la liga del PDF temporalmente al cotizar
                 comentariosCambio: '', // Guarda los motivos de rechazo
 // VARIABLES RECUPERADAS (Para crear nuevos proyectos)
-                nuevoProyecto: { cliente: '', nombre: '', items: [] },
+                nuevoProyecto: { cliente: '', nombre: '', items: [], notas: '' },
                 itemTemporal: { descripcion: '', cantidad: 1 },
                 proyectoEditandoId: null,
                 // Guarda los cambios temporalmente mientras se edita el BOM
