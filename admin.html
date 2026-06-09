@@ -517,6 +517,7 @@
 // VARIABLES RECUPERADAS (Para crear nuevos proyectos)
                 nuevoProyecto: { cliente: '', nombre: '', items: [] },
                 itemTemporal: { descripcion: '', cantidad: 1 },
+                proyectoEditandoId: null,
 
                 // 1. Descargar proyectos en tiempo real
                 async cargarProyectos() {
@@ -553,8 +554,12 @@
                 },
 
                 // 4. Abrir panel de edición/vista de un BOM
+                // 4. Abrir panel de edición/vista de un BOM
                 abrirProyecto(proyecto) {
+                    this.proyectoEditandoId = proyecto.id; // ¡El sistema recuerda qué proyecto abriste!
                     this.nuevoProyecto = { ...proyecto };
+                    localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
+                    localStorage.setItem('qble_admin_editando_id', proyecto.id);
                     this.seccionActiva = 'nuevo-bom';
                 },
 
@@ -577,30 +582,7 @@
                     }
                 },
 
-                // FUNCIÓN 1: Autoguardado silencioso para el equipo interno
-                guardarLocal() {
-                    localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
-                },
-
-                // FUNCIÓN 2: Agregar item a la tabla
-                agregarItemEspecial() {
-                    if(this.itemTemporal.descripcion.trim() === '') return;
-                    this.nuevoProyecto.items.push({
-                        descripcion: this.itemTemporal.descripcion,
-                        cantidad: this.itemTemporal.cantidad
-                    });
-                    this.itemTemporal.descripcion = '';
-                    this.itemTemporal.cantidad = 1;
-                    this.guardarLocal();
-                },
-
-                // FUNCIÓN 3: Quitar item de la tabla
-                eliminarItem(index) {
-                    this.nuevoProyecto.items.splice(index, 1);
-                    this.guardarLocal();
-                },
-
-                // FUNCIÓN 4: Enviar a la Base de Datos (Firebase)
+                // 6. Enviar o Actualizar en la Base de Datos (Firebase)
                 async guardarEnFirebase(estado) {
                     if(this.nuevoProyecto.cliente === '' || this.nuevoProyecto.nombre === '' || this.nuevoProyecto.items.length === 0) {
                         alert("⚠️ Completa el cliente, el proyecto y agrega al menos un material.");
@@ -611,18 +593,28 @@
                         const paquete = {
                             ...this.nuevoProyecto,
                             estadoCotizacion: estado === 'borrador' ? 'borrador' : 'BOM Pendiente',
-                            fechaCreacion: new Date().toISOString(),
-                            creadoPor: this.empleadoActual.email || window.auth.currentUser.email
+                            fechaModificacion: new Date().toISOString()
                         };
 
-                        await window.addDoc(window.collection(window.db, "proyectos"), paquete);
+                        if (this.proyectoEditandoId) {
+                            // MODO EDICIÓN: Sobreescribe el documento original
+                            await window.updateDoc(window.doc(window.db, "proyectos", this.proyectoEditandoId), paquete);
+                            alert("✅ Proyecto actualizado correctamente.");
+                        } else {
+                            // MODO CREACIÓN: Crea un proyecto totalmente nuevo
+                            paquete.fechaCreacion = new Date().toISOString();
+                            paquete.creadoPor = this.empleadoActual.email || window.auth.currentUser.email;
+                            await window.addDoc(window.collection(window.db, "proyectos"), paquete);
+                            alert(estado === 'borrador' ? "✅ Borrador respaldado en la nube." : "🚀 ¡Proyecto enviado a cotización exitosamente!");
+                        }
                         
-                        alert(estado === 'borrador' ? "✅ Borrador respaldado en la nube." : "🚀 ¡Proyecto enviado a cotización exitosamente!");
-                        
+                        // Limpiar la memoria al terminar
                         this.nuevoProyecto = { cliente: '', nombre: '', items: [] };
+                        this.proyectoEditandoId = null;
                         localStorage.removeItem('qble_admin_borrador');
+                        localStorage.removeItem('qble_admin_editando_id');
                         this.seccionActiva = 'cotizador';
-                        this.cargarProyectos(); // <- ¡Corregido! Sin comillas raras
+                        this.cargarProyectos();
 
                     } catch (error) {
                         console.error("Error al guardar en la nube: ", error);
@@ -632,13 +624,14 @@
                 
                 init() {
                     const borradorRecuperado = localStorage.getItem('qble_admin_borrador');
+                    const idRecuperado = localStorage.getItem('qble_admin_editando_id');
                     if(borradorRecuperado) {
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
+                        if(idRecuperado) this.proyectoEditandoId = idRecuperado;
                         if(this.nuevoProyecto.items.length > 0) {
                             this.seccionActiva = 'nuevo-bom';
                         }
                     }
-
                     // Encapsulamos la vigilancia del Cadenero para evitar que se quede pasmado
                     const arrancarCadenero = () => {
                         window.onAuthStateChanged(window.auth, async (user) => {
