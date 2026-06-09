@@ -261,9 +261,9 @@
                                             <td class="px-6 py-4 text-right space-y-2">
                                                 <button @click="actualizarEstadoBOM(p.id, 'Aprobado / En Cierre')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs mr-2">Aprobar y Enviar 🚀</button>
                                                 
-                                                <div class="inline-flex items-center gap-1">
-                                                    <input type="text" placeholder="¿Qué cambios requiere?" x-model="comentariosCambio" class="border border-slate-300 rounded px-2 py-1 text-xs w-44 focus:outline-none">
-                                                    <button @click="if(comentariosCambio) { actualizarEstadoBOM(p.id, 'Cambios Solicitados', { comentariosRechazo: comentariosCambio }) } else { alert('Explica qué cambios se necesitan') }" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Rechazar ❌</button>
+                                                <div class="inline-flex items-center gap-1" x-data="{ comentarioLocal: '' }">
+                                                    <input type="text" placeholder="¿Qué cambios requiere?" x-model="comentarioLocal" class="border border-slate-300 rounded px-2 py-1 text-xs w-44 focus:outline-none">
+                                                    <button @click="if(comentarioLocal) { actualizarEstadoBOM(p.id, 'Cambios Solicitados', { comentariosRechazo: comentarioLocal }) } else { alert('Explica qué cambios se necesitan') }" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Rechazar ❌</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -296,10 +296,23 @@
                                             <td class="px-6 py-4 font-extrabold text-slate-900 text-base" x-text="p.cliente"></td>
                                             <td class="px-6 py-4 font-medium text-slate-700" x-text="p.nombre"></td>
                                             <td class="px-6 py-4 text-xs text-slate-500" x-text="'Enviado hace: ' + calcularTiempo(p.fechaModificacion)"></td>
-                                            <td class="px-6 py-4 text-center">
-                                                <button @click="actualizarEstadoBOM(p.id, 'Ganado - Pasar a Tracking Logistics')" class="bg-slate-900 hover:bg-qble-orange text-white font-bold px-4 py-2 rounded-lg text-xs uppercase tracking-wider transition-colors shadow-sm">
+                                            <td class="px-6 py-4 text-center" x-data="{ motivoPerdida: '' }">
+                                                <button @click="actualizarEstadoBOM(p.id, 'Ganado - Pasar a Tracking Logistics')" class="w-full mb-3 bg-slate-900 hover:bg-qble-orange text-white font-bold px-4 py-2 rounded-lg text-[10px] uppercase tracking-wider transition-colors shadow-sm">
                                                     ¡PROYECTO GANADO! 🏆
                                                 </button>
+                                                
+                                                <div class="flex flex-col gap-1 border-t border-orange-100 pt-3">
+                                                    <select x-model="motivoPerdida" class="border border-slate-300 rounded px-2 py-1 text-[10px] w-full focus:outline-none bg-white font-bold text-slate-600">
+                                                        <option value="">- Motivo de pérdida -</option>
+                                                        <option value="Precio muy alto">Precio muy alto</option>
+                                                        <option value="Tiempo de entrega largo">Tiempo de entrega largo</option>
+                                                        <option value="Compró con la competencia">Compró con la competencia</option>
+                                                        <option value="Proyecto cancelado">Proyecto cancelado</option>
+                                                    </select>
+                                                    <button @click="if(motivoPerdida) { actualizarEstadoBOM(p.id, 'Perdido', { motivoPerdida: motivoPerdida }) } else { alert('Seleccione el motivo de la pérdida') }" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] uppercase w-full">
+                                                        Marcar Perdido ❌
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     </template>
