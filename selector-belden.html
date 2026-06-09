@@ -370,6 +370,35 @@
     }
 
     window.onload = manejarFiltrosDinamicos;
+
+function enviarAlPortal() {
+        const origen = new URLSearchParams(window.location.search).get('origen');
+        
+        if (!origen) {
+            enviarPorCorreo(); 
+            return;
+        }
+
+        const llave = origen === 'admin' ? 'qble_admin_borrador' : 'qble_borrador';
+        const redireccion = origen === 'admin' ? 'admin.html' : 'portal.html';
+        
+        let borrador = JSON.parse(localStorage.getItem(llave));
+        if(!borrador) {
+            borrador = { cliente: '', nombre: '', items: [] };
+        }
+
+        carrito.forEach(item => {
+            let desc = item.modelo || item.configuracion || item.polos || '';
+            borrador.items.push({
+                descripcion: `[${item.familia}] ${desc} - P/N: ${item.ref}`,
+                cantidad: parseInt(item.cantidad)
+            });
+        });
+
+        localStorage.setItem(llave, JSON.stringify(borrador));
+        window.location.href = redireccion;
+    }
+
 </script>
 
 </body>

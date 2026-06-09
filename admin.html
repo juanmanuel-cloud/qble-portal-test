@@ -518,6 +518,24 @@
                 nuevoProyecto: { cliente: '', nombre: '', items: [] },
                 itemTemporal: { descripcion: '', cantidad: 1 },
                 proyectoEditandoId: null,
+                // Guarda los cambios temporalmente mientras se edita el BOM
+                guardarLocal() {
+                    localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
+                },
+
+                // Agrega un ítem escrito manualmente a la lista
+                agregarItemEspecial() {
+                    if(this.itemTemporal.descripcion.trim() === '') return;
+                    this.nuevoProyecto.items.push({
+                        descripcion: this.itemTemporal.descripcion,
+                        cantidad: this.itemTemporal.cantidad
+                    });
+                    // Limpia la cajita después de agregar
+                    this.itemTemporal.descripcion = '';
+                    this.itemTemporal.cantidad = 1;
+                    this.guardarLocal();
+                },
+
 
                 // 1. Descargar proyectos en tiempo real
                 async cargarProyectos() {
