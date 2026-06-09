@@ -453,6 +453,57 @@
                 </div>
             </div>
 
+<div x-show="seccionActiva === 'pedidos'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
+                <div class="flex justify-between items-end border-b border-slate-200 pb-6">
+                    <div>
+                        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Pedidos de Clientes (Tracking)</h2>
+                        <p class="text-slate-500 mt-1">Visibilidad total de suministro. Transición desde la Orden de Compra hasta la entrega.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-emerald-50 text-emerald-800 text-[10px] uppercase tracking-widest font-black border-b border-emerald-100">
+                            <tr>
+                                <th class="px-6 py-4">Cliente / Proyecto</th>
+                                <th class="px-6 py-4">Orden de Compra</th>
+                                <th class="px-6 py-4">Estatus de Suministro</th>
+                                <th class="px-6 py-4 text-right">Acción Logística</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics')" :key="p.id">
+                                <tr class="hover:bg-slate-50">
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-slate-900 text-base" x-text="p.cliente"></div>
+                                        <div class="text-slate-500 text-xs mt-1" x-text="p.nombre"></div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded text-xs border border-slate-200" x-text="p.ordenCompra || 'Sin OC'"></span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="text-xs font-black text-amber-500 uppercase tracking-widest flex items-center">
+                                            <span class="animate-pulse mr-2 w-2 h-2 rounded-full bg-amber-500"></span> Pendiente de Surtir
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button @click="abrirProyecto(p)" class="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors shadow-sm">
+                                            Ver Detalles 👁️
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                            <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics').length === 0">
+                                <td colspan="4" class="px-6 py-12 text-center text-slate-400 font-medium">
+                                    <span class="text-3xl block mb-3">📦</span>
+                                    Aún no hay pedidos en curso. Cuando se gane un proyecto, aparecerá aquí.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
              <!-- FINANZAS LIMPIO -->
             <div x-show="seccionActiva === 'finanzas'" class="space-y-8 max-w-7xl mx-auto" style="display: none;">
                 <div>
@@ -694,7 +745,7 @@
                         }
                         
                         // Limpiar la memoria al terminar
-                        this.nuevoProyecto = { cliente: '', nombre: '', items: [] };
+                        this.nuevoProyecto = { cliente: '', nombre: '', items: [], historialNotas: [] };
                         this.proyectoEditandoId = null;
                         localStorage.removeItem('qble_admin_borrador');
                         localStorage.removeItem('qble_admin_editando_id');
