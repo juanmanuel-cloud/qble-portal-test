@@ -482,12 +482,10 @@
                                         <span class="bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded text-xs border border-slate-200" x-text="p.ordenCompra || 'Sin OC'"></span>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <span class="text-xs font-black text-amber-500 uppercase tracking-widest flex items-center">
-                                            <span class="animate-pulse mr-2 w-2 h-2 rounded-full bg-amber-500"></span> Pendiente de Surtir
-                                        </span>
+                                        <span class="text-[10px] font-black text-amber-700 uppercase tracking-widest flex items-center bg-amber-100 px-3 py-1.5 rounded-lg border border-amber-200" x-text="p.estatusLogistico || 'Pendiente de Surtir'"></span>
                                     </td>
                                     <td class="px-6 py-4 text-right">
-                                        <button @click="abrirProyecto(p)" class="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors shadow-sm">
+                                        <button @click="abrirPedido(p)" class="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors shadow-sm">
                                             Ver Detalles 👁️
                                         </button>
                                     </td>
@@ -501,6 +499,71 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <div x-show="seccionActiva === 'expediente-pedido' && proyectoActivo" class="space-y-6 max-w-7xl mx-auto" style="display: none;">
+                <div class="flex items-center mb-4">
+                    <button @click="cerrarPedido()" class="text-slate-500 hover:text-qble-orange font-bold text-sm flex items-center transition-colors">
+                        <span class="text-xl mr-1">←</span> Volver a la lista de pedidos
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-2xl border border-blue-200 shadow-md p-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
+                    
+                    <div class="flex flex-col md:flex-row justify-between items-start border-b border-slate-100 pb-6 mb-6">
+                        <div>
+                            <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-3 py-1 rounded-md uppercase tracking-widest">Expediente de Suministro</span>
+                            <h3 class="text-3xl font-bold text-slate-900 mt-2" x-text="proyectoActivo?.cliente"></h3>
+                            <p class="text-sm text-slate-500 font-medium mt-1" x-text="'Proyecto: ' + proyectoActivo?.nombre"></p>
+                        </div>
+                        <div class="mt-4 md:mt-0 text-left md:text-right bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Orden de Compra / Link Anexo</p>
+                            <a x-show="proyectoActivo?.ordenCompra" :href="proyectoActivo?.ordenCompra.startsWith('http') ? proyectoActivo?.ordenCompra : '#'" target="_blank" class="text-lg font-black text-blue-600 hover:underline" x-text="proyectoActivo?.ordenCompra"></a>
+                            <p x-show="!proyectoActivo?.ordenCompra" class="text-sm text-slate-400 font-bold">Sin OC adjunta</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-8">
+                        <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Actualizar Estatus Logístico</h4>
+                        <div class="flex flex-wrap gap-3">
+                            <button @click="actualizarEstatusLogistico('Pendiente de Surtir')" :class="proyectoActivo?.estatusLogistico === 'Pendiente de Surtir' ? 'bg-amber-500 text-white ring-4 ring-amber-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">⏳ Pendiente</button>
+                            <button @click="actualizarEstatusLogistico('Preparación y Corte')" :class="proyectoActivo?.estatusLogistico === 'Preparación y Corte' ? 'bg-blue-500 text-white ring-4 ring-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">⚙️ Preparación</button>
+                            <button @click="actualizarEstatusLogistico('Facturado')" :class="proyectoActivo?.estatusLogistico === 'Facturado' ? 'bg-purple-500 text-white ring-4 ring-purple-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🧾 Facturado</button>
+                            <button @click="actualizarEstatusLogistico('En Ruta')" :class="proyectoActivo?.estatusLogistico === 'En Ruta' ? 'bg-orange-500 text-white ring-4 ring-orange-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🚚 En Ruta</button>
+                            <button @click="actualizarEstatusLogistico('Entregado')" :class="proyectoActivo?.estatusLogistico === 'Entregado' ? 'bg-emerald-500 text-white ring-4 ring-emerald-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🤝 Entregado</button>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 border-t border-slate-100 pt-8">
+                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
+                            <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">💬</span> 
+                            Bitácora Logística del Pedido
+                        </h3>
+                        
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                            <div class="space-y-3 max-h-60 overflow-y-auto pr-2 mb-4" x-show="proyectoActivo?.historialNotas && proyectoActivo?.historialNotas.length > 0">
+                                <template x-for="(nota, index) in proyectoActivo?.historialNotas" :key="index">
+                                    <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+                                        <div class="flex justify-between items-center mb-1">
+                                            <span class="text-xs font-black text-blue-700 uppercase tracking-widest" x-text="nota.autor"></span>
+                                            <span class="text-[10px] text-slate-400 font-bold" x-text="calcularTiempo(nota.fecha)"></span>
+                                        </div>
+                                        <p class="text-sm text-slate-700 font-medium" x-text="nota.texto"></p>
+                                    </div>
+                                </template>
+                            </div>
+                            <div x-show="!proyectoActivo?.historialNotas || proyectoActivo?.historialNotas.length === 0" class="text-center py-4 text-slate-400 text-sm italic font-medium mb-4">
+                                Aún no hay registros de avance o guías en este pedido.
+                            </div>
+                            
+                            <div class="flex gap-2">
+                                <input type="text" x-model="nuevoComentarioPedido" @keyup.enter="agregarComentarioPedido()" placeholder="Registrar avance, número de guía, o comentario interno..." class="flex-1 p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-medium text-slate-800">
+                                <button @click="agregarComentarioPedido()" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-qble-orange transition-colors">Añadir Nota</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -610,6 +673,8 @@
 // Lista donde guardaremos los proyectos que lleguen de la nube
                 proyectos: [],
                 urlCotizacionPdf: '', // Guarda la liga del PDF temporalmente al cotizar
+                proyectoActivo: null,
+                nuevoComentarioPedido: '',
                 comentariosCambio: '', // Guarda los motivos de rechazo
 // VARIABLES RECUPERADAS (Para crear nuevos proyectos)
                 nuevoProyecto: { cliente: '', nombre: '', items: [], historialNotas: [] },
@@ -653,6 +718,56 @@
                     this.nuevoProyecto.items.splice(index, 1);
                     this.guardarLocal();
                 },
+
+
+                // ------------------------------------
+                // FUNCIONES DE LOGÍSTICA (PEDIDOS)
+                // ------------------------------------
+                abrirPedido(proyecto) {
+                    this.proyectoActivo = proyecto;
+                    if(!this.proyectoActivo.estatusLogistico) {
+                        this.proyectoActivo.estatusLogistico = 'Pendiente de Surtir';
+                    }
+                    this.seccionActiva = 'expediente-pedido';
+                },
+                cerrarPedido() {
+                    this.proyectoActivo = null;
+                    this.seccionActiva = 'pedidos';
+                },
+                async actualizarEstatusLogistico(nuevoEstatus) {
+                    try {
+                        await window.updateDoc(window.doc(window.db, "proyectos", this.proyectoActivo.id), {
+                            estatusLogistico: nuevoEstatus,
+                            fechaModificacion: new Date().toISOString()
+                        });
+                        this.proyectoActivo.estatusLogistico = nuevoEstatus;
+                        alert("🚚 Estatus de suministro actualizado a: " + nuevoEstatus);
+                        this.cargarProyectos();
+                    } catch(e) {
+                        alert("Error al conectar con la base de datos.");
+                    }
+                },
+                async agregarComentarioPedido() {
+                    if (this.nuevoComentarioPedido.trim() === '') return;
+                    if (!this.proyectoActivo.historialNotas) this.proyectoActivo.historialNotas = [];
+                    
+                    this.proyectoActivo.historialNotas.push({
+                        autor: this.empleadoActual.nombre || 'Usuario',
+                        fecha: new Date().toISOString(),
+                        texto: this.nuevoComentarioPedido
+                    });
+                    
+                    try {
+                        await window.updateDoc(window.doc(window.db, "proyectos", this.proyectoActivo.id), {
+                            historialNotas: this.proyectoActivo.historialNotas
+                        });
+                        this.nuevoComentarioPedido = '';
+                        this.cargarProyectos();
+                    } catch(e) {
+                        alert("Error al guardar la nota.");
+                    }
+                },
+                // ------------------------------------
 
 
                 // 1. Descargar proyectos en tiempo real
