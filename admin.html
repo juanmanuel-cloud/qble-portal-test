@@ -924,16 +924,23 @@
                     if(!confirm("¿Desea forzar la sincronización con Odoo ahora? Esto puede tardar unos segundos.")) return;
                     
                     try {
-                        // AQUÍ PONDREMOS LA URL DE MAKE.COM DESPUÉS
-                        // const respuesta = await fetch("URL_DE_TU_WEBHOOK_DE_MAKE");
+                        // Llamada real al Webhook de Make.com
+                        const respuesta = await fetch("https://hook.us2.make.com/0kt2de5it0oh3oihpzf5hep44r52ma7vhttps://hook.us2.make.com/0kt2de5it0oh3oihpzf5hep44r52ma7v", { method: 'GET' });
                         
-                        // Simulamos que tardó 2 segundos
-                        setTimeout(() => {
-                            alert("✅ Sincronización solicitada exitosamente a Odoo.");
-                            this.cargarClientesOdoo();
-                        }, 2000);
+                        if(respuesta.ok) {
+                            alert("✅ Sincronización solicitada a Make.com exitosamente.");
+                            // Esperamos 3 segundos a que Make termine de procesar Odoo y recargamos la lista
+                            setTimeout(() => {
+                                this.cargarClientesOdoo();
+                            }, 3000);
+                        } else {
+                            alert("⚠️ Hubo un problema al contactar al sincronizador.");
+                        }
                         
                     } catch(e) {
+                        console.error(e);
+                        alert("Error al conectar con el servidor de sincronización.");
+                    }
                         alert("Error al conectar con el sincronizador.");
                     }
                 },
