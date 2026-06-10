@@ -925,7 +925,7 @@
                     
                     try {
                         // Llamada real al Webhook de Make.com
-                        const respuesta = await fetch("https://hook.us2.make.com/0kt2de5it0oh3oihpzf5hep44r52ma7vhttps://hook.us2.make.com/0kt2de5it0oh3oihpzf5hep44r52ma7v", { method: 'GET' });
+                        const respuesta = await fetch("https://hook.us2.make.com/0kt2de5it0oh3oihpzf5hep44r52ma7v", { method: 'GET' });
                         
                         if(respuesta.ok) {
                             alert("✅ Sincronización solicitada a Make.com exitosamente.");
@@ -941,10 +941,7 @@
                         console.error(e);
                         alert("Error al conectar con el servidor de sincronización.");
                     }
-                        alert("Error al conectar con el sincronizador.");
-                    }
-                },
-                
+                },                
                 // Selecciona un cliente de la lista para el BOM
                 seleccionarClienteOdoo(cliente) {
                     this.nuevoProyecto.cliente = cliente.nombre;
