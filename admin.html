@@ -458,44 +458,94 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                    <table class="w-full text-sm text-left">
-                        <thead class="bg-emerald-50 text-emerald-800 text-[10px] uppercase tracking-widest font-black border-b border-emerald-100">
-                            <tr>
-                                <th class="px-6 py-4">Cliente / Proyecto</th>
-                                <th class="px-6 py-4">Orden de Compra</th>
-                                <th class="px-6 py-4">Estatus de Suministro</th>
-                                <th class="px-6 py-4 text-right">Acción Logística</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics')" :key="p.id">
-                                <tr class="hover:bg-slate-50">
-                                    <td class="px-6 py-4">
-                                        <div class="font-bold text-slate-900 text-base" x-text="p.cliente"></div>
-                                        <div class="text-slate-500 text-xs mt-1" x-text="p.nombre"></div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="bg-slate-100 text-slate-700 font-bold px-3 py-1.5 rounded text-xs border border-slate-200" x-text="p.ordenCompra || 'Sin OC'"></span>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <span class="text-[10px] font-black text-amber-700 uppercase tracking-widest flex items-center bg-amber-100 px-3 py-1.5 rounded-lg border border-amber-200" x-text="p.estatusLogistico || 'Pendiente de Surtir'"></span>
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <button @click="abrirPedido(p)" class="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors shadow-sm">
-                                            Ver Detalles 👁️
-                                        </button>
+                <div>
+                    <h3 class="text-xs font-black text-amber-600 uppercase tracking-[0.2em] mb-4 flex items-center">
+                        <span class="animate-pulse mr-2 w-2.5 h-2.5 rounded-full bg-amber-500"></span> 🚚 EN CURSO: Pedidos Activos
+                    </h3>
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-50 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4">Cliente / Proyecto</th>
+                                    <th class="px-6 py-4">Vendedor y OC</th>
+                                    <th class="px-6 py-4">Estatus y Tiempo</th>
+                                    <th class="px-6 py-4 text-right">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics' && x.estatusLogistico !== 'Entregado')" :key="p.id">
+                                    <tr class="hover:bg-slate-50">
+                                        <td class="px-6 py-4">
+                                            <div class="font-bold text-slate-900 text-base" x-text="p.cliente"></div>
+                                            <div class="text-slate-500 text-xs mt-1" x-text="p.nombre"></div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <div class="text-xs font-bold text-blue-600 mb-1" x-text="'👤 ' + (p.creadoPor || 'Desconocido')"></div>
+                                            <span class="bg-slate-100 text-slate-700 font-bold px-2 py-1 rounded text-[10px] border border-slate-200" x-text="'OC: ' + (p.ordenCompra || 'N/A')"></span>
+                                        </td>
+                                        <td class="px-6 py-4 space-y-2">
+                                            <span class="text-[10px] font-black uppercase tracking-widest flex items-center w-max px-3 py-1.5 rounded-lg border" :class="colorEstatusLogistico(p.estatusLogistico || 'Pendiente de Surtir')" x-text="p.estatusLogistico || 'Pendiente de Surtir'"></span>
+                                            
+                                            <span class="text-[10px] font-bold px-2 py-1 rounded-md block w-max mt-1" :class="evaluarTiempo(p.fechaPromesaEntrega).cls" x-text="evaluarTiempo(p.fechaPromesaEntrega).txt"></span>
+                                        </td>
+                                        <td class="px-6 py-4 text-right">
+                                            <button @click="abrirPedido(p)" class="bg-slate-900 text-white hover:bg-slate-800 px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-colors shadow-sm">
+                                                Expediente 📂
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics' && x.estatusLogistico !== 'Entregado').length === 0">
+                                    <td colspan="4" class="px-6 py-12 text-center text-slate-400 font-medium">
+                                        <span class="text-3xl block mb-3">📦</span> Aún no hay pedidos en curso.
                                     </td>
                                 </tr>
-                            </template>
-                            <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics').length === 0">
-                                <td colspan="4" class="px-6 py-12 text-center text-slate-400 font-medium">
-                                    <span class="text-3xl block mb-3">📦</span>
-                                    Aún no hay pedidos en curso. Cuando se gane un proyecto, aparecerá aquí.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="mt-12">
+                    <h3 class="text-xs font-black text-emerald-600 uppercase tracking-[0.2em] mb-4 flex items-center">
+                        <span class="mr-2 text-lg">✅</span> HISTORIAL: Pedidos Completados
+                    </h3>
+                    <div class="bg-white rounded-2xl border border-emerald-100 shadow-sm overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-emerald-50 text-emerald-700 text-[10px] uppercase tracking-widest font-black border-b border-emerald-100">
+                                <tr>
+                                    <th class="px-6 py-3">Cliente / Proyecto</th>
+                                    <th class="px-6 py-3">Vendedor y OC</th>
+                                    <th class="px-6 py-3">Fecha Entrega</th>
+                                    <th class="px-6 py-3 text-right">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-emerald-50">
+                                <template x-for="p in proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics' && x.estatusLogistico === 'Entregado')" :key="p.id">
+                                    <tr class="hover:bg-emerald-50 transition-colors">
+                                        <td class="px-6 py-3">
+                                            <div class="font-bold text-slate-900" x-text="p.cliente"></div>
+                                            <div class="text-slate-500 text-[10px]" x-text="p.nombre"></div>
+                                        </td>
+                                        <td class="px-6 py-3">
+                                            <div class="text-[10px] font-bold text-slate-500" x-text="p.creadoPor"></div>
+                                            <span class="text-[10px] font-bold text-emerald-700" x-text="'OC: ' + p.ordenCompra"></span>
+                                        </td>
+                                        <td class="px-6 py-3 text-xs font-bold text-slate-600" x-text="p.fechaPromesaEntrega || 'Sin registro'"></td>
+                                        <td class="px-6 py-3 text-right">
+                                            <button @click="abrirPedido(p)" class="bg-white border border-emerald-200 text-emerald-700 hover:bg-emerald-600 hover:text-white px-3 py-1.5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-colors shadow-sm">
+                                                Ver Evidencia 👁️
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                                <tr x-show="proyectos.filter(x => x.estadoCotizacion === 'Ganado - Pasar a Tracking Logistics' && x.estatusLogistico === 'Entregado').length === 0">
+                                    <td colspan="4" class="px-6 py-8 text-center text-emerald-400 font-medium text-xs">
+                                        No hay pedidos finalizados aún.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -507,36 +557,54 @@
                 </div>
 
                 <div class="bg-white rounded-2xl border border-blue-200 shadow-md p-8 relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
+                    <div class="absolute top-0 left-0 w-2 h-full" :class="proyectoActivo?.estatusLogistico === 'Entregado' ? 'bg-emerald-500' : 'bg-blue-500'"></div>
                     
                     <div class="flex flex-col md:flex-row justify-between items-start border-b border-slate-100 pb-6 mb-6">
-                        <div>
+                        <div class="w-full md:w-1/2">
                             <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-3 py-1 rounded-md uppercase tracking-widest">Expediente de Suministro</span>
                             <h3 class="text-3xl font-bold text-slate-900 mt-2" x-text="proyectoActivo?.cliente"></h3>
                             <p class="text-sm text-slate-500 font-medium mt-1" x-text="'Proyecto: ' + proyectoActivo?.nombre"></p>
+                            <p class="text-xs font-bold text-blue-600 mt-2" x-text="'👤 Vendedor: ' + proyectoActivo?.creadoPor"></p>
                         </div>
-                        <div class="mt-4 md:mt-0 text-left md:text-right bg-slate-50 p-4 rounded-lg border border-slate-200">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Orden de Compra / Link Anexo</p>
-                            <a x-show="proyectoActivo?.ordenCompra" :href="proyectoActivo?.ordenCompra.startsWith('http') ? proyectoActivo?.ordenCompra : '#'" target="_blank" class="text-lg font-black text-blue-600 hover:underline" x-text="proyectoActivo?.ordenCompra"></a>
-                            <p x-show="!proyectoActivo?.ordenCompra" class="text-sm text-slate-400 font-bold">Sin OC adjunta</p>
+                        
+                        <div class="mt-4 md:mt-0 w-full md:w-1/2 flex flex-col md:items-end gap-3">
+                            <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 text-left md:text-right w-full md:w-auto">
+                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Orden de Compra</p>
+                                <a x-show="proyectoActivo?.ordenCompra" :href="proyectoActivo?.ordenCompra.startsWith('http') ? proyectoActivo?.ordenCompra : '#'" target="_blank" class="text-lg font-black text-blue-600 hover:underline" x-text="proyectoActivo?.ordenCompra"></a>
+                                <p x-show="!proyectoActivo?.ordenCompra" class="text-sm text-slate-400 font-bold">Sin OC adjunta</p>
+                            </div>
+                            
+                            <div class="bg-orange-50 p-3 rounded-lg border border-orange-100 text-left md:text-right w-full md:w-auto" x-show="proyectoActivo?.estatusLogistico !== 'Entregado'">
+                                <label class="text-[10px] font-black text-orange-600 uppercase tracking-widest block mb-1">📅 Programar Entrega (SLA)</label>
+                                <div class="flex items-center gap-2 justify-end">
+                                    <input type="date" x-model="proyectoActivo.fechaPromesaEntrega" @change="guardarFechaPromesa(proyectoActivo.id, $event.target.value)" class="p-1.5 text-xs border border-orange-200 rounded font-bold text-slate-700 outline-none focus:border-orange-500">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mb-8">
+                    <div class="mb-8" x-show="proyectoActivo?.estatusLogistico !== 'Entregado'">
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Actualizar Estatus Logístico</h4>
                         <div class="flex flex-wrap gap-3">
                             <button @click="actualizarEstatusLogistico('Pendiente de Surtir')" :class="proyectoActivo?.estatusLogistico === 'Pendiente de Surtir' ? 'bg-amber-500 text-white ring-4 ring-amber-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">⏳ Pendiente</button>
                             <button @click="actualizarEstatusLogistico('Preparación y Corte')" :class="proyectoActivo?.estatusLogistico === 'Preparación y Corte' ? 'bg-blue-500 text-white ring-4 ring-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">⚙️ Preparación</button>
                             <button @click="actualizarEstatusLogistico('Facturado')" :class="proyectoActivo?.estatusLogistico === 'Facturado' ? 'bg-purple-500 text-white ring-4 ring-purple-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🧾 Facturado</button>
                             <button @click="actualizarEstatusLogistico('En Ruta')" :class="proyectoActivo?.estatusLogistico === 'En Ruta' ? 'bg-orange-500 text-white ring-4 ring-orange-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🚚 En Ruta</button>
-                            <button @click="actualizarEstatusLogistico('Entregado')" :class="proyectoActivo?.estatusLogistico === 'Entregado' ? 'bg-emerald-500 text-white ring-4 ring-emerald-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🤝 Entregado</button>
+                            <button @click="actualizarEstatusLogistico('Entregado')" :class="proyectoActivo?.estatusLogistico === 'Entregado' ? 'bg-emerald-500 text-white ring-4 ring-emerald-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🤝 Marcar Entregado</button>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-8" x-show="proyectoActivo?.estatusLogistico === 'Entregado'">
+                        <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 text-center">
+                            <h2 class="text-2xl font-black text-emerald-600 uppercase tracking-widest">✅ Pedido Completado</h2>
+                            <p class="text-sm text-emerald-700 mt-2 font-medium">El material fue entregado exitosamente. Puede consultar la bitácora abajo para evidencias y guías.</p>
                         </div>
                     </div>
 
                     <div class="mt-8 border-t border-slate-100 pt-8">
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
                             <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">💬</span> 
-                            Bitácora Logística del Pedido
+                            Bitácora Logística del Pedido (Evidencias)
                         </h3>
                         
                         <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
@@ -556,8 +624,8 @@
                             </div>
                             
                             <div class="flex gap-2">
-                                <input type="text" x-model="nuevoComentarioPedido" @keyup.enter="agregarComentarioPedido()" placeholder="Registrar avance, número de guía, o comentario interno..." class="flex-1 p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-medium text-slate-800">
-                                <button @click="agregarComentarioPedido()" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-qble-orange transition-colors">Añadir Nota</button>
+                                <input type="text" x-model="nuevoComentarioPedido" @keyup.enter="agregarComentarioPedido()" placeholder="Registrar avance, link de foto, número de guía..." class="flex-1 p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-medium text-slate-800">
+                                <button @click="agregarComentarioPedido()" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-qble-orange transition-colors">Añadir Registro</button>
                             </div>
                         </div>
                     </div>
@@ -720,6 +788,39 @@
                 // ------------------------------------
                 // FUNCIONES DE LOGÍSTICA (PEDIDOS)
                 // ------------------------------------
+                // Helper para colorear etiquetas automáticamente
+                colorEstatusLogistico(estatus) {
+                    const c = {
+                        'Pendiente de Surtir': 'bg-amber-100 text-amber-700 border-amber-300',
+                        'Preparación y Corte': 'bg-blue-100 text-blue-700 border-blue-300',
+                        'Facturado': 'bg-purple-100 text-purple-700 border-purple-300',
+                        'En Ruta': 'bg-orange-100 text-orange-700 border-orange-300',
+                        'Entregado': 'bg-emerald-100 text-emerald-700 border-emerald-300'
+                    };
+                    return c[estatus] || 'bg-slate-100 text-slate-700 border-slate-300';
+                },
+
+                // Helper para calcular retrasos y fechas
+                evaluarTiempo(fechaPromesa) {
+                    if(!fechaPromesa) return { txt: 'Sin programar', cls: 'bg-slate-100 text-slate-500' };
+                    const hoy = new Date(); hoy.setHours(0,0,0,0);
+                    const promesa = new Date(fechaPromesa + 'T00:00:00');
+                    const dif = Math.ceil((promesa - hoy) / 86400000);
+                    
+                    if(dif < 0) return { txt: `Retraso: ${Math.abs(dif)} días`, cls: 'bg-red-100 text-red-700 border border-red-200 font-black animate-pulse' };
+                    if(dif === 0) return { txt: 'Entrega HOY', cls: 'bg-orange-100 text-orange-700 border border-orange-200 font-black animate-pulse' };
+                    return { txt: `A tiempo (${dif} días rest.)`, cls: 'bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold' };
+                },
+
+                // Función para que logística asigne la fecha
+                async guardarFechaPromesa(id, fecha) {
+                    try {
+                        await window.updateDoc(window.doc(window.db, "proyectos", id), { fechaPromesaEntrega: fecha });
+                        if(this.proyectoActivo) this.proyectoActivo.fechaPromesaEntrega = fecha;
+                        this.cargarProyectos();
+                    } catch(e) { console.error(e); }
+                },
+
                 abrirPedido(proyecto) {
                     this.proyectoActivo = proyecto;
                     if(!this.proyectoActivo.estatusLogistico) {
