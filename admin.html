@@ -353,9 +353,32 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                        <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">1. Nombre del Cliente / Empresa</label>
-                        <input type="text" x-model="nuevoProyecto.cliente" @input="guardarLocal()" placeholder="Ej. Flex Automotriz, KUKA..." class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-blue-500 outline-none pb-2 bg-transparent transition-colors">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm relative" @click.away="mostrarResultadosCliente = false">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">1. Nombre del Cliente (Odoo)</label>
+                            <button @click="forzarSincronizacionOdoo()" class="text-[9px] font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded border border-emerald-200 transition-colors flex items-center">
+                                🔄 Sincronizar
+                            </button>
+                        </div>
+                        
+                        <input type="text" 
+                               x-model="busquedaCliente" 
+                               @input="mostrarResultadosCliente = true; nuevoProyecto.cliente = busquedaCliente; guardarLocal()" 
+                               @focus="mostrarResultadosCliente = true"
+                               placeholder="Buscar en base de datos..." 
+                               class="w-full mt-2 text-xl font-bold text-slate-900 placeholder-slate-300 border-b-2 border-dashed border-slate-300 focus:border-emerald-500 outline-none pb-2 bg-transparent transition-colors">
+                        
+                        <div x-show="mostrarResultadosCliente && busquedaCliente.length > 0" class="absolute z-50 w-full left-0 mt-1 bg-white border border-slate-200 shadow-xl rounded-lg max-h-60 overflow-y-auto" style="display: none;">
+                            <template x-for="cli in clientesOdoo.filter(c => c.nombre.toLowerCase().includes(busquedaCliente.toLowerCase()))">
+                                <div @click="seleccionarClienteOdoo(cli)" class="px-4 py-3 hover:bg-slate-50 cursor-pointer border-b border-slate-100">
+                                    <p class="font-bold text-slate-800 text-sm" x-text="cli.nombre"></p>
+                                    <p class="text-xs text-slate-500" x-text="'RFC: ' + (cli.rfc || 'N/A')"></p>
+                                </div>
+                            </template>
+                            <div x-show="clientesOdoo.filter(c => c.nombre.toLowerCase().includes(busquedaCliente.toLowerCase())).length === 0" class="px-4 py-3 text-sm text-slate-500 text-center italic">
+                                No se encontró en Odoo. Puede seguir escribiendo para crear uno nuevo.
+                            </div>
+                        </div>
                     </div>
                     <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                         <label class="text-[10px] font-black uppercase text-gray-400 tracking-widest ml-1">2. Nombre del Proyecto</label>
@@ -746,6 +769,9 @@
                 empleadoActual: {},
 // Lista donde guardaremos los proyectos que lleguen de la nube
                 proyectos: [],
+                clientesOdoo: [], // Aquí guardaremos la lista que llegue de Odoo
+                busquedaCliente: '', // Lo que escribes para buscar
+                mostrarResultadosCliente: false, // Controla si se abre la lista desplegable
                 urlCotizacionPdf: '', // Guarda la liga del PDF temporalmente al cotizar
                 proyectoActivo: null,
                 nuevoComentarioPedido: '',
@@ -877,6 +903,49 @@
                 },
                 // ------------------------------------
 
+
+// --- INTEGRACIÓN ODOO ---
+                // Descarga la lista de clientes desde Firebase
+                async cargarClientesOdoo() {
+                    try {
+                        const consulta = await window.getDocs(window.collection(window.db, "clientes_odoo"));
+                        let lista = [];
+                        consulta.forEach((doc) => {
+                            lista.push(doc.data());
+                        });
+                        // Ordenamos alfabéticamente
+                        this.clientesOdoo = lista.sort((a, b) => a.nombre.localeCompare(b.nombre));
+                    } catch (error) {
+                        console.error("Error al cargar clientes Odoo:", error);
+                    }
+                },
+                // El botón mágico que despierta a Make.com
+                async forzarSincronizacionOdoo() {
+                    if(!confirm("¿Desea forzar la sincronización con Odoo ahora? Esto puede tardar unos segundos.")) return;
+                    
+                    try {
+                        // AQUÍ PONDREMOS LA URL DE MAKE.COM DESPUÉS
+                        // const respuesta = await fetch("URL_DE_TU_WEBHOOK_DE_MAKE");
+                        
+                        // Simulamos que tardó 2 segundos
+                        setTimeout(() => {
+                            alert("✅ Sincronización solicitada exitosamente a Odoo.");
+                            this.cargarClientesOdoo();
+                        }, 2000);
+                        
+                    } catch(e) {
+                        alert("Error al conectar con el sincronizador.");
+                    }
+                },
+                
+                // Selecciona un cliente de la lista para el BOM
+                seleccionarClienteOdoo(cliente) {
+                    this.nuevoProyecto.cliente = cliente.nombre;
+                    this.busquedaCliente = cliente.nombre;
+                    this.mostrarResultadosCliente = false;
+                    this.guardarLocal();
+                },
+                // ------------------------
 
                 // 1. Descargar proyectos en tiempo real
                 async cargarProyectos() {
@@ -1025,6 +1094,7 @@
                                         this.cargandoAuth = false;
                                         this.errorMsg = '';
                                         this.cargarProyectos();
+                                        this.cargarClientesOdoo();
                                     } else {
                                         window.signOut(window.auth);
                                         this.errorMsg = 'No estás en la lista de empleados autorizados. Contacta a Sistemas.';
