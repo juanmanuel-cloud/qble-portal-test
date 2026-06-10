@@ -587,6 +587,7 @@
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Actualizar Estatus Logístico</h4>
                         <div class="flex flex-wrap gap-3">
                             <button @click="actualizarEstatusLogistico('Pendiente de Surtir')" :class="proyectoActivo?.estatusLogistico === 'Pendiente de Surtir' ? 'bg-amber-500 text-white ring-4 ring-amber-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">⏳ Pendiente</button>
+                            <button @click="actualizarEstatusLogistico('Pedido a Proveedor')" :class="proyectoActivo?.estatusLogistico === 'Pedido a Proveedor' ? 'bg-teal-500 text-white ring-4 ring-teal-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🛒 Pedido a Prov.</button>
                             <button @click="actualizarEstatusLogistico('Preparación y Corte')" :class="proyectoActivo?.estatusLogistico === 'Preparación y Corte' ? 'bg-blue-500 text-white ring-4 ring-blue-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">⚙️ Preparación</button>
                             <button @click="actualizarEstatusLogistico('Facturado')" :class="proyectoActivo?.estatusLogistico === 'Facturado' ? 'bg-purple-500 text-white ring-4 ring-purple-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🧾 Facturado</button>
                             <button @click="actualizarEstatusLogistico('En Ruta')" :class="proyectoActivo?.estatusLogistico === 'En Ruta' ? 'bg-orange-500 text-white ring-4 ring-orange-200' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest transition-all">🚚 En Ruta</button>
@@ -792,6 +793,7 @@
                 colorEstatusLogistico(estatus) {
                     const c = {
                         'Pendiente de Surtir': 'bg-amber-100 text-amber-700 border-amber-300',
+                        'Pedido a Proveedor': 'bg-teal-100 text-teal-700 border-teal-300',
                         'Preparación y Corte': 'bg-blue-100 text-blue-700 border-blue-300',
                         'Facturado': 'bg-purple-100 text-purple-700 border-purple-300',
                         'En Ruta': 'bg-orange-100 text-orange-700 border-orange-300',
