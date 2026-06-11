@@ -919,29 +919,51 @@
                         console.error("Error al cargar clientes Odoo:", error);
                     }
                 },
-                // El botón mágico que despierta a Make.com
+
+                // El botón mágico que atrapa el Boomerang de Make y guarda en Firebase
                 async forzarSincronizacionOdoo() {
-                    if(!confirm("¿Desea forzar la sincronización con Odoo ahora? Esto puede tardar unos segundos.")) return;
+                    if(!confirm("¿Desea descargar los clientes de Odoo a su portal?")) return;
                     
                     try {
-                        // Llamada real al Webhook de Make.com
+                        alert("📡 Conectando con Odoo... por favor no cierre la ventana.");
+                        
+                        // Lanzamos el Boomerang
                         const respuesta = await fetch("https://hook.us2.make.com/0kt2de5it0oh3oihpzf5hep44r52ma7v", { method: 'GET' });
                         
                         if(respuesta.ok) {
-                            alert("✅ Sincronización solicitada a Make.com exitosamente.");
-                            // Esperamos 3 segundos a que Make termine de procesar Odoo y recargamos la lista
-                            setTimeout(() => {
-                                this.cargarClientesOdoo();
-                            }, 3000);
+                            // Atrapamos el Boomerang
+                            const respuestaOdoo = await respuesta.json();
+                            
+                            // Entramos a la carpeta donde Odoo guarda la lista
+                            const clientes = respuestaOdoo.result?.records || respuestaOdoo;
+                            
+                            if(!clientes || clientes.length === 0) {
+                                alert("⚠️ Odoo no devolvió clientes o hubo un error de lectura."); return;
+                            }
+
+                            // Guardamos uno por uno en tu base de datos Firebase
+                            for(let c of clientes) {
+                                const datosLimpios = {
+                                    nombre: c.name || 'Sin Nombre',
+                                    rfc: c.vat || 'N/A',
+                                    email: c.email || 'N/A',
+                                    odoo_id: c.id
+                                };
+                                // setDoc crea o actualiza si ya existe, sin duplicar
+                                await window.setDoc(window.doc(window.db, "clientes_odoo", c.id.toString()), datosLimpios);
+                            }
+                            
+                            alert("✅ ¡" + clientes.length + " clientes guardados en Firebase exitosamente!");
+                            this.cargarClientesOdoo(); // Refrescamos la pantalla
                         } else {
                             alert("⚠️ Hubo un problema al contactar al sincronizador.");
                         }
-                        
                     } catch(e) {
                         console.error(e);
-                        alert("Error al conectar con el servidor de sincronización.");
+                        alert("Error al conectar con el servidor.");
                     }
-                },                
+                },
+                
                 // Selecciona un cliente de la lista para el BOM
                 seleccionarClienteOdoo(cliente) {
                     this.nuevoProyecto.cliente = cliente.nombre;
@@ -1131,7 +1153,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         // Traemos todas las herramientas de búsqueda de la base de datos
-        import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -1160,6 +1182,7 @@
         window.doc = doc;
         window.collection = collection;
         window.addDoc = addDoc;
+        window.setDoc = setDoc;
 
         window.iniciarSesionGoogle = () => {
             signInWithPopup(auth, provider).catch((error) => {
