@@ -927,40 +927,50 @@
                     try {
                         alert("📡 Conectando con Odoo... por favor no cierre la ventana.");
                         
-                        // Lanzamos el Boomerang
                         const respuesta = await fetch("https://hook.us2.make.com/0kt2de5it0oh3oihpzf5hep44r52ma7v", { method: 'GET' });
                         
-                        if(respuesta.ok) {
-                            // Atrapamos el Boomerang
-                            const respuestaOdoo = await respuesta.json();
-                            
-                            // Entramos a la carpeta donde Odoo guarda la lista
-                            const clientes = respuestaOdoo.result?.records || respuestaOdoo;
-                            
-                            if(!clientes || clientes.length === 0) {
-                                alert("⚠️ Odoo no devolvió clientes o hubo un error de lectura."); return;
-                            }
+                        // ATRAPAMOS EL ERROR DE MAKE APAGADO
+                        const textoPuro = await respuesta.text();
+                        if(textoPuro === "Accepted") {
+                            alert("⚠️ Make.com recibió la señal pero el motor estaba 'dormido'. Ve a Make, presiona '▶ Run once' y vuelve a intentarlo.");
+                            return;
+                        }
 
-                            // Guardamos uno por uno en tu base de datos Firebase
-                            for(let c of clientes) {
-                                const datosLimpios = {
-                                    nombre: c.name || 'Sin Nombre',
-                                    rfc: c.vat || 'N/A',
-                                    email: c.email || 'N/A',
-                                    odoo_id: c.id
-                                };
-                                // setDoc crea o actualiza si ya existe, sin duplicar
-                                await window.setDoc(window.doc(window.db, "clientes_odoo", c.id.toString()), datosLimpios);
+                        if(respuesta.ok) {
+                            try {
+                                const respuestaOdoo = JSON.parse(textoPuro);
+                                
+                                // Odoo puede devolver la lista en distintos niveles, los buscamos todos:
+                                const clientes = respuestaOdoo.result?.records || respuestaOdoo.records || respuestaOdoo;
+                                
+                                if(!Array.isArray(clientes) || clientes.length === 0) {
+                                    alert("⚠️ La caja de Odoo llegó vacía o con un formato inesperado."); 
+                                    console.log("Datos recibidos:", respuestaOdoo);
+                                    return;
+                                }
+
+                                // Guardamos uno por uno en tu base de datos Firebase
+                                for(let c of clientes) {
+                                    const datosLimpios = {
+                                        nombre: c.name || 'Sin Nombre',
+                                        rfc: c.vat || 'N/A',
+                                        email: c.email || 'N/A',
+                                        odoo_id: c.id
+                                    };
+                                    await window.setDoc(window.doc(window.db, "clientes_odoo", c.id.toString()), datosLimpios);
+                                }
+                                
+                                alert("✅ ¡" + clientes.length + " clientes guardados en Firebase exitosamente!");
+                                this.cargarClientesOdoo(); // Refrescamos la pantalla
+                            } catch(jsonError) {
+                                alert("⚠️ Error: Make.com devolvió texto en lugar de la lista. Te mandó esto: " + textoPuro.substring(0,50) + "...");
                             }
-                            
-                            alert("✅ ¡" + clientes.length + " clientes guardados en Firebase exitosamente!");
-                            this.cargarClientesOdoo(); // Refrescamos la pantalla
                         } else {
-                            alert("⚠️ Hubo un problema al contactar al sincronizador.");
+                            alert("⚠️ Hubo un problema al contactar al sincronizador. Código: " + respuesta.status);
                         }
                     } catch(e) {
                         console.error(e);
-                        alert("Error al conectar con el servidor.");
+                        alert("⚠️ El navegador bloqueó la conexión (Error CORS). Asegúrate de haber agregado el Access-Control-Allow-Origin en Make.com.");
                     }
                 },
                 
