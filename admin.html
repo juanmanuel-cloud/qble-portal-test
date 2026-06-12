@@ -153,8 +153,6 @@
                     <button @click="limpiarBOM(); seccionActiva = 'nuevo-bom'" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl shadow-md hover:bg-qble-orange transition-colors flex items-center transform active:scale-95">
                         <span class="text-xl mr-2">+</span> Crear Nuevo BOM
                     </button>
-                        <span class="text-xl mr-2">+</span> Crear Nuevo BOM
-                    </button>
                 </div>
 
                 <div x-show="['Director', 'Interno'].includes(empleadoActual.rol)" class="space-y-8">
@@ -675,6 +673,34 @@
                         </div>
                     </div>
 
+<div class="mt-8 border-t border-slate-100 pt-8">
+                        <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
+                            <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">📦</span> 
+                            Materiales Suministrados
+                        </h3>
+                        <div class="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-slate-100 text-slate-500 text-[10px] uppercase tracking-widest font-black border-b border-slate-200">
+                                    <tr>
+                                        <th class="px-6 py-3">Descripción del Material</th>
+                                        <th class="px-6 py-3 text-center w-32">Cantidad</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200 bg-white">
+                                    <template x-for="(item, index) in proyectoActivo?.items" :key="index">
+                                        <tr class="hover:bg-slate-50">
+                                            <td class="px-6 py-3 font-bold text-slate-800" x-text="item.descripcion"></td>
+                                            <td class="px-6 py-3 text-center font-bold text-qble-orange text-base" x-text="item.cantidad"></td>
+                                        </tr>
+                                    </template>
+                                    <tr x-show="!proyectoActivo?.items || proyectoActivo?.items.length === 0">
+                                        <td colspan="2" class="px-6 py-4 text-center text-slate-400 italic font-medium">Lista de materiales no disponible.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
                     <div class="mt-8 border-t border-slate-100 pt-8">
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center">
                             <span class="bg-blue-600 text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">💬</span> 
@@ -801,7 +827,7 @@
                 // Variables del menú
                 // El menú empieza cerrado en celulares y abierto en computadoras
                 menuAbierto: window.innerWidth > 768,
-                seccionActiva: 'pedidos',
+                seccionActiva: localStorage.getItem('qble_admin_seccion') || 'pedidos',
                 filtroChat: 'todos',
                 // Variables de seguridad
                 autenticado: false,
@@ -1277,23 +1303,21 @@
                     } catch (error) { console.error("Error: ", error); alert("Hubo un error de conexión."); }
                 },
                 
-                init() {
+               init() {
+                    // 1. MEMORIA DE PANTALLA: Guarda dónde estás en tiempo real
+                    this.$watch('seccionActiva', val => localStorage.setItem('qble_admin_seccion', val));
+
                     const borradorRecuperado = localStorage.getItem('qble_admin_borrador');
                     const idRecuperado = localStorage.getItem('qble_admin_editando_id');
                     
                     if(borradorRecuperado) {
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
-                        // FIX: Le decimos a la caja visual que recupere el nombre del cliente
                         this.busquedaCliente = this.nuevoProyecto.cliente || ''; 
-                        
                         if(idRecuperado) this.proyectoEditandoId = idRecuperado;
-                        if(this.nuevoProyecto.items.length > 0) {
-                            this.seccionActiva = 'nuevo-bom';
-                        }
+                        // Nota: Ya no forzamos abrir el BOM aquí para respetar la pantalla del usuario
                     }
 
                     // Encapsulamos la vigilancia del Cadenero (VACUNADO CONTRA GUERRA DE PESTAÑAS)
-                    const arrancarCadenero = () => {
                         window.onAuthStateChanged(window.auth, async (user) => {
                             if (user) {
                                 // 1. Validación estricta del dominio corporativo
