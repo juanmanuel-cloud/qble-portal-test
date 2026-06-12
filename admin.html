@@ -409,8 +409,9 @@
                         </div>
                         
                         <div class="flex gap-2 border-t border-slate-100 pt-4">
-                            <input type="text" x-model="nuevoComentario" @keyup.enter="agregarComentario()" placeholder="Escriba aquí sus instrucciones para Mariano o notas del cliente..." class="flex-1 p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-medium text-slate-800">
-                            <button @click="agregarComentario()" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-slate-800 transition-colors">Añadir Nota</button>
+                            <button @click="iniciarDictado('nota')" :class="grabando === 'nota' ? 'bg-red-500 animate-pulse' : 'bg-slate-200 hover:bg-slate-300'" class="px-4 py-3 rounded-lg text-xl transition-colors" title="Dictar por voz">🎙️</button>
+                            <input type="text" x-model="nuevoComentario" @keyup.enter="agregarComentario()" placeholder="Escriba o dicte sus instrucciones..." class="flex-1 p-3 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-medium text-slate-800">
+                            <button @click="agregarComentario()" class="bg-slate-900 text-white px-6 py-3 rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-slate-800 transition-colors">Añadir</button>
                         </div>
                     </div>
                 </div> <div>
@@ -431,9 +432,9 @@
                     </div>
 
                     <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 mt-4 flex flex-col md:flex-row gap-4 items-center">
-                        <div class="flex-shrink-0 text-2xl">✍️</div>
+                        <button @click="iniciarDictado('material')" :class="grabando === 'material' ? 'bg-red-500 text-white animate-pulse' : 'bg-white text-slate-600 hover:bg-slate-50'" class="flex-shrink-0 w-12 h-12 rounded-full border border-slate-300 shadow-sm flex items-center justify-center text-xl transition-colors" title="Dictar material">🎙️</button>
                         <div class="flex-1 w-full">
-                            <input type="text" x-model="itemTemporal.descripcion" @keyup.enter="agregarItemEspecial()" placeholder="Escriba aquí la marca, modelo o descripción libre..." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-qble-orange">
+                            <input type="text" x-model="itemTemporal.descripcion" @keyup.enter="agregarItemEspecial()" placeholder="Dicte o escriba la marca y modelo..." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none focus:border-qble-orange">
                         </div>
                         <div class="w-full md:w-32">
                             <input type="number" x-model="itemTemporal.cantidad" @keyup.enter="agregarItemEspecial()" placeholder="Cant." class="w-full p-3 rounded-lg border border-slate-300 text-sm focus:outline-none text-center">
@@ -776,6 +777,36 @@
                 proyectoActivo: null,
                 nuevoComentarioPedido: '',
                 comentariosCambio: '', // Guarda los motivos de rechazo
+// VARIABLES Y FUNCIÓN DEL MICRÓFONO 🎙️
+                grabando: false,
+                iniciarDictado(campoDestino) {
+                    if (!('webkitSpeechRecognition' in window)) {
+                        alert("⚠️ Tu navegador actual no soporta el dictado por voz. Usa Google Chrome o Edge.");
+                        return;
+                    }
+                    const reconocimiento = new webkitSpeechRecognition();
+                    reconocimiento.lang = 'es-MX';
+                    reconocimiento.continuous = false;
+                    reconocimiento.interimResults = false;
+
+                    reconocimiento.onstart = () => { this.grabando = campoDestino; };
+                    reconocimiento.onresult = (event) => {
+                        const transcripcion = event.results[0][0].transcript;
+                        if (campoDestino === 'nota') {
+                            this.nuevoComentario = (this.nuevoComentario + ' ' + transcripcion).trim();
+                        } else if (campoDestino === 'material') {
+                            this.itemTemporal.descripcion = (this.itemTemporal.descripcion + ' ' + transcripcion).trim();
+                        }
+                    };
+                    reconocimiento.onerror = (event) => {
+                        console.error("Error en micrófono:", event.error);
+                        alert("No se pudo escuchar. Verifica los permisos de tu micrófono.");
+                        this.grabando = false;
+                    };
+                    reconocimiento.onend = () => { this.grabando = false; };
+                    reconocimiento.start();
+                },
+
 // VARIABLES RECUPERADAS (Para crear nuevos proyectos)
                 nuevoProyecto: { cliente: '', nombre: '', items: [], historialNotas: [] },
                 nuevoComentario: '',
