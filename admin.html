@@ -270,7 +270,7 @@
                                                 
                                                 <div class="inline-flex items-center gap-1" x-data="{ comentarioLocal: '' }">
                                                     <input type="text" placeholder="¿Qué cambios requiere?" x-model="comentarioLocal" class="border border-slate-300 rounded px-2 py-1 text-xs w-44 focus:outline-none">
-                                                    <button @click="if(comentarioLocal) { actualizarEstadoBOM(p.id, 'Cambios Solicitados', { comentariosRechazo: comentarioLocal }) } else { alert('Explica qué cambios se necesitan') }" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Rechazar ❌</button>
+                                                    <button @click="if(comentarioLocal) { actualizarEstadoBOM(p.id, 'Cambios Solicitados', { comentariosRechazo: comentarioLocal, historialActual: p.historialNotas || [] }, comentarioLocal) } else { alert('Explica qué cambios se necesitan') }" class="bg-red-500 hover:bg-red-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs">Rechazar ❌</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -346,9 +346,12 @@
                         <p class="text-slate-500 mt-1">Genera la lista de materiales y envíala para ser cotizada.</p>
                     </div>
                     <div class="flex space-x-3 w-full md:w-auto">
-                        <button @click="seccionActiva = 'cotizador'" class="px-5 py-3 rounded-lg font-bold text-sm text-slate-600 border border-slate-200 hover:bg-slate-50 w-full md:w-auto">Cancelar</button>
-                        <button @click="guardarEnFirebase('borrador')" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-slate-800 w-full md:w-auto">💾 Guardar Borrador</button>
-                        <button @click="guardarEnFirebase('BOM Pendiente')" class="bg-emerald-500 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-emerald-600 w-full md:w-auto">📥 Mandar a Cotizar</button>
+                        <button @click="seccionActiva = 'cotizador'" class="px-5 py-3 rounded-lg font-bold text-sm text-slate-600 border border-slate-200 hover:bg-slate-50 w-full md:w-auto">Volver / Cerrar</button>
+                        
+                        <button x-show="!proyectoEditandoId || nuevoProyecto.estadoCotizacion === 'borrador'" @click="guardarEnFirebase('borrador')" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-slate-800 w-full md:w-auto">💾 Guardar Borrador</button>
+                        <button x-show="!proyectoEditandoId || nuevoProyecto.estadoCotizacion === 'borrador'" @click="guardarEnFirebase('BOM Pendiente')" class="bg-emerald-500 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-emerald-600 w-full md:w-auto">📥 Solicitar Cotización</button>
+
+                        <button x-show="proyectoEditandoId && nuevoProyecto.estadoCotizacion !== 'borrador'" @click="guardarEnFirebase(nuevoProyecto.estadoCotizacion)" class="bg-slate-900 text-white px-5 py-3 rounded-lg font-bold text-sm shadow-md hover:bg-slate-800 w-full md:w-auto">💾 Guardar Cambios del BOM</button>
                     </div>
                 </div>
 
@@ -448,6 +451,43 @@
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center">
                             <span class="bg-qble-orange text-white w-6 h-6 rounded-full inline-flex items-center justify-center mr-2 text-xs">2</span> Lista de Materiales (BOM)
                         </h3>
+                    </div>
+
+<div x-show="proyectoEditandoId && ['BOM Pendiente', 'Cambios Solicitados'].includes(nuevoProyecto.estadoCotizacion)" class="bg-blue-50 border-2 border-blue-200 rounded-2xl p-6 mt-8 shadow-sm">
+                        <h3 class="text-sm font-black text-blue-800 uppercase tracking-widest mb-2 flex items-center">
+                            <span class="mr-2 text-xl">📄</span> Adjuntar y Enviar Cotización
+                        </h3>
+                        <p class="text-sm text-blue-600 mb-4 font-medium">Ingrese el enlace del PDF de Odoo u OneDrive para que el equipo lo revise.</p>
+                        <div class="flex flex-col md:flex-row gap-3">
+                            <input type="text" x-model="nuevoProyecto.urlPdf" placeholder="Pegar link aquí..." class="flex-1 p-3 rounded-lg border border-blue-300 text-sm focus:outline-none focus:border-blue-500 font-bold">
+                            <button @click="enviarCotizacionDesdeBOM()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-bold text-sm uppercase tracking-widest shadow-md transition-colors whitespace-nowrap">
+                                🚀 Enviar a Revisión
+                            </button>
+                        </div>
+                    </div>
+
+                    <div x-show="proyectoEditandoId && nuevoProyecto.estadoCotizacion === 'Cotizado'" class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-6 mt-8 shadow-sm">
+                         <h3 class="text-sm font-black text-emerald-800 uppercase tracking-widest mb-4 flex items-center">
+                             <span class="mr-2 text-xl">⚖️</span> Decisión de Dirección / Ventas
+                         </h3>
+                         <div class="flex flex-col md:flex-row gap-4">
+                             <a :href="nuevoProyecto.urlPdf" target="_blank" class="bg-white border-2 border-blue-200 text-blue-700 hover:bg-blue-50 px-6 py-3 rounded-lg font-bold text-sm shadow-sm transition-colors flex items-center justify-center">
+                                 Ver PDF Adjunto 📄
+                             </a>
+                             <button @click="guardarEnFirebase('Aprobado / En Cierre')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-bold text-sm shadow-md transition-colors flex items-center justify-center flex-1">
+                                 Aprobar Cotización y Buscar Cierre ✅
+                             </button>
+                         </div>
+                         
+                         <div class="mt-6 border-t border-emerald-200 pt-5">
+                             <p class="text-xs text-emerald-700 font-bold mb-2 uppercase tracking-widest">¿Hay errores? Devuélvalo a corrección:</p>
+                             <div class="flex flex-col md:flex-row gap-2">
+                                 <input type="text" x-model="comentariosCambio" placeholder="Explique qué cambios necesita Mariano..." class="flex-1 p-3 rounded-lg border border-red-200 text-sm focus:outline-none focus:border-red-500 font-medium">
+                                 <button @click="rechazarDesdeBOM()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-bold text-sm shadow-md transition-colors whitespace-nowrap">
+                                     Rechazar BOM ❌
+                                 </button>
+                             </div>
+                         </div>
                     </div>
 
                     <div x-show="nuevoProyecto.items.length === 0" class="bg-white border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center">
@@ -1048,26 +1088,63 @@
                     return diff > 120;
                 },
 
-                // 4. Abrir panel de edición/vista de un BOM
-                // 4. Abrir panel de edición/vista de un BOM
+                // 4. Abrir panel de edición/vista de un BOM (CORREGIDO PARA QUE NO SE BORRE EL CLIENTE)
                 abrirProyecto(proyecto) {
-                    this.proyectoEditandoId = proyecto.id; // ¡El sistema recuerda qué proyecto abriste!
-                    this.nuevoProyecto = { ...proyecto };
+                    this.proyectoEditandoId = proyecto.id;
+                    this.nuevoProyecto = JSON.parse(JSON.stringify(proyecto)); // Copia profunda
+                    this.busquedaCliente = this.nuevoProyecto.cliente || ''; // <-- LA MAGIA: Rellena la caja visual
                     localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
                     localStorage.setItem('qble_admin_editando_id', proyecto.id);
                     this.seccionActiva = 'nuevo-bom';
                 },
 
-                // 5. AUTOMATIZACIÓN: Cambiar el estado de un BOM en Firebase
-                async actualizarEstadoBOM(proyectoId, nuevoEstado, extras = {}) {
+                // BITÁCORA UNIVERSAL: Guarda y sincroniza en tiempo real
+                async agregarComentario() {
+                    if (this.nuevoComentario.trim() === '') return;
+                    if (!this.nuevoProyecto.historialNotas) this.nuevoProyecto.historialNotas = [];
+                    
+                    this.nuevoProyecto.historialNotas.push({
+                        autor: this.empleadoActual.nombre || 'Usuario',
+                        fecha: new Date().toISOString(),
+                        texto: this.nuevoComentario
+                    });
+                    
+                    this.nuevoComentario = '';
+                    this.guardarLocal();
+
+                    // Si el proyecto ya existe en la nube, sincroniza el chat instantáneamente
+                    if (this.proyectoEditandoId) {
+                        try {
+                            await window.updateDoc(window.doc(window.db, "proyectos", this.proyectoEditandoId), {
+                                historialNotas: this.nuevoProyecto.historialNotas
+                            });
+                            this.cargarProyectos(); // Refresca las tablas por detrás
+                        } catch(e) { console.error("Error sincronizando bitácora", e); }
+                    }
+                },
+
+                // 5. AUTOMATIZACIÓN: Cambiar el estado de un BOM desde las Tablas (Y guardar en bitácora)
+                async actualizarEstadoBOM(proyectoId, nuevoEstado, extras = {}, comentarioAdicional = null) {
                     try {
-                        const datosActualizados = {
+                        let datosActualizados = {
                             estadoCotizacion: nuevoEstado,
                             fechaModificacion: new Date().toISOString(),
                             ...extras
                         };
+
+                        // Si hay un comentario (ej. un rechazo), lo inyectamos a la bitácora unificada
+                        if (comentarioAdicional && extras.historialActual) {
+                            extras.historialActual.push({
+                                autor: this.empleadoActual.nombre || 'Director',
+                                fecha: new Date().toISOString(),
+                                texto: `🔄 ESTATUS (${nuevoEstado}): ${comentarioAdicional}`
+                            });
+                            datosActualizados.historialNotas = extras.historialActual;
+                            delete datosActualizados.historialActual; // Limpiamos la variable extra
+                        }
+
                         await window.updateDoc(window.doc(window.db, "proyectos", proyectoId), datosActualizados);
-                        alert(`🚀 BOM actualizado a: ${nuevoEstado}`);
+                        alert(`🚀 Proyecto actualizado a: ${nuevoEstado}`);
                         this.urlCotizacionPdf = '';
                         this.comentariosCambio = '';
                         this.cargarProyectos();
@@ -1077,7 +1154,33 @@
                     }
                 },
 
-                // 6. Enviar o Actualizar en la Base de Datos (Firebase)
+                // FLUJO MARIANO: Enviar cotización DESDE ADENTRO del BOM
+                async enviarCotizacionDesdeBOM() {
+                    if(!this.nuevoProyecto.urlPdf) { alert("⚠️ Ingrese el link del PDF de la cotización"); return; }
+                    if (!this.nuevoProyecto.historialNotas) this.nuevoProyecto.historialNotas = [];
+                    this.nuevoProyecto.historialNotas.push({
+                        autor: this.empleadoActual.nombre || 'Cotizador',
+                        fecha: new Date().toISOString(),
+                        texto: `📄 Cotización lista y enviada a revisión. (Link: ${this.nuevoProyecto.urlPdf})`
+                    });
+                    await this.guardarEnFirebase('Cotizado');
+                },
+
+                // FLUJO DIRECTOR: Rechazar DESDE ADENTRO del BOM
+                async rechazarDesdeBOM() {
+                    if(!this.comentariosCambio) { alert("⚠️ Explique qué cambios se necesitan."); return; }
+                    if (!this.nuevoProyecto.historialNotas) this.nuevoProyecto.historialNotas = [];
+                    this.nuevoProyecto.historialNotas.push({
+                        autor: this.empleadoActual.nombre || 'Director',
+                        fecha: new Date().toISOString(),
+                        texto: `❌ RECHAZADO: ${this.comentariosCambio}`
+                    });
+                    this.nuevoProyecto.comentariosRechazo = this.comentariosCambio;
+                    await this.guardarEnFirebase('Cambios Solicitados');
+                    this.comentariosCambio = '';
+                },
+
+                // 6. Enviar o Actualizar TODO el proyecto
                 async guardarEnFirebase(estado) {
                     if(this.nuevoProyecto.cliente === '' || this.nuevoProyecto.nombre === '' || this.nuevoProyecto.items.length === 0) {
                         alert("⚠️ Completa el cliente, el proyecto y agrega al menos un material.");
@@ -1087,23 +1190,20 @@
                     try {
                         const paquete = {
                             ...this.nuevoProyecto,
-                            estadoCotizacion: estado === 'borrador' ? 'borrador' : 'BOM Pendiente',
+                            estadoCotizacion: estado === 'borrador' ? 'borrador' : estado,
                             fechaModificacion: new Date().toISOString()
                         };
 
                         if (this.proyectoEditandoId) {
-                            // MODO EDICIÓN: Sobreescribe el documento original
                             await window.updateDoc(window.doc(window.db, "proyectos", this.proyectoEditandoId), paquete);
                             alert("✅ Proyecto actualizado correctamente.");
                         } else {
-                            // MODO CREACIÓN: Crea un proyecto totalmente nuevo
                             paquete.fechaCreacion = new Date().toISOString();
                             paquete.creadoPor = this.empleadoActual.email || window.auth.currentUser.email;
                             await window.addDoc(window.collection(window.db, "proyectos"), paquete);
-                            alert(estado === 'borrador' ? "✅ Borrador respaldado en la nube." : "🚀 ¡Proyecto enviado a cotización exitosamente!");
+                            alert(estado === 'borrador' ? "✅ Borrador respaldado." : "🚀 ¡Proyecto enviado exitosamente!");
                         }
                         
-                        // Limpiar la memoria al terminar
                         this.nuevoProyecto = { cliente: '', nombre: '', items: [], historialNotas: [] };
                         this.proyectoEditandoId = null;
                         localStorage.removeItem('qble_admin_borrador');
@@ -1111,10 +1211,7 @@
                         this.seccionActiva = 'cotizador';
                         this.cargarProyectos();
 
-                    } catch (error) {
-                        console.error("Error al guardar en la nube: ", error);
-                        alert("Hubo un error de conexión. Intente de nuevo.");
-                    }
+                    } catch (error) { console.error("Error: ", error); alert("Hubo un error de conexión."); }
                 },
                 
                 init() {
