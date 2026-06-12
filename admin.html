@@ -1120,44 +1120,42 @@
                 init() {
                     const borradorRecuperado = localStorage.getItem('qble_admin_borrador');
                     const idRecuperado = localStorage.getItem('qble_admin_editando_id');
+                    
                     if(borradorRecuperado) {
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
+                        // FIX: Le decimos a la caja visual que recupere el nombre del cliente
+                        this.busquedaCliente = this.nuevoProyecto.cliente || ''; 
+                        
                         if(idRecuperado) this.proyectoEditandoId = idRecuperado;
                         if(this.nuevoProyecto.items.length > 0) {
                             this.seccionActiva = 'nuevo-bom';
                         }
                     }
-                    // Encapsulamos la vigilancia del Cadenero
+
+                    // Encapsulamos la vigilancia del Cadenero (VACUNADO CONTRA GUERRA DE PESTAÑAS)
                     const arrancarCadenero = () => {
                         window.onAuthStateChanged(window.auth, async (user) => {
                             if (user) {
                                 // 1. Validación estricta del dominio corporativo
                                 if(!user.email.endsWith('@qble.com.mx')) {
-                                    window.signOut(window.auth);
-                                    this.errorMsg = 'Acceso denegado. Utilice una cuenta @qble.com.mx';
-                                    this.cargandoAuth = false;
-                                    return;
+                                    this.errorMsg = 'Acceso denegado. Utilice una cuenta corporativa.';
+                                    this.autenticado = false; this.cargandoAuth = false;
+                                    return; // Ya NO cerramos sesión, solo bloqueamos la pantalla
                                 }
                                 
                                 try {
-                                    // 2. Intentamos buscar si ya existe la Lista Blanca
-                                    const consulta = window.query(
-                                        window.collection(window.db, "empleados_autorizados"), 
-                                        window.where("email", "==", user.email.toLowerCase())
-                                    );
+                                    const consulta = window.query(window.collection(window.db, "empleados_autorizados"), window.where("email", "==", user.email.toLowerCase()));
                                     const resultados = await window.getDocs(consulta);
 
                                     if (!resultados.empty) {
                                         const datosEmpleado = resultados.docs[0].data();
                                         if(datosEmpleado.estado !== 'activo') {
-                                            window.signOut(window.auth);
                                             this.errorMsg = 'Cuenta corporativa suspendida.';
-                                            this.cargandoAuth = false;
+                                            this.autenticado = false; this.cargandoAuth = false;
                                             return;
                                         }
                                         this.empleadoActual = datosEmpleado;
                                     } else {
-                                        // 3. PARCHE MVP: Si no está en la lista blanca aún, lo dejamos pasar como Director
                                         this.empleadoActual = { nombre: user.displayName || 'Director QBLE', rol: 'Director', email: user.email };
                                     }
 
@@ -1168,14 +1166,9 @@
                                     this.cargarClientesOdoo();
 
                                 } catch (error) {
-                                    // 4. PREVENCIÓN DE CADUCIDAD FIREBASE (Reglas vencidas)
-                                    console.warn("Reglas de Firebase vencidas o error de lectura. Entrando en Modo MVP forzado.");
                                     this.empleadoActual = { nombre: user.displayName || 'Director QBLE', rol: 'Director', email: user.email };
-                                    this.autenticado = true;
-                                    this.cargandoAuth = false;
-                                    this.errorMsg = '';
-                                    this.cargarProyectos();
-                                    this.cargarClientesOdoo();
+                                    this.autenticado = true; this.cargandoAuth = false; this.errorMsg = '';
+                                    this.cargarProyectos(); this.cargarClientesOdoo();
                                 }
                             } else {
                                 this.autenticado = false;
@@ -1184,7 +1177,7 @@
                         });
                     };
 
-                    // Solución a la "carrera de velocidad": Si Firebase ya cargó, arranca. Si no, espéralo.
+                    // Solución a la "carrera de velocidad"
                     if (window.auth) {
                         arrancarCadenero();
                     } else {
