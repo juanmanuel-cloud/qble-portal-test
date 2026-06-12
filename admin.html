@@ -1314,17 +1314,17 @@
                         this.nuevoProyecto = JSON.parse(borradorRecuperado);
                         this.busquedaCliente = this.nuevoProyecto.cliente || ''; 
                         if(idRecuperado) this.proyectoEditandoId = idRecuperado;
-                        // Nota: Ya no forzamos abrir el BOM aquí para respetar la pantalla del usuario
                     }
 
                     // Encapsulamos la vigilancia del Cadenero (VACUNADO CONTRA GUERRA DE PESTAÑAS)
+                    const arrancarCadenero = () => {
                         window.onAuthStateChanged(window.auth, async (user) => {
                             if (user) {
                                 // 1. Validación estricta del dominio corporativo
                                 if(!user.email.endsWith('@qble.com.mx')) {
                                     this.errorMsg = 'Acceso denegado. Utilice una cuenta corporativa.';
                                     this.autenticado = false; this.cargandoAuth = false;
-                                    return; // Ya NO cerramos sesión, solo bloqueamos la pantalla
+                                    return;
                                 }
                                 
                                 try {
