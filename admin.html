@@ -150,7 +150,9 @@
                         <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Centro de Gestión Comercial</h2>
                         <p class="text-slate-500 mt-1" x-text="'Perfil operativo detectado: ' + empleadoActual.rol"></p>
                     </div>
-                    <button @click="seccionActiva = 'nuevo-bom'" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl shadow-md hover:bg-qble-orange transition-colors flex items-center transform active:scale-95">
+                    <button @click="limpiarBOM(); seccionActiva = 'nuevo-bom'" class="bg-slate-900 text-white font-bold px-6 py-3 rounded-xl shadow-md hover:bg-qble-orange transition-colors flex items-center transform active:scale-95">
+                        <span class="text-xl mr-2">+</span> Crear Nuevo BOM
+                    </button>
                         <span class="text-xl mr-2">+</span> Crear Nuevo BOM
                     </button>
                 </div>
@@ -1088,42 +1090,56 @@
                     return diff > 120;
                 },
 
-                // 4. Abrir panel de edición/vista de un BOM (CORREGIDO PARA QUE NO SE BORRE EL CLIENTE)
+                // Función para "Limpiar el escritorio" antes de un BOM nuevo
+                limpiarBOM() {
+                    this.proyectoEditandoId = null;
+                    this.nuevoProyecto = { cliente: '', nombre: '', items: [], historialNotas: [] };
+                    this.busquedaCliente = '';
+                    this.itemTemporal = { descripcion: '', cantidad: 1 };
+                    this.nuevoComentario = '';
+                    this.urlCotizacionPdf = '';
+                    this.comentariosCambio = '';
+                    localStorage.removeItem('qble_admin_borrador');
+                    localStorage.removeItem('qble_admin_editando_id');
+                },
+
+                // 4. Abrir panel de edición/vista de un BOM
                 abrirProyecto(proyecto) {
                     this.proyectoEditandoId = proyecto.id;
-                    this.nuevoProyecto = JSON.parse(JSON.stringify(proyecto)); // Copia profunda
-                    this.busquedaCliente = this.nuevoProyecto.cliente || ''; // <-- LA MAGIA: Rellena la caja visual
+                    this.nuevoProyecto = JSON.parse(JSON.stringify(proyecto)); 
+                    this.busquedaCliente = this.nuevoProyecto.cliente || ''; 
                     localStorage.setItem('qble_admin_borrador', JSON.stringify(this.nuevoProyecto));
                     localStorage.setItem('qble_admin_editando_id', proyecto.id);
                     this.seccionActiva = 'nuevo-bom';
                 },
 
-                // BITÁCORA UNIVERSAL: Guarda y sincroniza en tiempo real
+                // BITÁCORA A PRUEBA DE BALAS (Usa arrayUnion para no sobreescribir a Mariano)
                 async agregarComentario() {
                     if (this.nuevoComentario.trim() === '') return;
-                    if (!this.nuevoProyecto.historialNotas) this.nuevoProyecto.historialNotas = [];
                     
-                    this.nuevoProyecto.historialNotas.push({
+                    const nuevaNota = {
                         autor: this.empleadoActual.nombre || 'Usuario',
                         fecha: new Date().toISOString(),
                         texto: this.nuevoComentario
-                    });
+                    };
+
+                    if (!this.nuevoProyecto.historialNotas) this.nuevoProyecto.historialNotas = [];
+                    this.nuevoProyecto.historialNotas.push(nuevaNota);
                     
                     this.nuevoComentario = '';
                     this.guardarLocal();
 
-                    // Si el proyecto ya existe en la nube, sincroniza el chat instantáneamente
                     if (this.proyectoEditandoId) {
                         try {
                             await window.updateDoc(window.doc(window.db, "proyectos", this.proyectoEditandoId), {
-                                historialNotas: this.nuevoProyecto.historialNotas
+                                // Esto empuja la nota a la nube sin borrar lo que otros hayan puesto
+                                historialNotas: window.arrayUnion(nuevaNota)
                             });
-                            this.cargarProyectos(); // Refresca las tablas por detrás
+                            this.cargarProyectos(); 
                         } catch(e) { console.error("Error sincronizando bitácora", e); }
                     }
                 },
 
-                // 5. AUTOMATIZACIÓN: Cambiar el estado de un BOM desde las Tablas (Y guardar en bitácora)
                 async actualizarEstadoBOM(proyectoId, nuevoEstado, extras = {}, comentarioAdicional = null) {
                     try {
                         let datosActualizados = {
@@ -1132,15 +1148,14 @@
                             ...extras
                         };
 
-                        // Si hay un comentario (ej. un rechazo), lo inyectamos a la bitácora unificada
-                        if (comentarioAdicional && extras.historialActual) {
-                            extras.historialActual.push({
+                        if (comentarioAdicional) {
+                            const notaAutomatica = {
                                 autor: this.empleadoActual.nombre || 'Director',
                                 fecha: new Date().toISOString(),
                                 texto: `🔄 ESTATUS (${nuevoEstado}): ${comentarioAdicional}`
-                            });
-                            datosActualizados.historialNotas = extras.historialActual;
-                            delete datosActualizados.historialActual; // Limpiamos la variable extra
+                            };
+                            datosActualizados.historialNotas = window.arrayUnion(notaAutomatica);
+                            delete datosActualizados.historialActual; // Limpiamos basura
                         }
 
                         await window.updateDoc(window.doc(window.db, "proyectos", proyectoId), datosActualizados);
@@ -1149,23 +1164,71 @@
                         this.comentariosCambio = '';
                         this.cargarProyectos();
                     } catch (error) {
-                        console.error("Error al actualizar estado:", error);
+                        console.error("Error:", error);
                         alert("Error de comunicación con la base de datos.");
                     }
                 },
 
-                // FLUJO MARIANO: Enviar cotización DESDE ADENTRO del BOM
                 async enviarCotizacionDesdeBOM() {
                     if(!this.nuevoProyecto.urlPdf) { alert("⚠️ Ingrese el link del PDF de la cotización"); return; }
-                    if (!this.nuevoProyecto.historialNotas) this.nuevoProyecto.historialNotas = [];
-                    this.nuevoProyecto.historialNotas.push({
+                    const notaExtra = {
                         autor: this.empleadoActual.nombre || 'Cotizador',
                         fecha: new Date().toISOString(),
-                        texto: `📄 Cotización lista y enviada a revisión. (Link: ${this.nuevoProyecto.urlPdf})`
-                    });
-                    await this.guardarEnFirebase('Cotizado');
+                        texto: `📄 Cotización enviada a revisión. (Link: ${this.nuevoProyecto.urlPdf})`
+                    };
+                    await this.guardarEnFirebase('Cotizado', notaExtra);
                 },
 
+                async rechazarDesdeBOM() {
+                    if(!this.comentariosCambio) { alert("⚠️ Explique qué cambios se necesitan."); return; }
+                    const notaExtra = {
+                        autor: this.empleadoActual.nombre || 'Director',
+                        fecha: new Date().toISOString(),
+                        texto: `❌ RECHAZADO: ${this.comentariosCambio}`
+                    };
+                    this.nuevoProyecto.comentariosRechazo = this.comentariosCambio;
+                    await this.guardarEnFirebase('Cambios Solicitados', notaExtra);
+                },
+
+                async guardarEnFirebase(estado, notaExtra = null) {
+                    if(this.nuevoProyecto.cliente === '' || this.nuevoProyecto.nombre === '' || this.nuevoProyecto.items.length === 0) {
+                        alert("⚠️ Completa el cliente, el proyecto y agrega al menos un material."); return;
+                    }
+
+                    try {
+                        let paquete = {
+                            ...this.nuevoProyecto,
+                            estadoCotizacion: estado === 'borrador' ? 'borrador' : estado,
+                            fechaModificacion: new Date().toISOString()
+                        };
+
+                        if (this.proyectoEditandoId) {
+                            // EL SECRETO: Quitamos el array viejo para no aplastar el chat de los demás
+                            delete paquete.historialNotas;
+                            
+                            // Si hay una nota nueva en el proceso (ej. un rechazo), la empujamos atómicamente
+                            if(notaExtra) {
+                                paquete.historialNotas = window.arrayUnion(notaExtra);
+                            }
+
+                            await window.updateDoc(window.doc(window.db, "proyectos", this.proyectoEditandoId), paquete);
+                            alert("✅ Proyecto actualizado correctamente.");
+                        } else {
+                            paquete.fechaCreacion = new Date().toISOString();
+                            paquete.creadoPor = this.empleadoActual.email || window.auth.currentUser.email;
+                            if(notaExtra) {
+                                if(!paquete.historialNotas) paquete.historialNotas = [];
+                                paquete.historialNotas.push(notaExtra);
+                            }
+                            await window.addDoc(window.collection(window.db, "proyectos"), paquete);
+                            alert(estado === 'borrador' ? "✅ Borrador respaldado." : "🚀 ¡Proyecto enviado exitosamente!");
+                        }
+                        
+                        this.limpiarBOM(); // Reseteamos todas las variables para el siguiente
+                        this.seccionActiva = 'cotizador';
+                        this.cargarProyectos();
+                    } catch (error) { console.error("Error: ", error); alert("Hubo un error de conexión."); }
+                },
                 // FLUJO DIRECTOR: Rechazar DESDE ADENTRO del BOM
                 async rechazarDesdeBOM() {
                     if(!this.comentariosCambio) { alert("⚠️ Explique qué cambios se necesitan."); return; }
@@ -1288,7 +1351,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         // Traemos todas las herramientas de búsqueda de la base de datos
-        import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs, updateDoc, doc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -1318,6 +1381,7 @@
         window.collection = collection;
         window.addDoc = addDoc;
         window.setDoc = setDoc;
+        window.arrayUnion = arrayUnion;
 
         window.iniciarSesionGoogle = () => {
             signInWithPopup(auth, provider).catch((error) => {
